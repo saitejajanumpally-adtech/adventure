@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Signed in with a verified @databeat.io Google account.
+    function inDomain() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower().matches('.*@databeat[.]io');
+    }
+
+    // Admins are listed (lower-case) in the document config/admins, field "emails".
+    function isAdmin() {
+      return inDomain()
+        && request.auth.token.email.lower() in get(/databases/$(database)/documents/config/admins).data.emails;
+    }
+
+    match /users/{uid} {
+      allow read, write: if inDomain() && request.auth.uid == uid;
+    }
+
+    match /config/{doc} {
+      allow read: if inDomain();
+      allow write: if false; // edit in the Firebase console
+    }
+
+    match /packs/{game} {
+      allow read: if inDomain();
+      allow write: if isAdmin();
+      match /versions/{v} {
+        allow read, write: if isAdmin();
+      }
+    }
+
+    // One document per reported question. People can add their own report once; only admins read, close or delete them.
+    match /reports/{rid} {
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+      allow create: if inDomain()
+        && request.resource.data.keys().hasOnly(['game', 'itemId', 'count', 'reporters', 'reasons', 'preview', 'createdAt'])
+        && request.resource.data.count == 1
+        && request.resource.data.reporters.keys().hasOnly([request.auth.uid])
+        && request.resource.data.preview.size() <= 200;
+      allow update: if isAdmin()
+        || (inDomain()
+          && !(request.auth.uid in resource.data.reporters)
+          && request.resource.data.count == resource.data.count + 1
+          && request.resource.data.reporters.diff(resource.data.reporters).affectedKeys().hasOnly([request.auth.uid])
+          && request.resource.data.reasons.diff(resource.data.reasons).affectedKeys().size() <= 1
+          && request.resource.data.game == resource.data.game
+          && request.resource.data.itemId == resource.data.itemId);
+    }
+  }
+}
