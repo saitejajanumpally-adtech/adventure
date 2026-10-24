@@ -5,13 +5,13 @@ export const CONFIG = {
 
   // true  = try the app locally with a fake user and no Firebase (data stays in this browser).
   // false = real Google login and shared data. Set to false once Firebase is configured.
-  DEMO_MODE: true,
+  DEMO_MODE: false,
 
   FIREBASE: {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    appId: ''
+    apiKey: 'AIzaSyCe5kRH-q8JKMwUUXMDoFMHQq40oPquaFU',
+    authDomain: 'adventure-rd.firebaseapp.com',
+    projectId: 'adventure-rd',
+    appId: '1:510089681762:web:6ccdebd55cab1ac0c16a3b'
   },
 
   // Questions are cached in each browser this long, which keeps database reads low.
