@@ -32,7 +32,11 @@ const inRange = (day, r) => day >= r.from && day <= r.to;
 
 /* ---------- CSV ---------- */
 export function toCsv(rows) {
-  const esc = (v) => { const t = v == null ? '' : String(v); return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; };
+  const esc = (v) => {
+    let t = v == null ? '' : String(v);
+    if (typeof v === 'string' && /^[=+\-@\t\r]/.test(t)) t = `'${t}`; // text that looks like a formula must not run in Excel
+    return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
+  };
   return '\uFEFF' + rows.map((r) => r.map(esc).join(',')).join('\r\n');
 }
 function download(name, text, type = 'text/csv;charset=utf-8') {
@@ -264,7 +268,7 @@ function editItemForm(S, game, item, pack, done, onSaved) {
     const ans = h('select', {}, h('option', { value: 'myth' }, 'Myth'), h('option', { value: 'fact' }, 'Fact'));
     if (tf) ans.value = item.answer ? 'fact' : 'myth';
     const opts = (item.options || []).map((o) => h('input', { value: o }));
-    const radios = opts.map((_, k) => h('input', { type: 'radio', name: 'correct', value: k, 'aria-label': `Option ${k + 1} is correct`, checked: item.answer === k }));
+    const radios = opts.map((_, k) => h('input', { type: 'radio', name: `correct-${item.id}`, value: k, 'aria-label': `Option ${k + 1} is correct`, checked: item.answer === k }));
     kids.push(field(tf ? 'Statement' : 'Question', q),
       tf ? field('Correct answer', ans) : h('div', {}, h('label', {}, 'Options (select the correct one)'), opts.map((o, k) => h('div', { class: 'row gap' }, radios[k], o))),
       field('Explanation', why), field('Hint (optional): a nudge that does not give the answer away', hint));

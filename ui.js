@@ -74,14 +74,28 @@ export function wordmark(size = 'lg') {
   return h('div', { class: 'wm sm' }, word, h('div', { class: 'presents' }, flask(), 'R&D Labs'));
 }
 
-/* Dialog. Returns { close }. dismissible=false blocks Esc and backdrop clicks (used by the joke ad). */
+/* Dialog. Returns { close }. dismissible=false blocks Esc and backdrop clicks (used by the joke ad).
+   Tab and Shift+Tab stay inside the dialog, and focus goes back to where it was when the dialog closes. */
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 export function modal(content, { dismissible = true, label = 'Dialog' } = {}) {
   const prev = document.activeElement;
   const back = h('div', { class: 'backdrop' });
   const box = h('div', { class: 'dialog', role: 'dialog', 'aria-modal': 'true', 'aria-label': label, tabindex: '-1' }, content);
   back.append(box);
-  const close = () => { document.removeEventListener('keydown', onKey); back.remove(); if (prev && prev.focus) prev.focus(); };
-  const onKey = (e) => { if (dismissible && e.key === 'Escape') close(); };
+  const close = () => { document.removeEventListener('keydown', onKey); back.remove(); if (prev && prev.isConnected && prev.focus) prev.focus(); };
+  const onKey = (e) => {
+    if (!back.isConnected) { document.removeEventListener('keydown', onKey); return; } // removed by a page change
+    const all = document.querySelectorAll('.backdrop');
+    if (all[all.length - 1] !== back) return; // only the top dialog reacts
+    if (dismissible && e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    const f = [...box.querySelectorAll(FOCUSABLE)].filter((el) => el.getClientRects().length);
+    if (!f.length) { e.preventDefault(); box.focus(); return; }
+    const first = f[0], last = f[f.length - 1], at = document.activeElement;
+    if (!box.contains(at)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && (at === first || at === box)) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+  };
   if (dismissible) back.addEventListener('click', (e) => { if (e.target === back) close(); });
   document.addEventListener('keydown', onKey);
   document.body.append(back);

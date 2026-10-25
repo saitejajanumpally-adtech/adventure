@@ -337,7 +337,7 @@ a.mode:active{transform:scale(.98)}
 .ad-creative.cookie .ad-cta{width:100%;max-width:460px}
 .ad-app{display:flex;align-items:center;gap:12px}
 .ad-appicon{width:72px;height:72px;border-radius:18px;background:#fff;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
-.ad-appicon .pet-fig{--h:72px}
+.ad-appicon .pet-fig,.ad-appicon .pet-fig.pad{--h:72px}
 .ad-free{font-size:12px;font-weight:700;text-align:left}
 .ad-alt{background:transparent;border:0;min-height:44px;color:#3C3489;font-weight:700;font-size:15px;text-decoration:underline;cursor:pointer}
 .ad-alt:disabled{color:var(--soft);cursor:default}
@@ -481,3 +481,16 @@ textarea.inp{font-family:inherit;font-size:15px}
   .qh{flex:1;white-space:normal;min-width:0}
   .qbar{order:3;flex:1 0 100%}.qclock{order:2}.xbtn{order:2}
 }
+
+/* review fixes: text size picker, joke ad header, very narrow screens (browser zoom 150% on a phone) */
+.ad-count{white-space:nowrap}.ad-i{flex-shrink:0}
+@media (max-width:480px){.seg{display:flex;width:100%}.segb{flex:1 1 auto;min-width:0;padding:0 8px}}
+@media (max-width:340px){
+  .topbar-in{flex-wrap:wrap;justify-content:center}
+  .presents{display:none}.word.sm{font-size:17px}
+  .opts.two{flex-wrap:wrap}.opts.two .opt{flex:1 1 100%}
+  .qhead{margin-right:0}.kbtip{display:none}
+  .playgrid>*,.qcard{min-width:0}.fb-actions{flex-wrap:wrap}
+}
+.menu{max-width:calc(100vw - 16px)}
+@media (max-width:340px){.avwrap{position:static}.menu{left:8px;right:8px;width:auto;max-width:none;top:100%}}

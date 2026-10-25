@@ -61,6 +61,7 @@ function askOne(box, it, i, n, ctx) {
     const onKey = (e) => {
       if (!box.isConnected) { document.removeEventListener('keydown', onKey); return; }
       if (e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test((e.target && e.target.tagName) || '')) return;
+      if (document.querySelector('.backdrop')) return; // a dialog or the joke ad is open
       const k = String(e.key).toLowerCase();
       const idx = it.kind === 'tf' ? ({ m: 0, f: 1 }[k] ?? -1) : Math.max('abcd'.indexOf(k), '1234'.indexOf(k));
       if (idx >= 0 && btns[idx] && !btns[idx].disabled) { e.preventDefault(); btns[idx].click(); }
@@ -95,15 +96,16 @@ function askOne(box, it, i, n, ctx) {
       hinted = true; sh.hintBusy(); sh.coach.hintBefore();
       await adBreak(ctx);
       if (!box.isConnected || answered) return;
-      const clue = it.hint ? `Clue: ${it.hint}` : '';
+      const clue = it.hint ? `Clue: ${it.hint}${/[.!?]$/.test(it.hint) ? '' : '.'}` : '';
+      // The note under the question shows the clue too, because the coach panel is hidden on phones and tablets.
       if (it.kind === 'mcq') {
         const wrong = shuffle(order.map((o, k) => (o.idx === it.answer ? -1 : k)).filter((k) => k >= 0)).slice(0, 2);
         wrong.forEach((k) => { btns[k].disabled = true; btns[k].classList.add('gone'); });
         sh.coach.hintAfter('Two wrong answers removed.', clue);
-        sh.note('Two wrong answers removed. This question now earns half AdCoins.');
+        sh.note(`${clue} Two wrong answers removed. This question now earns half AdCoins.`.trim());
       } else {
         sh.coach.hintAfter('Here is a nudge.', clue);
-        sh.note('Hint used. This question now earns half AdCoins.');
+        sh.note(`${clue || 'Hint used.'} This question now earns half AdCoins.`);
       }
       sh.hintUsed({});
     } : null);
@@ -216,12 +218,13 @@ export function runFlow(box, pz, ctx) {
 /* ---------- jargon match with three lives ---------- */
 export function runMatch(box, pz, ctx) {
   return new Promise((resolve) => {
-    const sh = ctx.shell, n = pz.pairs.length;
-    let hintsLeft = limitOf(ctx.gameId, 'perRound', 1);
+    const sh = ctx.shell, n = pz.pairs.length, hintLimit = limitOf(ctx.gameId, 'perRound', 1);
+    let hintsLeft = hintLimit;
     sh.coach.reset(); sh.note('');
     const finish = (shown, win, mistakes, hintedCount, matchedCount) => {
       const coins = win ? Math.max(0, n - mistakes - hintedCount) * 10 + hintedCount * 5 : Math.max(0, matchedCount - hintedCount) * 10 + hintedCount * 5;
-      resolve({ correct: shown, total: n, perfect: win && mistakes === 0 && hintedCount === 0, hints: hintedCount, items: [{ id: pz.id, game: ctx.gameId, coins }] });
+      const used = hintLimit - hintsLeft; // counts a hint used before "Try again" too
+      resolve({ correct: shown, total: n, perfect: win && mistakes === 0 && used === 0, hints: Math.max(hintedCount, used), items: [{ id: pz.id, game: ctx.gameId, coins }] });
     };
     function round() {
       sh.setHeader('Match each term', 0);

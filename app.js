@@ -741,7 +741,14 @@ async function onUser(u, msg) {
 export async function boot() {
   S.store = await createStore();
   window.addEventListener('hashchange', route);
-  document.addEventListener('click', () => document.querySelectorAll('.menu').forEach((m) => { m.hidden = true; }));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.menu').forEach((m) => { m.hidden = true; }); });
+  // Close the profile menu on an outside click or Escape, and tell screen readers it is closed.
+  const closeMenus = (refocus) => document.querySelectorAll('.menu').forEach((m) => {
+    if (m.hidden) return;
+    m.hidden = true;
+    const av = m.parentElement && m.parentElement.querySelector('.avatar');
+    if (av) { av.setAttribute('aria-expanded', 'false'); if (refocus && m.contains(document.activeElement)) av.focus(); }
+  });
+  document.addEventListener('click', () => closeMenus(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenus(true); });
   await S.store.init(onUser);
 }
