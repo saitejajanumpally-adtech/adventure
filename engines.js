@@ -1,7 +1,7 @@
 import { shuffle } from './util.js';
 import { generateGrid } from './crossword.js';
 import { h, ic, fill, petFigure } from './ui.js';
-import { HINTS } from './data.js';
+import { HINTS, QUESTION_CUES } from './data.js';
 
 /* Set by the app so feedback boxes can show the player's companion. */
 export const hooks = { companion: null };
@@ -53,7 +53,8 @@ function askOne(box, it, i, n, ctx) {
   const sh = ctx.shell;
   return new Promise((resolve) => {
     let hinted = false, answered = false, btns = [], order = [];
-    sh.setHeader(`Question ${i + 1} of ${n}`, (i / n) * 100);
+    const seenBefore = ctx.isSeen && it.game ? ctx.isSeen(it.game, it.id) : null;
+    sh.setHeader(`Question ${i + 1} of ${n}${seenBefore == null ? '' : seenBefore ? ' \u00B7 Seen before' : ' \u00B7 New to you'}`, (i / n) * 100);
     sh.coach.reset(); sh.note('');
     const opts = h('div', { class: `opts ${it.kind === 'tf' ? 'two' : ''}`.trim() });
     const fbHolder = h('div', {});
@@ -63,6 +64,7 @@ function askOne(box, it, i, n, ctx) {
       if (e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test((e.target && e.target.tagName) || '')) return;
       if (document.querySelector('.backdrop')) return; // a dialog or the joke ad is open
       const k = String(e.key).toLowerCase();
+      if (k === 'h') { e.preventDefault(); sh.triggerHint(); return; }
       const idx = it.kind === 'tf' ? ({ m: 0, f: 1 }[k] ?? -1) : Math.max('abcd'.indexOf(k), '1234'.indexOf(k));
       if (idx >= 0 && btns[idx] && !btns[idx].disabled) { e.preventDefault(); btns[idx].click(); }
     };
@@ -87,7 +89,8 @@ function askOne(box, it, i, n, ctx) {
       btns = order.map((o, k) => mkBtn(k, o.t, '', () => finish(o.idx === it.answer, btns[k], btns[order.findIndex((x) => x.idx === it.answer)])));
     }
     opts.append(...btns);
-    fill(box, h('h2', { class: 'qtext' }, it.q), opts, fbHolder);
+    const cue = QUESTION_CUES[it.game];
+    fill(box, h('div', { class: 'qblock' }, cue ? h('p', { class: 'eyebrow' }, cue[0]) : null, h('h2', { class: 'qtext' }, it.q), cue ? h('p', { class: 'muted instr' }, cue[1]) : null), opts, fbHolder);
     document.addEventListener('keydown', onKey);
 
     const canHint = it.kind === 'mcq' || !!it.hint;

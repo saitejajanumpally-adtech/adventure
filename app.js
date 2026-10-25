@@ -90,7 +90,7 @@ function nudge() {
   if (!left) return null;
   if (left.id === 'first') return 'Finish a game to earn First Steps.';
   if (left.id === 'flawless') return 'One perfect round earns Flawless.';
-  if (left.id === 'fire') return `${Math.max(1, 7 - (p.bestStreak || 0))} more ${7 - (p.bestStreak || 0) === 1 ? 'day' : 'days'} in a row earns On Fire.`;
+  if (left.id === 'fire') { const n = Math.max(1, 7 - (p.bestStreak || 0)); return `${n} more ${n === 1 ? 'day' : 'days'} in a row earns On Fire.`; }
   if (left.id === 'pals') return 'Meet all 8 pets to earn Pet Pals.';
   if (left.id === 'allround') return `${LIVE.filter((g) => !isHidden(g) && !p.played[g.id]).length} games left to earn All-Rounder.`;
   return `${Math.max(0, LEVELS[4].t - p.coins)} AdCoins to Level 5 and Yield Pro.`;
@@ -176,16 +176,19 @@ function renderTour() {
 }
 
 /* ---------- home ---------- */
+const sectionHead = (title, sub, extra) => h('div', { class: 'sec-head' }, h('div', {}, h('h2', {}, title), sub ? h('p', { class: 'muted' }, sub) : null), extra || null);
+const DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
 function gameCard(g) {
   const c = catOf(g);
   if (!g.live || isHidden(g)) return h('div', { class: 'gcard soon', 'aria-label': `${g.title}, coming soon` }, h('span', { class: 'gic' }, ic(g.icon)), h('div', {}, h('b', {}, g.title), h('span', {}, 'Coming soon')));
-  return h('a', { class: 'gcard', href: `#/game/${g.id}`, style: `--bg:${c.bg};--fg:${c.fg}` }, h('span', { class: 'gic' }, ic(g.icon)), h('div', {}, h('b', {}, g.title), h('span', {}, g.tag)));
+  const played = S.profile.played[g.id];
+  return h('a', { class: 'gcard', href: `#/game/${g.id}`, style: `--bg:${c.bg};--fg:${c.fg}` }, h('span', { class: 'gic' }, ic(g.icon)),
+    h('div', {}, h('b', {}, g.title), h('span', {}, g.tag), h('small', { class: 'gmeta', 'data-game': g.id }, played ? `Level ${gameLevel(played.correct)}` : 'Not played yet')));
 }
 
 function renderHome() {
   const p = S.profile, today = dateKey(), lv = levelInfo(p.coins), done = p.missionDay === today;
-  const hr = new Date().getHours();
-  const greet = `${hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening'}, ${greetName()}.`;
   const away = daysAway();
   const baseMood = !p.lastDay ? 'hello' : away >= 3 ? 'sleepy' : 'happy';
   const comp = petById(p.companion);
@@ -195,21 +198,21 @@ function renderHome() {
   // mascot: tap to make it react
   const mascot = h('button', { class: 'mascot', 'aria-label': `${comp.name} the ${comp.species}. Tap to say hello.` });
   const bubble = h('div', { class: 'hbubble', role: 'status' });
-  const setMascot = (mood, text) => { fill(mascot, petFigure(p.companion, mood, 'phero')); fill(bubble, h('b', {}, greet), h('p', {}, text)); };
+  const setMascot = (mood, text) => { fill(mascot, petFigure(p.companion, mood, 'phero')); fill(bubble, h('b', {}, `${comp.name} says`), h('p', {}, text)); };
   mascot.addEventListener('click', () => setMascot(pick(['hello', 'celebrate', 'happy', 'explain', 'proud']), pick(TIPS)));
   setMascot(baseMood, baseMsg);
 
   const live = LIVE.filter((g) => g.kind !== 'mission' && !isHidden(g));
   const featured = live.find((g) => g.id === eff().featured);
   let rec = featured || live.find((g) => g.id !== p.lastGame) || live[0];
-  const recBox = h('section', { class: 'rec' });
+  const recBox = h('section', { class: 'rec', 'aria-label': 'Recommended game' });
   const drawRec = () => fill(recBox,
     h('span', { class: 'gic big' }, ic(rec.icon)),
-    h('div', { class: 'rec-t' }, h('p', { class: 'small-lab' }, featured && rec.id === featured.id ? 'Featured this week' : 'Recommended for you'), h('b', {}, rec.title), h('p', { class: 'muted' }, rec.tag)),
+    h('div', { class: 'rec-t' }, h('p', { class: 'eyebrow' }, featured && rec.id === featured.id ? 'Featured this week' : 'Recommended for you'), h('b', {}, rec.title), h('p', { class: 'muted' }, rec.tag)),
     h('div', { class: 'rec-a' }, h('a', { class: 'btn inline ghost', href: `#/game/${rec.id}` }, ic('player-play'), 'Play'),
       h('button', { class: 'btn inline ghost', onclick: () => { const pool = live.filter((g) => g.id !== rec.id); go(`/game/${pick(pool).id}`); } }, ic('sparkles'), 'Surprise me')));
   drawRec();
-  // work out which game has the most questions the player has not seen yet
+  // work out which game has the most questions the player has not seen yet, and show "N new" on each tile
   (async () => {
     try {
       let best = null;
@@ -217,6 +220,8 @@ function renderHome() {
         const items = ((await S.store.loadPack(g.id)).items || []).filter((x) => x && x.id && !x.disabled);
         const seen = new Set(seenOf(g.id));
         const fresh = items.filter((x) => !seen.has(x.id)).length;
+        const meta = recBox.isConnected && $app.querySelector(`.gmeta[data-game="${g.id}"]`);
+        if (meta) { const played = p.played[g.id]; meta.textContent = `${played ? `Level ${gameLevel(played.correct)} · ` : ''}${fresh ? `${fresh} new` : 'all seen'}`; }
         const score = fresh * 10 - (p.played[g.id] ? p.played[g.id].plays : 0) - (g.id === p.lastGame ? 1000 : 0);
         if (!best || score > best.score) best = { g, score };
       }
@@ -224,25 +229,53 @@ function renderHome() {
     } catch { /* keep the default */ }
   })();
 
-  const wd = weekDaysNow(), todayIdx = weekdayIndex();
-  const wbonus = p.weekBonusKey === weekKey();
-  const journey = h('section', { class: 'jour' },
-    h('div', { class: 'row wrap' }, h('b', {}, `Level ${lv.level}: ${lv.name}`), h('span', { class: 'muted' }, lv.next ? `${lv.next.t - p.coins} ${CURRENCY} to ${lv.next.n}` : 'Top level reached')),
-    h('div', { class: 'path', role: 'img', 'aria-label': `Level ${lv.level} of ${LEVELS.length}` }, LEVELS.flatMap((l, k) => [
-      k ? h('i', { class: `ln ${k <= lv.idx ? 'on' : ''}` }) : null,
-      h('i', { class: `nd ${k < lv.idx ? 'on' : ''} ${k === lv.idx ? 'cur' : ''}` })])),
-    h('div', { class: 'wk' }, h('b', {}, 'This week'),
-      ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, k) => h('span', { class: `d ${wd.includes(k) ? 'on' : ''} ${k === todayIdx && !wd.includes(k) ? 'td' : ''}` }, d)),
-      h('span', { class: 'muted' }, wbonus ? `Weekly bonus earned (+${eff().weekBonus})` : `${wd.length} of ${eff().weekDays} days \u00B7 +${eff().weekBonus} ${CURRENCY} at ${eff().weekDays}`)));
+  // quest hero (left) and progress card (right)
+  const hero = h('section', { class: 'qhero', 'aria-label': "Today's quest" },
+    mascot,
+    h('div', { class: 'qh-main' },
+      bubble,
+      h('p', { class: 'eyebrow' }, 'A five-minute break for your brain'),
+      h('h1', { class: 'hello' }, `Hey ${greetName()}, ready for an “aha”?`),
+      h('p', { class: 'questline' }, done ? 'Today’s quest is complete. Replay it for practice.' : 'Today’s quest: 3 puzzles, 5 minutes. A little more AdTech confidence.'),
+      h('div', { class: 'steps', 'aria-hidden': 'true' }, [0, 1, 2].map(() => h('i', { class: done ? 'on' : '' })), h('span', {}, done ? 'Completed today' : 'Not started yet')),
+      h('div', { class: 'row gap wrap' },
+        h('a', { class: 'btn quest', href: '#/play/daily-warmup' }, ic('player-play'), done ? 'Play again' : 'Start quest'),
+        h('span', { class: 'rw' }, ic('coin'), done ? 'Bonus earned today' : `+${30} ${CURRENCY} bonus`))));
 
+  const wd = weekDaysNow(), todayIdx = weekdayIndex(), wbonus = p.weekBonusKey === weekKey();
+  const left = Math.max(0, eff().weekDays - wd.length);
+  const weekMsg = wbonus ? `Weekly bonus earned: +${eff().weekBonus} ${CURRENCY}. Lovely rhythm.`
+    : left === 1 ? `One more day for +${eff().weekBonus} ${CURRENCY}. A little learning goes far.` : `${left} more days for +${eff().weekBonus} ${CURRENCY}.`;
+  const progress = h('section', { class: 'prog', 'aria-label': 'Your progress' },
+    h('div', { class: 'lvl' }, h('span', { class: 'lvl-ic' }, ic('rocket')), h('div', {}, h('p', { class: 'eyebrow' }, `Level ${lv.level} of ${LEVELS.length}`), h('b', {}, lv.name))),
+    h('div', { class: 'bar', role: 'progressbar', 'aria-label': 'Progress to the next level', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(lv.pct) }, h('div', { class: 'fill', style: `width:${lv.pct}%` })),
+    h('p', { class: 'muted small' }, lv.next ? `${lv.next.t - p.coins} ${CURRENCY} to ${lv.next.n}` : 'Top level reached'),
+    h('div', { class: 'streakrow' }, ic('flame'), h('span', {}, streakNow() ? `${streakNow()}-day streak. Keep it going.` : 'Play today to start a streak.')),
+    h('div', { class: 'wkh' }, h('b', {}, 'Your weekly rhythm'), h('span', { class: 'muted' }, `${wd.length} of ${eff().weekDays} days`)),
+    h('div', { class: 'week', role: 'group', 'aria-label': 'This week' }, ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, k) => {
+      const on = wd.includes(k), td = k === todayIdx;
+      return h('div', { class: `wd ${on ? 'on' : ''} ${td && !on ? 'td' : ''}`.trim() },
+        h('span', { class: 'wl', 'aria-hidden': 'true' }, d),
+        h('span', { class: 'wc', role: 'img', 'aria-label': `${DAY_NAMES[k]}: ${on ? 'played' : td ? 'today' : 'not played'}` }, on ? ic('check') : null));
+    })),
+    h('p', { class: 'muted small' }, weekMsg));
+
+  // lifetime journey, with the level names so nobody has to guess what the dots are
+  const journey = h('section', { class: 'jour', 'aria-label': 'Your learning journey' },
+    h('div', { class: 'sec-head tight' }, h('h2', {}, 'A little wiser, every day'), h('p', { class: 'muted' }, 'Your lifetime learning journey')),
+    h('ol', { class: 'path' }, LEVELS.map((l, k) => h('li', { class: `pn ${k < lv.idx ? 'done' : ''} ${k === lv.idx ? 'cur' : ''}`.trim(), 'aria-current': k === lv.idx ? 'step' : null },
+      h('i', { class: 'nd' }, k < lv.idx ? ic('check') : String(k + 1)), h('span', { class: 'pname' }, l.n, h('span', { class: 'sr-only' }, k < lv.idx ? ', reached' : k === lv.idx ? ', your level' : ', not yet'))))));
+
+  const liveCount = LIVE.filter((g) => !isHidden(g)).length;
   const sections = CATS.map((c) => {
     const gs = GAMES.filter((g) => g.cat === c.id);
-    return h('section', { class: 'cat', style: `--panel:${c.panel};--ink:${c.fg};--tag:${c.tagInk}` },
+    return h('section', { class: 'cat', style: `--panel:${c.panel};--ink:${c.fg};--tag:${c.tagInk};--n:${gs.length}`, 'aria-label': c.title },
       h('div', { class: 'cat-head' }, h('b', {}, c.title), h('span', {}, c.tagline)),
+      h('p', { class: 'cat-about' }, c.about),
       h('div', { class: 'gcards' }, gs.map(gameCard)));
   });
 
-  const floorBar = h('i', { style: 'width:0%' }), floorTxt = h('p', { class: 'muted' }, 'Loading this week\u2019s total\u2026');
+  const floorBar = h('i', { style: 'width:0%' }), floorTxt = h('p', { class: 'muted' }, 'Loading this week’s total…');
   const drawFloor = () => {
     const n = S.floor || 0, goal = eff().floorGoal;
     floorBar.style.width = `${Math.min(100, Math.round((n / goal) * 100))}%`;
@@ -253,28 +286,22 @@ function renderHome() {
 
   const badgeTiles = BADGES.map((b) => {
     const got = !!p.badges[b.id];
-    return h('div', { class: `bdg ${got ? 'got' : ''}`, title: `${b.title}: ${b.desc}`, 'aria-label': `${b.title}, ${got ? 'earned' : 'locked'}: ${b.desc}` }, h('span', { class: 'bi' }, ic(got ? b.icon : 'lock')), h('b', {}, b.title));
+    return h('div', { class: `bdg ${got ? 'got' : ''}`, title: `${b.title}: ${b.desc}`, 'aria-label': `${b.title}, ${got ? 'earned' : 'locked'}: ${b.desc}` },
+      h('span', { class: 'bi' }, ic(got ? b.icon : 'lock')), h('b', {}, b.title), h('small', { class: 'bst' }, got ? 'Earned' : 'Locked'));
   });
   const extras = h('section', { class: 'extras' },
-    h('div', { class: 'xcard' }, h('div', { class: 'row' }, h('b', {}, 'Badges'), h('span', { class: 'muted' }, `${Object.keys(p.badges).length} of ${BADGES.length}`)), h('div', { class: 'bdgs' }, badgeTiles)),
-    h('div', { class: 'xcard' }, h('b', {}, 'Floor goal'), h('div', { class: 'bar floor' }, floorBar), floorTxt));
+    h('div', { class: 'xcard wins' }, h('div', { class: 'row' }, h('h2', {}, 'Little wins, proudly collected'), h('span', { class: 'muted' }, `${Object.keys(p.badges).length} of ${BADGES.length}`)), h('div', { class: 'bdgs' }, badgeTiles)),
+    h('div', { class: 'xcard floorcard' }, h('p', { class: 'eyebrow' }, 'Better together'), h('h2', {}, 'One floor. One shared goal.'), h('div', { class: 'bar floor' }, floorBar), floorTxt));
 
   const bn = S.announce.banner || {};
   const bannerOn = bn.on && bn.text && (!bn.until || today <= bn.until);
   view(page([
     bannerOn ? h('div', { class: 'banner', role: 'status' }, ic('speakerphone'), h('span', {}, bn.text)) : null,
-    h('section', { class: 'qhero' },
-      mascot,
-      h('div', { class: 'qh-main' },
-        bubble,
-        h('p', { class: 'small-lab' }, "Today's quest"),
-        h('h2', {}, done ? 'Quest complete' : '3 puzzles, 5 minutes'),
-        h('div', { class: 'steps', 'aria-hidden': 'true' }, [0, 1, 2].map(() => h('i', { class: done ? 'on' : '' })), h('span', {}, done ? 'Completed today' : 'Not started yet')),
-        h('div', { class: 'row gap wrap' },
-          h('a', { class: 'btn quest', href: '#/play/daily-warmup' }, ic('player-play'), done ? 'Play again' : 'Start quest'),
-          h('span', { class: 'rw' }, ic('coin'), done ? 'Bonus earned today' : `+${30} ${CURRENCY} bonus`)))),
-    recBox, journey, sections, extras,
-    S.store.demo ? h('p', { class: 'demo' }, 'Demo mode: no real login. Your progress stays in this browser.') : null]));
+    h('div', { class: 'hero2' }, hero, progress),
+    recBox,
+    sectionHead('Find your kind of play', 'Small puzzles. Big “oh, that makes sense” moments.', h('span', { class: 'chip-count' }, `${liveCount} games to explore`)),
+    sections, journey, extras,
+    S.store.demo ? h('p', { class: 'demo' }, 'Demo mode: no real login. Your progress stays in this browser.') : null], { cls: 'homepage' }));
 }
 
 /* ---------- how to play ---------- */
@@ -337,7 +364,8 @@ async function renderIntro(id) {
       h('div', { class: 'row gap top' }, petFigure(pet, 'explain', 'lg'), h('div', {}, h('h1', {}, g.title), h('p', {}, g.blurb))),
       h('div', { class: 'bubble' }, h('span', {}, `${petById(pet).name} says`), h('p', {}, tip)),
       h('div', { class: 'row gap wrap' }, h('button', { class: 'btn light inline', onclick: () => showHow(id) }, ic('question-mark'), 'How to play'), pool)),
-    h('h3', {}, 'How do you want to play?'),
+    h('h2', { class: 'subhead' }, 'How do you want to play?'),
+    h('p', { class: 'muted small' }, 'Solo is open today. More ways to play are on the way.'),
     h('div', { class: 'grid modes' }, MODES.map((m) => m.live
       ? h('a', { class: 'mode', href: `#/play/${id}` }, ic(m.icon, 'big'), h('div', {}, h('p', {}, m.title), h('span', {}, m.sub)))
       : h('div', { class: 'mode soon', 'aria-label': `${m.title}, coming soon` }, ic(m.icon, 'big'), h('div', {}, h('p', {}, m.title), h('span', {}, 'Coming soon')))))), { narrow: true }));
@@ -468,9 +496,20 @@ function buildPlayShell(g, hostPet) {
   const cnote = h('p', { class: 'cnote' });
   const coachFig = petFigure(hostPet, 'explain', 'pcoach'); // one picture for the whole round: only its mood changes, so it never flickers
   petBox.append(coachFig);
+  // Phones and tablets: a slim coach strip instead of the side panel. Tap it to read a little more.
+  const stripFig = petFigure(hostPet, 'explain', 'sthumb');
+  const stripMain = h('span', { class: 'cs-main' }), stripSub = h('span', { class: 'cs-sub' }), stripNote = h('span', { class: 'cs-note' });
+  const stripMore = h('div', { class: 'cs-more', id: 'cs-more', hidden: true }, stripSub, stripNote);
+  const stripBtn = h('button', { class: 'cs-btn', 'aria-expanded': 'false', 'aria-controls': 'cs-more', 'aria-label': `${pet.name}, your coach. Show more`, onclick: () => {
+    const open = stripMore.hidden; stripMore.hidden = !open; stripBtn.setAttribute('aria-expanded', String(open)); strip.classList.toggle('open', open);
+  } }, stripFig, h('span', { class: 'cs-name' }, h('b', {}, pet.name), stripMain), ic('chevron-down'));
+  const strip = h('div', { class: 'cstrip', role: 'status' }, stripBtn, stripMore);
+  const DEFAULT_SUB = 'Stuck? Tap Hint. A hinted question earns half AdCoins.';
+  const setNote = (t) => { cnote.textContent = t || ''; stripNote.textContent = t || ''; };
   const setBubble = (main, mood, sub) => {
-    coachFig.setMood(mood);
+    coachFig.setMood(mood); stripFig.setMood(mood);
     fill(bubble, h('p', {}, main), sub ? h('p', { class: 'sub' }, sub) : null);
+    stripMain.textContent = main; stripSub.textContent = sub || DEFAULT_SUB;
   };
   const tips = GAME_TIPS[g.id] || [''];
   const hideBtn = h('button', { class: 'chide', 'aria-label': 'Hide coach', onclick: () => setCoach(false) }, ic('chevron-left'));
@@ -479,7 +518,7 @@ function buildPlayShell(g, hostPet) {
     petBox, bubble, cnote, h('div', { class: 'cactions' }, hintCoach, howCoach));
   const thumb = petFigure(hostPet, 'happy', 'thumb');
   const rail = h('button', { class: 'coachrail', 'aria-label': 'Show coach', onclick: () => setCoach(true) }, thumb, h('span', {}, 'Coach'), ic('chevron-right'));
-  const card = h('section', { class: 'qcard' }, head, box, hnote, h('div', { class: 'hint-under' }, hintCard, howCard), h('p', { class: 'kbtip' }, g.kind === 'tf' ? 'Tip: press M for Myth or F for Fact.' : g.kind === 'mcq' || g.kind === 'mission' ? 'Tip: press A, B, C or D on your keyboard.' : ''));
+  const card = h('section', { class: 'qcard' }, head, strip, box, hnote, h('div', { class: 'hint-under' }, hintCard, howCard), h('p', { class: 'kbtip' }, g.kind === 'tf' ? 'Tip: press M for Myth or F for Fact, and H for a hint.' : g.kind === 'mcq' || g.kind === 'mission' ? 'Tip: press A, B, C or D to answer, and H for a hint.' : ''));
   const grid = h('div', { class: `playgrid ${st.coach === false ? 'nocoach' : ''}` }, panel, rail, card);
   const setCoach = (on) => { st.coach = on; grid.classList.toggle('nocoach', !on); save(); };
 
@@ -507,7 +546,7 @@ function buildPlayShell(g, hostPet) {
       hintFn = fn; nudged = false;
       const txt = left == null ? 'Hint' : left === 0 ? 'No hints left' : `Hint (${left} left)`;
       hintBoth((b) => { b.hidden = !fn; b.disabled = !fn || left === 0; b.classList.remove('used', 'nudge'); label(b, txt); });
-      cnote.textContent = ''; api.note('');
+      setNote(''); api.note('');
       armIdle();
     },
     hintEnable(on) { if (!hintFn) return; hintBoth((b) => { if (!b.classList.contains('used')) b.disabled = !on; }); if (on) armIdle(); else stopIdle(); },
@@ -519,16 +558,17 @@ function buildPlayShell(g, hostPet) {
         hintBoth((b) => { b.disabled = left <= 0; b.classList.remove('nudge'); label(b, txt); });
       } else {
         hintBoth((b) => { b.disabled = true; b.classList.remove('nudge'); b.classList.add('used'); label(b, 'Hint used'); });
-        if (left != null) cnote.textContent = `${left} ${left === 1 ? 'hint' : 'hints'} left in this round.`;
+        if (left != null) setNote(`${left} ${left === 1 ? 'hint' : 'hints'} left in this round.`);
       }
     },
     lockHint() { stopIdle(); if (hintFn) hintBoth((b) => { b.disabled = true; }); },
+    triggerHint() { const b = [hintCard, hintCoach].find((x) => !x.hidden && !x.disabled && x.offsetParent !== null); if (b) b.click(); },
     coach: {
-      reset() { setBubble(pick(tips), 'explain'); cnote.textContent = ''; },
+      reset() { setBubble(pick(tips), 'explain'); setNote(''); },
       react(kind) { answeredAny = true; setBubble(pick(lines[kind] || lines.right), MOOD[kind] || 'happy'); },
       hintBefore() { setBubble(pick(lines.hint), 'think'); },
       hintAfter(main, sub) { setBubble(main, 'explain', sub); },
-      note(text) { cnote.textContent = text || ''; }
+      note(text) { setNote(text); }
     },
     destroy() { stopIdle(); }
   };
@@ -559,7 +599,7 @@ async function play(id) {
     if (!items.length) { fill(box, h('p', {}, 'No puzzles are available for this game right now.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); return; }
     timer.start();
     if (sh.clock) S.clock = setInterval(() => { sh.clock.querySelector('.ct').textContent = fmtTime(timer.ms()); }, 500);
-    const ctx = { gameId: id, timer, adsOn: () => !adFreeActive(), hostPet, shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
+    const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), adsOn: () => !adFreeActive(), hostPet, shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
     const res = ['mission', 'tf', 'mcq'].includes(g.kind) ? await runQuiz(box, items, ctx)
       : await ({ flow: runFlow, match: runMatch, sort: runSort, cross: runCross }[g.kind])(box, items[0], ctx);
     timer.stop(); sh.destroy();
@@ -576,18 +616,30 @@ async function play(id) {
 /* ---------- scorecard, pets, settings, help, what's new ---------- */
 function renderCard() {
   const p = S.profile, lv = levelInfo(p.coins);
-  const metric = (label, value) => h('div', { class: 'metric' }, h('span', {}, label), h('b', {}, value));
+  const metric = (icon, label, value) => h('div', { class: 'metric' }, h('span', { class: 'mi' }, ic(icon)), h('b', {}, value), h('span', { class: 'ml' }, label));
   view(page(h('div', { class: 'stage' },
     h('a', { class: 'back', href: '#/home' }, ic('arrow-left'), 'Home'), h('h1', {}, 'My scorecard'),
-    h('div', { class: 'grid4' }, metric('Level', `${lv.level}: ${lv.name}`), metric(`${CURRENCY} earned`, p.coins), metric('Spent', p.spent || 0), metric('Balance', balanceOf(p)), metric('Streak', plural(streakNow(), 'day')), metric('Best streak', plural(p.bestStreak || 0, 'day')), metric('Pets met', `${Object.keys(p.met).length} of ${PETS.length}`), metric('Badges', `${Object.keys(p.badges).length} of ${BADGES.length}`)),
-    h('p', { class: 'muted small', style: 'margin-top:8px' }, 'Your level comes from everything you have earned, so spending AdCoins never lowers it.'),
-    h('h3', {}, 'By game'),
-    h('div', { class: 'card' }, GAMES.filter((g) => g.live).map((g) => {
+    h('p', { class: 'muted lede' }, 'Your AdCoins, streaks and progress in one place.'),
+    h('div', { class: 'grid4' },
+      metric('rocket', 'Level', `${lv.level}: ${lv.name}`), metric('coins', `${CURRENCY} earned`, p.coins), metric('shopping-cart', 'Spent', p.spent || 0), metric('wallet', 'Balance', balanceOf(p)),
+      metric('flame', 'Streak', plural(streakNow(), 'day')), metric('trophy', 'Best streak', plural(p.bestStreak || 0, 'day')), metric('paw', 'Pets met', `${Object.keys(p.met).length} of ${PETS.length}`), metric('medal', 'Badges', `${Object.keys(p.badges).length} of ${BADGES.length}`)),
+    h('p', { class: 'muted small note-c' }, 'Your level comes from everything you have earned, so spending AdCoins never lowers it.'),
+    h('h2', { class: 'subhead' }, 'By game'),
+    h('p', { class: 'muted small' }, 'How you are doing in each game. A game levels up as you answer more questions right.'),
+    h('div', { class: 'gstats' }, GAMES.filter((g) => g.live).map((g) => {
       const s = p.played[g.id], bt = p.bestTime[g.id];
-      return h('div', { class: 'srow' }, ic(g.icon), h('span', {}, g.title, s ? h('small', { class: 'lvtag' }, ` Level ${gameLevel(s.correct)}`) : null), h('span', { class: 'muted' }, s ? `${plural(s.plays, 'play')}, ${s.total ? Math.round((s.correct / s.total) * 100) : 0}% right${bt ? `, best ${fmtTime(bt)}` : ''}` : 'Not played yet'));
+      return h('div', { class: `gs ${s ? '' : 'idle'}`.trim() }, h('span', { class: 'gic' }, ic(g.icon)), h('b', {}, g.title),
+        s ? h('span', { class: 'lvtag' }, `Level ${gameLevel(s.correct)}`) : null,
+        h('span', { class: 'muted' }, s ? `${plural(s.plays, 'play')} \u00B7 ${s.total ? Math.round((s.correct / s.total) * 100) : 0}% right` : 'Not played yet'),
+        s && bt ? h('span', { class: 'muted' }, `Best time ${fmtTime(bt)}`) : null);
     })),
-    h('h3', {}, 'Badges'),
-    h('div', { class: 'card' }, BADGES.map((b) => h('div', { class: 'srow' }, ic(p.badges[b.id] ? b.icon : 'lock'), h('span', {}, `${b.title}: ${b.desc}`), h('span', { class: 'muted' }, p.badges[b.id] ? 'Earned' : 'Locked'))))), { narrow: true }));
+    h('h2', { class: 'subhead' }, 'Badges'),
+    h('p', { class: 'muted small' }, 'Little wins, proudly collected.'),
+    h('div', { class: 'bgrid' }, BADGES.map((b) => {
+      const got = !!p.badges[b.id];
+      return h('div', { class: `bdg big ${got ? 'got' : ''}`.trim(), 'aria-label': `${b.title}, ${got ? 'earned' : 'locked'}: ${b.desc}` },
+        h('span', { class: 'bi' }, ic(got ? b.icon : 'lock')), h('b', {}, b.title), h('small', { class: 'bd' }, b.desc), h('small', { class: 'bst' }, got ? 'Earned' : 'Locked'));
+    }))), { narrow: true }));
 }
 
 function renderPets() {
@@ -635,6 +687,7 @@ function renderSettings() {
   const nick = h('input', { id: 'nick', class: 'inp', maxlength: 20, value: p.nickname || '', placeholder: p.name || 'Your name', autocomplete: 'off' });
   view(page(h('div', { class: 'stage' },
     h('a', { class: 'back', href: '#/home' }, ic('arrow-left'), 'Home'), h('h1', {}, 'Settings'),
+    h('p', { class: 'muted lede' }, 'Make AdVenture feel right for you.'),
     h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Play'),
       toggle('coach', 'Show the coach panel on laptops', 'The pet panel beside the question. You can also hide it from the game screen.'),
       toggle('liveTimer', 'Show a timer while playing', 'Your time always shows on the results screen.'),

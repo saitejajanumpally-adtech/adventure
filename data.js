@@ -1,8 +1,8 @@
 export const CATS = [
-  { id: 'daily', title: 'Daily habit', tagline: 'Quick brain boosters', bg: '#CECBF6', fg: '#26215C', panel: '#E4E2FA', tagInk: '#4F4A8A' },
-  { id: 'concept', title: 'Concept builders', tagline: 'Build your skills', bg: '#B5D4F4', fg: '#042C53', panel: '#DCEAF9', tagInk: '#2B5A8A' },
-  { id: 'current', title: 'Staying current', tagline: 'Stay ahead', bg: '#FAEEDA', fg: '#633806', panel: '#FBF3E4', tagInk: '#7A4A12' },
-  { id: 'fun', title: 'Fun and fast', tagline: 'Quick and fun', bg: '#D3D1C7', fg: '#2C2C2A', panel: '#E9E8E2', tagInk: '#4A4A46' }
+  { id: 'daily', title: 'Daily habit', tagline: 'Quick brain boosters', about: 'Two minutes a day builds the habit.', bg: '#CECBF6', fg: '#26215C', panel: '#E4E2FA', tagInk: '#4F4A8A' },
+  { id: 'concept', title: 'Concept builders', tagline: 'Build your skills', about: 'Go deeper: order, match, sort and solve.', bg: '#B5D4F4', fg: '#042C53', panel: '#DCEAF9', tagInk: '#2B5A8A' },
+  { id: 'current', title: 'Staying current', tagline: 'Stay ahead', about: 'What is changing in AdTech. Coming soon.', bg: '#FAEEDA', fg: '#633806', panel: '#FBF3E4', tagInk: '#7A4A12' },
+  { id: 'fun', title: 'Fun and fast', tagline: 'Quick and fun', about: 'Fast, playful rounds. Coming soon.', bg: '#D3D1C7', fg: '#2C2C2A', panel: '#E9E8E2', tagInk: '#4A4A46' }
 ];
 
 export const CURRENCY = 'AdCoins';
@@ -123,6 +123,13 @@ export const TIPS = [
   'A floor price is the lowest price a seller will accept. Too high and fill drops, too low and revenue leaks.',
   'A consent signal travels with the ad request so partners know what data they may use.'
 ];
+
+/* Small label and one-line instruction shown above each quiz question. */
+export const QUESTION_CUES = {
+  'myth-or-fact': ['Myth or fact?', 'Is this statement a myth or a fact?'],
+  'acronym-decoder': ['Decode the acronym', 'Pick the meaning that fits.'],
+  'odd-one-out': ['Find the odd one out', 'Pick the one that does not belong.']
+};
 
 export const GAME_TIPS = {
   'daily-warmup': ['Three questions, about five minutes. Do it before your first meeting.', 'A streak counts any day you finish a puzzle.'],
