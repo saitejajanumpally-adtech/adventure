@@ -1,5 +1,5 @@
 import { CONFIG } from './config.js';
-import { CATS, GAMES, MODES, LEVELS, TIPS, GAME_TIPS, PETS, TOUR, CURRENCY, BADGES, LINES, GAME_LEVELS, TEXT_SIZES, WHATS_NEW, WHATS_NEW_MINOR } from './data.js';
+import { CATS, GAMES, MODES, LEVELS, TIPS, GAME_TIPS, PETS, TOUR, CURRENCY, BADGES, LINES, GAME_LEVELS, TEXT_SIZES, WHATS_NEW, WHATS_NEW_MINOR, HINTS, SHOP_SOON, SHOP_DEFAULTS } from './data.js';
 import { shuffle, mulberry32, seedFrom, dateKey, yesterdayKey, weekKey, weekdayIndex, parseDevice } from './util.js';
 import { createStore } from './store.js';
 import { h, ic, fill, toast, petFigure, preloadPets, PET_MOODS, petById, wordmark, modal, fmtTime, initialsOf, confetti } from './ui.js';
@@ -30,6 +30,10 @@ const eff = () => ({
   adSkip: Number(S.remote.adSkip) || CONFIG.AD_SKIP_AFTER,
   adFreePrice: Number(S.remote.adFreePrice) || CONFIG.AD_FREE_PRICE,
   adFreeDays: Number(S.remote.adFreeDays) || CONFIG.AD_FREE_DAYS,
+  adHintPrice: Number(S.remote.adHintPrice) || SHOP_DEFAULTS.adHintPrice,
+  adHintMax: Number(S.remote.adHintMax) || SHOP_DEFAULTS.adHintMax,
+  giftMax: Number(S.remote.giftMax) || SHOP_DEFAULTS.giftMax,
+  shopHidden: Array.isArray(S.remote.shopHidden) ? S.remote.shopHidden : [],
   featured: S.remote.featured || '',
   hidden: Array.isArray(S.remote.hidden) ? S.remote.hidden : []
 });
@@ -42,6 +46,7 @@ const newsList = () => (S.announce.entries && S.announce.entries.length ? S.anno
 const newCount = () => { const list = newsList(), seen = S.profile.newSeen; const i = list.findIndex((e) => e.id === seen); return i < 0 ? list.length : i; };
 
 function view(el) {
+  document.body.classList.remove('noscroll');
   if (S.clock) { clearInterval(S.clock); S.clock = null; }
   if (S.timer) { S.timer.stop(); S.timer = null; }
   fill($app, el);
@@ -98,30 +103,39 @@ function nudge() {
 
 /* ---------- page frame: top bar with logo, streak, AdCoins and profile ---------- */
 function topbar() {
-  const p = S.profile, lv = levelInfo(p.coins), nn = newCount();
-  const item = (href, icon, text, extra, badgeN) => h('a', { role: 'menuitem', href, onclick: extra }, ic(icon), text, badgeN ? h('span', { class: 'badge' }, badgeN) : null);
+  const p = S.profile, lv = levelInfo(p.coins), nn = newCount(), bal = balanceOf(p);
+  const shown = (p.nickname || p.name || S.user.name || '').trim();
+  const link = (href, icon, text, note, badgeN, extra) => h('a', { class: 'mi2', href, onclick: extra },
+    h('span', { class: 'ic' }, ic(icon)), text, badgeN ? h('span', { class: 'badge' }, badgeN) : note ? h('em', {}, note) : null);
+  const group = (title, ...items) => h('div', { class: 'mg' }, h('h4', {}, title), items);
   const adminN = (S.reportCount || 0) + (S.feedbackCount || 0);
-  const menu = h('div', { class: 'menu', role: 'menu', hidden: true },
-    h('div', { class: 'menu-head' }, h('b', {}, p.nickname || p.name || S.user.name), h('span', {}, `Level ${lv.level} \u00B7 ${balanceOf(p)} ${CURRENCY}`)),
-    item('#/card', 'chart-bar', 'My scorecard'),
-    item('#/pets', 'paw', 'My pets'),
-    item('#/settings', 'settings', 'Settings'),
-    item('#/help', 'message-circle', 'Help and feedback'),
-    item('#/new', 'sparkles', "What's new", null, nn),
-    item('#/tour', 'map-2', 'Replay the tour', () => { S.tourI = 0; }),
-    S.admin ? item('#/admin', 'inbox', 'Admin', null, adminN) : null,
-    h('button', { role: 'menuitem', class: 'menu-out', onclick: () => { try { sessionStorage.removeItem('rda_sess'); } catch { /* ignore */ } S.store.signOut(onUser); } }, ic('logout'), 'Sign out'));
-  const avatar = h('button', { class: 'avatar', 'aria-haspopup': 'menu', 'aria-expanded': 'false', 'aria-label': 'Profile menu', onclick: (e) => {
-    e.stopPropagation();
-    const open = menu.hidden; menu.hidden = !open; avatar.setAttribute('aria-expanded', String(open));
-  } }, h('span', { class: 'ini' }, initialsOf(S.user)), ic('chevron-down'), nn ? h('span', { class: 'avdot', 'aria-hidden': 'true' }) : null);
+  const signOut = h('button', { class: 'mi2 out', onclick: () => { try { sessionStorage.removeItem('rda_sess'); } catch { /* ignore */ } S.store.signOut(onUser); } }, h('span', { class: 'ic' }, ic('logout')), 'Sign out');
+  const menu = h('div', { class: 'menu', id: 'acct-menu', hidden: true, 'aria-label': 'Your menu' },
+    h('div', { class: 'who' }, h('span', { class: 'big' }, initialsOf(S.user)),
+      h('div', {}, h('b', {}, p.fullName || S.user.fullName || shown), h('small', {}, S.user.email || ''),
+        h('div', { class: 'chips2' }, h('span', {}, ic('rocket'), `Level ${lv.level} · ${lv.name}`), h('span', {}, ic('coin'), `${bal} ${CURRENCY}`)))),
+    group('Me', link('#/profile', 'user-circle', 'My profile', 'name, nickname'), link('#/card', 'chart-bar', 'My scorecard'), link('#/pets', 'paw', 'My pets', `${Object.keys(p.met).length} of ${PETS.length}`)),
+    group(CURRENCY, link('#/coins', 'coins', `My ${CURRENCY}`, 'earn · spend'), link('#/guide', 'book-2', 'How AdVenture works', 'rules')),
+    group('Settings and help', link('#/settings', 'settings', 'Settings', 'text size, timer'), link('#/help', 'message-circle', 'Help and feedback'),
+      link('#/new', 'sparkles', "What's new", null, nn), link('#/tour', 'map-2', 'Replay the tour', null, 0, () => { S.tourI = 0; })),
+    S.admin ? group('Admin only', link('#/admin', 'inbox', 'Admin', null, adminN)) : null,
+    h('div', { class: 'mdiv' }), signOut);
+  const scrim = h('div', { class: 'scrim', onclick: () => setOpen(false) });
+  const avatar = h('button', { class: 'avatar', 'aria-expanded': 'false', 'aria-controls': 'acct-menu', 'aria-label': 'Open your menu', onclick: (e) => { e.stopPropagation(); setOpen(menu.hidden); } },
+    ic('menu-2', 'mi-ic'), h('span', { class: 'ini' }, initialsOf(S.user)), h('span', { class: 'an' }, shown), h('span', { class: 'menuw' }, 'Menu'), ic('chevron-down', 'chev'),
+    nn ? h('span', { class: 'avdot', 'aria-hidden': 'true' }) : null);
+  const setOpen = (on) => {
+    menu.hidden = !on; scrim.classList.toggle('on', on); avatar.setAttribute('aria-expanded', String(on));
+    avatar.setAttribute('aria-label', on ? 'Close your menu' : 'Open your menu'); document.body.classList.toggle('noscroll', on);
+  };
+  menu.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
   return h('header', { class: 'topbar' },
     h('div', { class: 'topbar-in' },
       h('a', { class: 'brand', href: '#/home', 'aria-label': 'ADVenture home' }, wordmark('sm')),
       h('div', { class: 'tb-right' },
         h('span', { class: 'pill f', title: 'Streak' }, ic('flame'), String(streakNow())),
-        h('span', { class: 'pill c', title: `${CURRENCY} you can spend` }, ic('coin'), String(balanceOf(p))),
-        h('div', { class: 'avwrap' }, avatar, menu))));
+        h('a', { class: 'pill c', href: '#/coins', 'aria-label': `${bal} ${CURRENCY}. Open My ${CURRENCY}.`, title: `Your ${CURRENCY}. Tap to see how to earn and spend them.` }, ic('coin'), String(bal), h('span', { class: 'pl' }, ` ${CURRENCY}`)),
+        h('div', { class: 'avwrap' }, avatar, scrim, menu))));
 }
 const page = (kids, { narrow = false, cls = '' } = {}) => h('div', { class: `app ${narrow ? 'narrow' : ''} ${cls}`.trim() }, topbar(), h('main', { class: 'page' }, kids));
 
@@ -293,10 +307,15 @@ function renderHome() {
     h('div', { class: 'xcard wins' }, h('div', { class: 'row' }, h('h2', {}, 'Little wins, proudly collected'), h('span', { class: 'muted' }, `${Object.keys(p.badges).length} of ${BADGES.length}`)), h('div', { class: 'bdgs' }, badgeTiles)),
     h('div', { class: 'xcard floorcard' }, h('p', { class: 'eyebrow' }, 'Better together'), h('h2', {}, 'One floor. One shared goal.'), h('div', { class: 'bar floor' }, floorBar), floorTxt));
 
+  const welcome = p.introSeen ? null : h('section', { class: 'welcome', 'aria-label': 'How AdVenture works' }, ic('sparkles'),
+    h('div', {}, h('b', {}, 'Welcome! Here is how it works.'), h('p', {}, `Play short puzzles, collect ${CURRENCY} and level up. Spend ${CURRENCY} on ad-free hints. Everything is explained in your menu.`),
+      h('div', { class: 'row gap wrap' }, h('a', { class: 'linkbtn', href: '#/guide' }, 'Learn more'),
+        h('button', { class: 'linkbtn', onclick: () => { p.introSeen = true; save(); welcome.remove(); } }, 'Got it'))));
   const bn = S.announce.banner || {};
   const bannerOn = bn.on && bn.text && (!bn.until || today <= bn.until);
   view(page([
     bannerOn ? h('div', { class: 'banner', role: 'status' }, ic('speakerphone'), h('span', {}, bn.text)) : null,
+    welcome,
     h('div', { class: 'hero2' }, hero, progress),
     recBox,
     sectionHead('Find your kind of play', 'Small puzzles. Big “oh, that makes sense” moments.', h('span', { class: 'chip-count' }, `${liveCount} games to explore`)),
@@ -363,6 +382,7 @@ async function renderIntro(id) {
     h('section', { class: 'hero', style: `--bg:${c.bg};--fg:${c.fg}` },
       h('div', { class: 'row gap top' }, petFigure(pet, 'explain', 'lg'), h('div', {}, h('h1', {}, g.title), h('p', {}, g.blurb))),
       h('div', { class: 'bubble' }, h('span', {}, `${petById(pet).name} says`), h('p', {}, tip)),
+      h('div', { class: 'rwd' }, ic('coins'), h('span', {}, g.earn || g.how.scoring)),
       h('div', { class: 'row gap wrap' }, h('button', { class: 'btn light inline', onclick: () => showHow(id) }, ic('question-mark'), 'How to play'), pool)),
     h('h2', { class: 'subhead' }, 'How do you want to play?'),
     h('p', { class: 'muted small' }, 'Solo is open today. More ways to play are on the way.'),
@@ -456,6 +476,7 @@ function renderResult(g, res, r, ms, left) {
       res.hints ? h('p', { class: 'small' }, `Hints used: ${res.hints}. Those items earned half AdCoins, and a round with hints can't be perfect.`) : null,
       h('div', { class: 'bar' }, h('div', { class: 'fill', style: `width:${r.after.pct}%` })),
       h('p', { class: 'muted small' }, r.leveled ? `Level up! You are now ${r.after.name}.` : `Level ${r.after.level}: ${r.after.name}`),
+      h('p', { class: 'small' }, h('b', {}, `Your ${CURRENCY}: ${balanceOf(p)}.`), ' ', coinGoal(), ' ', h('a', { class: 'more', href: '#/coins' }, `See your ${CURRENCY} \u2192`)),
       pool ? h('p', { class: 'muted small' }, pool) : null),
     h('div', { class: 'stack' },
       h('a', { class: 'btn', href: `#/play/${g.id}`, onclick: () => { if (location.hash === `#/play/${g.id}`) setTimeout(route, 0); } }, 'Play again'),
@@ -599,7 +620,7 @@ async function play(id) {
     if (!items.length) { fill(box, h('p', {}, 'No puzzles are available for this game right now.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); return; }
     timer.start();
     if (sh.clock) S.clock = setInterval(() => { sh.clock.querySelector('.ct').textContent = fmtTime(timer.ms()); }, 500);
-    const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), adsOn: () => !adFreeActive(), hostPet, shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
+    const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), skipAd, hostPet, shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
     const res = ['mission', 'tf', 'mcq'].includes(g.kind) ? await runQuiz(box, items, ctx)
       : await ({ flow: runFlow, match: runMatch, sort: runSort, cross: runCross }[g.kind])(box, items[0], ctx);
     timer.stop(); sh.destroy();
@@ -661,30 +682,12 @@ function renderPets() {
 }
 
 function renderSettings() {
-  const p = S.profile, st = p.settings, e = eff();
+  const p = S.profile, st = p.settings;
   const toggle = (key, label, sub) => { const cb = h('input', { type: 'checkbox', id: `s-${key}`, checked: st[key] !== false && !!st[key], onchange: () => { st[key] = cb.checked; applyPrefs(); save(); } }); return h('label', { class: 'switch', for: `s-${key}` }, cb, h('span', {}, h('b', {}, label), h('small', {}, sub))); };
   const sizeSeg = h('div', { class: 'seg', role: 'radiogroup', 'aria-label': 'Text size' });
   const drawSize = () => fill(sizeSeg, TEXT_SIZES.map((t) => h('button', { class: `segb ${(st.textSize || 'standard') === t.id ? 'on' : ''}`, role: 'radio', 'aria-checked': String((st.textSize || 'standard') === t.id), onclick: () => { st.textSize = t.id; applyPrefs(); save(); drawSize(); } }, t.label)));
   drawSize();
-  const passBox = h('div', { class: 'passbox' });
-  const drawPass = () => {
-    const active = adFreeActive(), bal = balanceOf(p);
-    const until = new Date(p.adFreeUntil || 0).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
-    const can = bal >= e.adFreePrice;
-    fill(passBox,
-      h('div', { class: 'passrow' }, h('div', { class: 'grow' }, h('b', {}, active ? `Ad-free hints until ${until}` : `Ad-free pass: ${e.adFreeDays} days`),
-        h('div', { class: 'muted' }, active ? `Add ${e.adFreeDays} more days for ${e.adFreePrice} ${CURRENCY}.` : can ? `You have ${bal} ${CURRENCY}.` : `You have ${bal} ${CURRENCY}. You need ${e.adFreePrice - bal} more.`)),
-        h('button', { class: `btn ${can ? '' : 'off'}`, disabled: !can, onclick: () => {
-          const m = modal(h('div', { class: 'how' }, h('h2', {}, 'Buy the ad-free pass?'), h('p', { class: 'muted' }, `This spends ${e.adFreePrice} ${CURRENCY} for ${e.adFreeDays} days without the joke ad. Your level is not affected.`),
-            h('div', { class: 'center-row gapb' }, h('button', { class: 'btn ghost', onclick: () => m.close() }, 'Not now'), h('button', { class: 'btn', onclick: () => {
-              if (balanceOf(p) < e.adFreePrice) { m.close(); return; }
-              p.spent = (p.spent || 0) + e.adFreePrice; p.adFreeUntil = Math.max(Date.now(), p.adFreeUntil || 0) + e.adFreeDays * 864e5;
-              save(); m.close(); toast('Ad-free hints are on.'); renderSettings();
-            } }, `Buy for ${e.adFreePrice}`))), { label: 'Buy the ad-free pass' });
-        } }, active ? `Add ${e.adFreeDays} days` : `Buy for ${e.adFreePrice}`)));
-  };
-  drawPass();
-  const nick = h('input', { id: 'nick', class: 'inp', maxlength: 20, value: p.nickname || '', placeholder: p.name || 'Your name', autocomplete: 'off' });
+  const stock = p.adHints || 0;
   view(page(h('div', { class: 'stage' },
     h('a', { class: 'back', href: '#/home' }, ic('arrow-left'), 'Home'), h('h1', {}, 'Settings'),
     h('p', { class: 'muted lede' }, 'Make AdVenture feel right for you.'),
@@ -693,12 +696,14 @@ function renderSettings() {
       toggle('liveTimer', 'Show a timer while playing', 'Your time always shows on the results screen.'),
       toggle('motion', 'Animations', 'Pet movement, confetti and the logo animation.')),
     h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Text size'), h('p', { class: 'muted', style: 'margin:2px 0 10px' }, 'Changes the question and answer text everywhere.'), sizeSeg),
-    h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Ad-free hints'), h('p', { class: 'muted', style: 'margin:2px 0 10px' }, 'Hints play a short joke ad first. Spend AdCoins to skip it for a while.'), passBox,
-      h('p', { class: 'muted', style: 'margin-top:8px' }, 'Your level is based on everything you have earned, so spending never lowers it.')),
-    h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Your name in greetings'), h('label', { for: 'nick' }, 'Display name'), nick,
-      h('p', { class: 'muted', style: 'margin:6px 0 10px' }, `Only used in "Good morning, ${greetName()}". Reports and leaderboards use your Google account name.`),
-      h('button', { class: 'btn', onclick: () => { p.nickname = nick.value.trim(); save(); toast('Name saved.'); renderSettings(); } }, 'Save name')),
-    h('p', { class: 'muted center', style: 'text-align:center' }, `R&D AdVenture \u00B7 version ${CONFIG.APP_VERSION}`)), { narrow: true }));
+    h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Ad-free hints'),
+      h('p', { class: 'muted', style: 'margin:2px 0 8px' }, adFreeActive() ? `Your ad-free pass is on until ${untilText(p.adFreeUntil)}.` : `Hints play a short joke ad first. You have ${stock} ad-free ${stock === 1 ? 'hint' : 'hints'} saved.`),
+      toggle('useAdHints', 'Use my ad-free hints automatically', 'When you tap Hint, a saved ad-free hint skips the joke ad. Turn this off to keep them for later.'),
+      h('p', { style: 'margin:8px 0 0' }, h('a', { class: 'more', href: '#/coins' }, `Buy ad-free hints and passes in My ${CURRENCY} →`))),
+    h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Your name'),
+      h('p', { class: 'muted', style: 'margin:2px 0 8px' }, 'Your nickname, name and email are in My profile.'),
+      h('a', { class: 'btn ghost inline', href: '#/profile' }, ic('user-circle'), 'Open My profile')),
+    h('p', { class: 'muted center', style: 'text-align:center' }, `R&D AdVenture · version ${CONFIG.APP_VERSION}`)), { narrow: true }));
 }
 
 function renderHelp() {
@@ -741,6 +746,200 @@ function renderNews() {
       minor ? h('p', { class: 'muted', style: 'margin-top:10px' }, minor) : null)), { narrow: true }));
 }
 
+/* ---------- AdCoins: wallet, shop, rules, profile, gifts ---------- */
+const logEntry = (n, what) => { const p = S.profile; p.log = [{ t: Date.now(), n, what }, ...(p.log || [])].slice(0, 20); };
+const keepScroll = (fn) => { const y = window.scrollY; fn(); window.scrollTo(0, y); };
+const fmtDay = (t) => {
+  if (!t) return '';
+  const k = dateKey(new Date(t));
+  return k === dateKey() ? 'Today' : k === yesterdayKey() ? 'Yesterday' : new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+};
+const untilText = (t) => new Date(t || 0).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+
+/* A confirm step before anything is bought: price, balance after, and what you get. */
+function confirmBuy({ title, text, price, label }) {
+  return new Promise((resolve) => {
+    const m = modal(h('div', { class: 'how buy' }, h('h2', {}, title), h('p', { class: 'muted' }, text),
+      h('div', { class: 'buyrows' },
+        h('div', {}, h('span', {}, 'Price'), h('b', {}, `${price} ${CURRENCY}`)),
+        h('div', {}, h('span', {}, 'Balance after'), h('b', {}, `${balanceOf(S.profile) - price} ${CURRENCY}`))),
+      h('div', { class: 'center-row gapb' },
+        h('button', { class: 'btn ghost', onclick: () => { m.close(); resolve(false); } }, 'Not now'),
+        h('button', { class: 'btn', onclick: () => { m.close(); resolve(true); } }, label || `Buy for ${price}`))), { label: title });
+  });
+}
+const onCoinsPage = () => location.hash === '#/coins';
+
+async function buyAdHint() {
+  const p = S.profile, e = eff();
+  if (balanceOf(p) < e.adHintPrice) { toast(`You need ${e.adHintPrice - balanceOf(p)} more ${CURRENCY}.`); return; }
+  if ((p.adHints || 0) >= e.adHintMax) { toast(`You can keep up to ${e.adHintMax} ad-free hints.`); return; }
+  const ok = await confirmBuy({ title: 'Buy an ad-free hint?', text: `Your next hint skips the joke ad. You can keep up to ${e.adHintMax} at a time.`, price: e.adHintPrice });
+  if (!ok || balanceOf(p) < e.adHintPrice || (p.adHints || 0) >= e.adHintMax) return;
+  p.spent = (p.spent || 0) + e.adHintPrice; p.adHints = (p.adHints || 0) + 1;
+  logEntry(-e.adHintPrice, 'Bought an ad-free hint'); save(); toast('Ad-free hint added.');
+  if (onCoinsPage()) keepScroll(renderCoins);
+}
+async function buyPass() {
+  const p = S.profile, e = eff();
+  if (balanceOf(p) < e.adFreePrice) { toast(`You need ${e.adFreePrice - balanceOf(p)} more ${CURRENCY}.`); return; }
+  const ok = await confirmBuy({ title: 'Buy the ad-free pass?', text: `Hints skip the joke ad for ${e.adFreeDays} days. Your level is not affected.`, price: e.adFreePrice });
+  if (!ok || balanceOf(p) < e.adFreePrice) return;
+  p.spent = (p.spent || 0) + e.adFreePrice; p.adFreeUntil = Math.max(Date.now(), p.adFreeUntil || 0) + e.adFreeDays * 864e5;
+  logEntry(-e.adFreePrice, 'Bought the ad-free pass'); save(); toast('Ad-free hints are on.');
+  if (onCoinsPage()) keepScroll(renderCoins);
+}
+/* Called before every hint. True means "no joke ad this time". An ad-free pass wins; otherwise one saved ad-free hint is used. */
+function skipAd() {
+  const p = S.profile;
+  if (adFreeActive()) return true;
+  if (p.settings.useAdHints !== false && (p.adHints || 0) > 0) {
+    p.adHints -= 1; save(); toast(`Used 1 ad-free hint (${p.adHints} left)`); return true;
+  }
+  return false;
+}
+
+/* R&D Gifts: new gifts for this player are added to their AdCoins once, then remembered by id. */
+async function claimGifts() {
+  const p = S.profile;
+  let g;
+  try { g = await S.store.getGifts(S.user.uid); } catch { return null; }
+  const have = new Set(p.giftIds || []);
+  const fresh = ((g && g.list) || []).filter((x) => x && x.id && Number(x.n) > 0 && !have.has(x.id)).sort((a, b) => (a.at || 0) - (b.at || 0));
+  if (!fresh.length) return null;
+  const sum = fresh.reduce((a, x) => a + Number(x.n), 0);
+  p.coins += sum;
+  p.giftIds = [...(p.giftIds || []), ...fresh.map((x) => x.id)].slice(-200);
+  p.log = [...fresh.map((x) => ({ t: x.at || Date.now(), n: Number(x.n), what: `R&D Gift: ${x.note}`, gift: true })), ...(p.log || [])].sort((a, b) => b.t - a.t).slice(0, 20);
+  const b = checkBadges();
+  save();
+  return { sum, notes: fresh.map((x) => x.note).filter(Boolean), badges: b.fresh };
+}
+function showGift(g) {
+  const m = modal(h('div', { class: 'giftpop' },
+    h('span', { class: 'gi' }, ic('gift')),
+    h('div', {}, h('h2', {}, `You got an R&D Gift: +${g.sum} ${CURRENCY}`), g.notes.slice(0, 3).map((n) => h('p', { class: 'gnote' }, `“${n}”`)),
+      g.badges.length ? h('p', { class: 'gnote' }, `Badge unlocked: ${g.badges.map((b) => b.title).join(', ')}`) : null,
+      h('button', { class: 'btn', onclick: () => m.close() }, 'Lovely, thanks'))), { label: 'You got an R&D Gift' });
+}
+
+function renderCoins() {
+  const p = S.profile, e = eff(), bal = balanceOf(p), lv = levelInfo(p.coins), active = adFreeActive();
+  const stock = p.adHints || 0;
+  const canPass = bal >= e.adFreePrice, canHint = bal >= e.adHintPrice && stock < e.adHintMax;
+  const earn = (amt, tag, title, sub) => h('div', { class: 'earn' }, h('div', { class: 'amt' }, amt, h('small', {}, tag)), h('div', {}, h('b', {}, title), h('span', {}, sub)));
+  const goal = active
+    ? h('div', { class: 'goal' }, h('b', {}, `Your ad-free pass is on until ${untilText(p.adFreeUntil)}`), h('p', { class: 'muted small' }, 'Hints skip the joke ad. You can add more days below.'))
+    : h('div', { class: 'goal' }, h('b', {}, 'Your next goal: the ad-free pass'),
+      h('p', { class: 'muted small' }, canPass ? `Costs ${e.adFreePrice} ${CURRENCY}. You have enough.` : `${e.adFreePrice - bal} ${CURRENCY} to go.`),
+      h('div', { class: 'bar', role: 'progressbar', 'aria-label': 'Progress to the ad-free pass', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.min(100, Math.round((bal / e.adFreePrice) * 100))) }, h('div', { class: 'fill', style: `width:${Math.min(100, Math.round((bal / e.adFreePrice) * 100))}%` })));
+  const shopCard = ({ icon, title, text, price, note, btnId, btnText, ok, onBuy }) => h('div', { class: 'card2' },
+    h('div', { class: 'top' }, h('span', { class: 'big-ic' }, ic(icon)), h('b', {}, title)), h('p', {}, text),
+    h('span', { class: 'price' }, ic('coin'), String(price)), note ? h('small', { class: 'muted' }, note) : null,
+    h('button', { class: 'btn ghost inline', id: btnId, disabled: !ok, onclick: onBuy }, btnText));
+  const wantRow = (x) => {
+    const row = h('div', { class: 'want' });
+    const note = h('small', { class: 'muted' }, 'Tap again to undo');
+    const btn = h('button', { class: 'btn inline', onclick: () => { p.wants = p.wants || {}; if (p.wants[x.id]) delete p.wants[x.id]; else p.wants[x.id] = true; save(); paint(); } });
+    const paint = () => { const on = !!(p.wants || {})[x.id]; btn.className = `btn inline ${on ? 'want-on' : 'ghost'}`; btn.setAttribute('aria-pressed', String(on)); fill(btn, ic(on ? 'heart-filled' : 'heart'), on ? 'You want this' : 'I want this'); note.hidden = !on; };
+    row.append(btn, note); paint();
+    return row;
+  };
+  const soon = SHOP_SOON.filter((x) => !e.shopHidden.includes(x.id));
+  const activity = (p.log || []).length
+    ? (p.log || []).map((x) => h('div', { class: 'actrow' }, h('span', { class: `a ${x.gift ? 'gift' : x.n > 0 ? 'pos' : 'neg'}` }, `${x.n > 0 ? '+' : '−'}${Math.abs(x.n)}`), h('span', {}, x.what), h('small', {}, fmtDay(x.t))))
+    : [h('p', { class: 'muted small' }, 'Nothing yet. Your purchases and R&D Gifts will show here.')];
+  view(page(h('div', { class: 'stage' },
+    h('a', { class: 'back', href: '#/home' }, ic('arrow-left'), 'Home'), h('h1', {}, `My ${CURRENCY}`),
+    h('p', { class: 'muted lede' }, 'Play, learn, collect. AdCoins are the points you earn for learning AdTech, a nod to the ad revenue everyone here works with.'),
+    h('div', { class: 'wallet' }, h('span', { class: 'coin' }, ic('coins')),
+      h('div', {}, h('div', { class: 'bal' }, String(bal)), h('div', { class: 'bal-l' }, `${CURRENCY} you can spend`)),
+      h('div', { class: 'meta' }, h('div', {}, h('b', {}, String(p.coins)), 'earned in total'), h('div', {}, h('b', {}, String(p.spent || 0)), 'spent'), h('div', {}, h('b', {}, `Level ${lv.level}`), 'never drops'))),
+    goal,
+    h('h2', { class: 'subhead' }, 'Ways to earn'), h('p', { class: 'muted small' }, 'The more you play, the more you collect. New questions pay most.'),
+    h('div', { class: 'earnlist' },
+      earn('+10', 'each', 'A correct answer on a new question', '5 if you used a hint. Seen it before? It only counts if you beat your best replay.'),
+      earn('+20', 'bonus', 'A perfect round', 'Every answer right and no hints.'),
+      earn('+30', 'daily', 'Finish the daily quest', 'Three quick puzzles, once a day.'),
+      earn(`+${e.weekBonus}`, 'weekly', `Play on ${e.weekDays} different days in a week`, 'Monday to Sunday. See your weekly rhythm on the home page.'),
+      earn('+10–30', 'badges', 'Badges', 'First Steps, Flawless, On Fire, Pet Pals and All-Rounder each pay a one-time bonus.')),
+    h('h2', { class: 'subhead' }, 'Shop'), h('p', { class: 'muted small' }, 'Spending never lowers your level.'),
+    h('div', { class: 'shopgrid' },
+      shopCard({ icon: 'bulb', title: 'One ad-free hint', text: 'Skip the joke ad once. Your next hint uses it automatically.', price: e.adHintPrice,
+        note: stock >= e.adHintMax ? `You have ${stock}, the most you can keep.` : bal < e.adHintPrice ? `You have ${stock}. You need ${e.adHintPrice - bal} more ${CURRENCY}.` : `You have ${stock}. You can keep up to ${e.adHintMax}.`,
+        btnId: 'buy-hint', btnText: 'Buy', ok: canHint, onBuy: buyAdHint }),
+      shopCard({ icon: 'ad-off', title: 'Ad-free pass', text: `${e.adFreeDays} days of hints without the joke ad.`, price: e.adFreePrice,
+        note: active ? `On until ${untilText(p.adFreeUntil)}.` : bal < e.adFreePrice ? `You need ${e.adFreePrice - bal} more ${CURRENCY}.` : null,
+        btnId: 'buy-pass', btnText: active ? `Add ${e.adFreeDays} days` : 'Buy', ok: canPass, onBuy: buyPass }),
+      soon.map((x) => h('div', { class: 'card2 soon' }, h('div', { class: 'top' }, h('span', { class: 'big-ic' }, ic(x.icon)), h('b', {}, x.title)), h('p', {}, x.text), h('small', { class: 'muted' }, 'Coming soon'), wantRow(x)))),
+    soon.length ? h('p', { class: 'muted small' }, 'Tell us what to build next. It is a vote, not a promise.') : null,
+    h('h2', { class: 'subhead' }, 'Recent activity'), h('div', { class: 'card2 actlist' }, activity),
+    h('p', { style: 'margin-top:14px' }, h('a', { class: 'more', href: '#/guide' }, 'See all the rules →'))), { narrow: true }));
+}
+
+function renderGuide() {
+  const e = eff();
+  const row = (a, b) => h('tr', {}, h('td', {}, a), h('td', {}, b));
+  const table = (heads, rows) => h('div', { class: 'tsc' }, h('table', { class: 'rules' }, h('thead', {}, h('tr', {}, heads.map((t) => h('th', {}, t)))), h('tbody', {}, rows)));
+  const badgeLine = BADGES.filter((b) => b.coins).map((b) => `${b.title} +${b.coins}`).join(', ');
+  view(page(h('div', { class: 'stage' },
+    h('a', { class: 'back', href: '#/home' }, ic('arrow-left'), 'Home'), h('h1', {}, 'How AdVenture works'),
+    h('p', { class: 'muted lede' }, 'Short puzzles, a little every day. Here is the whole idea.'),
+    h('div', { class: 'flow' },
+      h('div', {}, h('span', { class: 'n' }, '1'), h('b', {}, 'Play'), h('p', {}, 'Pick a game. Each round takes about five minutes.')),
+      h('div', {}, h('span', { class: 'n' }, '2'), h('b', {}, `Earn ${CURRENCY}`), h('p', {}, 'Right answers pay. New questions pay most.')),
+      h('div', {}, h('span', { class: 'n' }, '3'), h('b', {}, 'Grow'), h('p', {}, `Level up, collect badges, spend ${CURRENCY} in the shop.`))),
+    h('h2', { class: 'subhead' }, `Earning ${CURRENCY}`),
+    table(['What you do', 'You get'], [
+      row('Correct answer on a new question', '10'), row('Correct answer with a hint', '5'), row('Perfect round (all right, no hints)', '+20'),
+      row('Finish the daily quest (once a day)', '+30'), row(`Play on ${e.weekDays} different days in a Monday to Sunday week`, `+${e.weekBonus}`),
+      row('A question you have seen before', 'only if you beat your best replay'), row('Badges (one time each)', badgeLine)]),
+    h('p', { class: 'muted small' }, 'You will not see a question again until you have seen them all.'),
+    h('h2', { class: 'subhead' }, 'Levels'), h('p', { class: 'muted small' }, `Your level comes from every ${CURRENCY} you have earned. Spending never lowers it.`),
+    table(['Level', 'Name', `${CURRENCY} earned`], LEVELS.map((l, i) => h('tr', {}, h('td', {}, String(i + 1)), h('td', {}, l.n), h('td', {}, String(l.t))))),
+    h('p', { class: 'muted small' }, 'Each game also has its own skill level, from 1 to 5, based on your correct answers in that game.'),
+    h('h2', { class: 'subhead' }, 'Hints'),
+    table(['Game', 'Hints'], [
+      row('Quiz games (Myth or fact, Acronym decoder, Odd one out, daily quest)', '1 per question'), row('Stack sorter', `${HINTS['stack-sorter'].perRound} per round, once per card`),
+      row('Ad-flow builder', `${HINTS['ad-flow-builder'].perRound} per puzzle, after your first wrong check`), row('Crossword', `${HINTS.crossword.perRound} per puzzle, one per word`), row('Jargon match', `${HINTS['jargon-match'].perRound} per puzzle`)]),
+    h('p', { class: 'muted small' }, 'A hinted answer earns half, and a round with a hint cannot be perfect. Every hint starts with a short joke ad, unless you have an ad-free pass or an ad-free hint.'),
+    h('h2', { class: 'subhead' }, 'Shop'),
+    table(['Item', 'Price'], [row('One ad-free hint (your next hint skips the ad)', `${e.adHintPrice} ${CURRENCY}`), row(`Ad-free pass (${e.adFreeDays} days)`, `${e.adFreePrice} ${CURRENCY}`)]),
+    h('h2', { class: 'subhead' }, 'Streaks, weekly rhythm and badges'),
+    h('p', { class: 'muted' }, `A streak counts every day you finish a round. The weekly rhythm counts different days in a Monday to Sunday week. There are ${BADGES.length} badges to collect. The floor goal adds up everyone's rounds, with no names.`),
+    h('h2', { class: 'subhead' }, 'Game by game'), h('p', { class: 'muted small' }, 'Tap a game to read how it works.'),
+    h('div', { class: 'gstats' }, GAMES.filter((g) => g.live).map((g) => h('button', { class: 'gs gbtn2', onclick: () => showHow(g.id) }, h('span', { class: 'gic' }, ic(g.icon)), h('b', {}, g.title), h('span', { class: 'muted' }, g.tag)))),
+    h('h2', { class: 'subhead' }, 'Who can see what'),
+    h('div', { class: 'priv' }, ic('shield-lock'), h('div', {}, h('b', {}, 'Your scores are not a leaderboard'),
+      h('p', {}, 'Teammates only see the floor total, with no names. Admins, the managers of this tool, can see names, levels and scores so they can help the team learn. Your nickname is only used to greet you.')))), { narrow: true }));
+}
+
+function renderProfile() {
+  const p = S.profile, lv = levelInfo(p.coins), comp = petById(p.companion);
+  const google = p.fullName || S.user.fullName || p.name || '';
+  const nick = h('input', { id: 'nick', class: 'inp', maxlength: 20, value: p.nickname || '', placeholder: google.split(' ')[0] || 'Your nickname', autocomplete: 'off', 'aria-describedby': 'nick-prev' });
+  const prev = h('p', { class: 'prev', id: 'nick-prev' });
+  const drawPrev = () => { prev.textContent = `Preview: “Hey ${nick.value.trim() || p.name || S.user.name}, ready for an aha?”`; };
+  nick.addEventListener('input', drawPrev); drawPrev();
+  const lock = h('span', { class: 'lock' }, ic('lock'), 'From your Google account');
+  const since = p.firstSeen ? new Date(p.firstSeen).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+  view(page(h('div', { class: 'stage' },
+    h('a', { class: 'back', href: '#/home' }, ic('arrow-left'), 'Home'), h('h1', {}, 'My profile'),
+    h('div', { class: 'pf' },
+      h('div', { class: 'pf-top' }, h('div', { class: 'pf-av', 'aria-hidden': 'true' }, initialsOf(S.user)),
+        h('div', {}, h('div', { class: 'pf-name' }, greetName()), h('div', { class: 'muted' }, `Level ${lv.level} · ${lv.name}${since ? ` · playing since ${since}` : ''}`))),
+      h('div', { class: 'pf-row' }, h('label', { class: 'lab', for: 'nick' }, 'Nickname'),
+        h('div', { class: 'val' }, nick, h('button', { class: 'btn inline', id: 'save-nick', onclick: () => { p.nickname = nick.value.trim(); save(); toast('Nickname saved.'); keepScroll(renderProfile); } }, 'Save'), prev)),
+      h('div', { class: 'pf-row' }, h('span', { class: 'lab' }, 'Name'), h('div', { class: 'val' }, h('span', { id: 'pf-name' }, google || '–'), lock)),
+      h('div', { class: 'pf-row' }, h('span', { class: 'lab' }, 'Email'), h('div', { class: 'val' }, h('span', { id: 'pf-email' }, S.user.email || p.email || '–'), lock.cloneNode(true))),
+      h('div', { class: 'pf-row' }, h('span', { class: 'lab' }, 'Companion'), h('div', { class: 'val' }, petFigure(p.companion, 'hello', 'xs'), h('span', {}, `${comp.name} the ${comp.species}`), h('a', { class: 'more', href: '#/pets' }, 'Change'))),
+      h('div', { class: 'pf-row' }, h('span', { class: 'lab' }, 'Where your name shows'),
+        h('div', { class: 'val plain-v' }, 'Your nickname greets you on the home page. Reports and feedback use your Google name. Admins can see your name and scores. Teammates cannot.'))),
+    h('div', { class: 'center-row' }, h('button', { class: 'btn ghost', onclick: () => { try { sessionStorage.removeItem('rda_sess'); } catch { /* ignore */ } S.store.signOut(onUser); } }, ic('logout'), 'Sign out'))), { narrow: true }));
+}
+
+const coinGoal = () => (adFreeActive() ? 'Your ad-free pass is on.' : balanceOf(S.profile) >= eff().adFreePrice ? `You can buy the ad-free pass (${eff().adFreePrice}).` : `${eff().adFreePrice - balanceOf(S.profile)} to go for the ad-free pass.`);
+
 /* ---------- routing and auth ---------- */
 function route() {
   const hash = location.hash.replace(/^#/, '') || '/home';
@@ -755,6 +954,9 @@ function route() {
   if (a === 'card') return renderCard();
   if (a === 'pets') return renderPets();
   if (a === 'settings') return renderSettings();
+  if (a === 'coins') return renderCoins();
+  if (a === 'guide') return renderGuide();
+  if (a === 'profile') return renderProfile();
   if (a === 'help') return renderHelp();
   if (a === 'new') return renderNews();
   if (a === 'admin') return adminView(S, { page: (kids) => page(kids, { cls: 'adminpage' }), view, go, eff, setCounts: (r, f) => { S.reportCount = r; S.feedbackCount = f; } }, b || 'insights');
@@ -765,6 +967,7 @@ const go = (p) => { location.hash = '#' + p; };
 async function onUser(u, msg) {
   S.loginMsg = msg || '';
   if (!u) { S.user = null; S.profile = null; S.admin = false; return renderLogin(); }
+  let gift = null;
   try {
     S.user = u;
     S.profile = await S.store.loadProfile(u);
@@ -783,6 +986,7 @@ async function onUser(u, msg) {
     try { fresh = !sessionStorage.getItem('rda_sess'); sessionStorage.setItem('rda_sess', '1'); } catch { /* storage blocked */ }
     if (fresh) p.signIns = (p.signIns || 0) + 1;
     p.lastSeen = Date.now();
+    gift = await claimGifts();
     S.store.saveProfile(u, p).catch(() => {});
     applyPrefs();
     startPetPreload(S.profile.companion);
@@ -792,6 +996,7 @@ async function onUser(u, msg) {
     return renderLogin();
   }
   route();
+  if (gift) showGift(gift);
 }
 
 /* Pet images load in order of need: the sign-in pet first (the page waits up to 2 seconds for it), then the tour and
@@ -810,14 +1015,15 @@ export async function boot() {
   const petsReady = startPetPreload(null);
   S.store = await createStore();
   window.addEventListener('hashchange', route);
-  // Close the profile menu on an outside click or Escape, and tell screen readers it is closed.
-  const closeMenus = (refocus) => document.querySelectorAll('.menu').forEach((m) => {
-    if (m.hidden) return;
-    m.hidden = true;
-    const av = m.parentElement && m.parentElement.querySelector('.avatar');
-    if (av) { av.setAttribute('aria-expanded', 'false'); if (refocus && m.contains(document.activeElement)) av.focus(); }
+  // Close the menu on an outside click or Escape, and tell screen readers it is closed.
+  const closeMenus = (refocus) => document.querySelectorAll('.menu:not([hidden])').forEach((mn) => {
+    mn.hidden = true;
+    const wrap = mn.parentElement, av = wrap && wrap.querySelector('.avatar'), sc = wrap && wrap.querySelector('.scrim');
+    if (sc) sc.classList.remove('on');
+    document.body.classList.remove('noscroll');
+    if (av) { av.setAttribute('aria-expanded', 'false'); av.setAttribute('aria-label', 'Open your menu'); if (refocus && mn.contains(document.activeElement)) av.focus(); }
   });
-  document.addEventListener('click', () => closeMenus(false));
+  document.addEventListener('click', (e) => { if (!e.target.closest('.menu')) closeMenus(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenus(true); });
   await petsReady; // at most 2 seconds, so the sign-in pet is already there when the page appears
   await S.store.init(onUser);

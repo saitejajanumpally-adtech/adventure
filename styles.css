@@ -59,12 +59,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 .avwrap{position:relative}
 .avatar{display:flex;align-items:center;gap:2px;min-height:48px;background:#fff;border:2px solid var(--brand);border-radius:28px;padding:3px 10px 3px 3px;color:var(--brand);cursor:pointer}
 .avatar .ini{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--line);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
-.menu{position:absolute;right:0;top:56px;width:260px;width:min(260px,calc(100vw - 24px));background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 6px 18px rgba(38,33,92,.14)}
-.menu a,.menu button{display:flex;align-items:center;gap:10px;min-height:44px;padding:10px 12px;border-radius:10px;text-decoration:none;background:none;border:0;width:100%;cursor:pointer;font-size:15px;text-align:left}
-.menu a:hover,.menu button:hover{background:var(--bg)}
-.menu i{color:var(--brand);font-size:19px}
-.menu-head{padding:8px 12px 10px;border-bottom:1px solid var(--bg);margin-bottom:4px;display:flex;flex-direction:column}
-.menu-head span{font-size:12px;color:var(--soft)}
 .badge{background:#A32D2D;color:#fff;border-radius:10px;font-size:11px;padding:0 7px;margin-left:auto;font-weight:700}
 
 /* layout */
@@ -492,8 +486,6 @@ textarea.inp{font-family:inherit;font-size:15px}
   .qhead{margin-right:0}.kbtip{display:none}
   .playgrid>*,.qcard{min-width:0}.fb-actions{flex-wrap:wrap}
 }
-.menu{max-width:calc(100vw - 16px)}
-@media (max-width:340px){.avwrap{position:static}.menu{left:8px;right:8px;width:auto;max-width:none;top:100%}}
 
 /* ===== design polish (home, play, scorecard) ===== */
 .eyebrow{font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#3C3489;margin:0}
@@ -637,3 +629,141 @@ h2.subhead{font-size:20px;margin:24px 0 4px}
   .homepage .extras{order:7}
   .homepage .demo{order:8}
 }
+
+/* ===== batch 2: menu, AdCoins, rules, profile, gifts ===== */
+.pill.c{text-decoration:none;cursor:pointer}
+.pill.c .pl{font-weight:600}
+@media (max-width:560px){.pill.c .pl{display:none}}
+.avatar{gap:8px;padding:3px 12px 3px 4px;font:inherit;font-weight:700;color:var(--ink)}
+.avatar .an{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.avatar .chev{font-size:18px;color:var(--brand)}
+.avatar .mi-ic,.avatar .menuw{display:none}
+.menu{position:absolute;right:0;top:58px;width:340px;max-width:calc(100vw - 16px);max-height:calc(100vh - 80px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 34px rgba(38,33,92,.22);padding:8px;z-index:50}
+.menu .who{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:12px;margin-bottom:6px}
+.menu .who .big{width:48px;height:48px;border-radius:50%;background:#fff;color:var(--brand);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.menu .who b{display:block;font-family:var(--head);font-size:16px;line-height:1.15}
+.menu .who small{display:block;color:var(--soft);font-size:12px;overflow:hidden;text-overflow:ellipsis}
+.menu .who>div{min-width:0}
+.chips2{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chips2 span{background:#fff;border-radius:12px;padding:2px 9px;font-size:12px;font-weight:700;display:inline-flex;gap:4px;align-items:center}
+.mg{padding:6px 6px 2px}
+.mg>h4{margin:6px 8px 4px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--soft);font-weight:800}
+.mi2{display:flex;align-items:center;gap:12px;min-height:46px;padding:8px 10px;border-radius:12px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:600;width:100%;background:none;border:0;cursor:pointer;text-align:left;font-family:inherit}
+.mi2:hover{background:var(--bg)}
+.mi2 .ic{width:32px;height:32px;border-radius:10px;background:var(--bg);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.mi2 em{margin-left:auto;font-style:normal;font-size:12px;font-weight:700;color:var(--soft)}
+.mi2 .badge{margin-left:auto}
+.mi2.out{color:#8a1f1f}.mi2.out .ic{background:#fbeaea;color:#a32d2d}
+.mdiv{height:1px;background:var(--bg);margin:6px 8px}
+.scrim{display:none}
+@media (max-width:700px){
+  .avatar .an,.avatar .ini,.avatar .chev{display:none}
+  .avatar .mi-ic{display:inline-block;font-size:20px;color:var(--brand)}
+  .avatar .menuw{display:inline;font-size:14px;font-weight:700}
+  .avatar{padding:0 14px;min-height:46px;gap:6px}
+  .menu{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;max-width:none;max-height:82vh;border-radius:26px 26px 0 0;padding:6px 10px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(38,33,92,.35);z-index:70}
+  .menu::before{content:'';display:block;width:44px;height:5px;border-radius:3px;background:var(--line);margin:6px auto 10px}
+  .scrim.on{display:block;position:fixed;inset:0;background:rgba(38,33,92,.45);z-index:60}
+  body.noscroll{overflow:hidden}
+}
+.avatar .avdot{top:4px;right:6px}
+.more{font-weight:700;color:var(--brand)}
+
+/* My AdCoins */
+.wallet{background:linear-gradient(135deg,#FAC775,#F5B352);color:#412402;border-radius:26px;padding:20px 22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.wallet .coin{width:64px;height:64px;border-radius:50%;background:#fff;color:#B7791F;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 4px 12px rgba(65,36,2,.2)}
+.wallet .bal{font-family:var(--head);font-size:clamp(34px,6vw,48px);font-weight:800;line-height:1}
+.wallet .bal-l{font-weight:700}
+.wallet .meta{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;font-weight:600;margin-left:auto}
+.wallet .meta div{text-align:center}.wallet .meta b{display:block;font-family:var(--head);font-size:20px}
+.goal{background:#fff;border-radius:18px;padding:14px 16px;margin-top:12px}
+.goal .bar{margin-top:8px;height:10px;background:var(--line)}
+.goal p{margin:2px 0 0}
+.earnlist{display:grid;gap:8px;margin-top:10px}
+.earn{display:flex;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:12px 14px}
+.earn .amt{min-width:72px;text-align:center;background:#FFF4E0;color:#6B3D00;border-radius:12px;padding:8px 6px;font-weight:800;font-family:var(--head);font-size:18px;line-height:1.1}
+.earn .amt small{display:block;font-size:12px;font-weight:700;font-family:var(--body)}
+.earn b{display:block;font-size:15px}.earn span{font-size:13px;color:var(--soft)}
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
+.card2{background:#fff;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.card2 .top{display:flex;align-items:center;gap:10px}
+.card2 .big-ic{width:44px;height:44px;border-radius:14px;background:var(--bg);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.card2 b{font-size:16px}.card2>p{font-size:14px;color:var(--soft);margin:0}
+.card2 .price{font-weight:800;font-family:var(--head);font-size:18px;display:inline-flex;gap:4px;align-items:center}
+.card2 .btn{margin-top:6px}
+.card2.soon{background:#F1EFE8;border:1.5px dashed #B4B2A9}
+.card2.soon .big-ic{background:#E7E5DD;color:#5F5E5A}
+.want{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.btn.want-on{background:#E8F1EA;color:#1F5A43;border:1.5px solid #2F7D5B}
+.card2.actlist{align-items:stretch;gap:0;padding:8px 14px}
+.actrow{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--bg);font-size:14px}
+.actrow:first-child{border-top:0}
+.actrow .a{min-width:64px;text-align:center;font-weight:800;border-radius:10px;padding:4px 6px}
+.a.pos{background:#E8F1EA;color:#1F5A43}.a.neg{background:#FBEAEA;color:#8a1f1f}.a.gift{background:#FAC775;color:#412402}
+.actrow small{color:var(--soft);margin-left:auto;white-space:nowrap}
+
+/* How AdVenture works */
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:640px){.flow{grid-template-columns:1fr}}
+.flow>div{background:#fff;border-radius:18px;padding:16px;text-align:center}
+.flow .n{width:36px;height:36px;border-radius:50%;background:var(--brand);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:6px}
+.flow b{display:block;font-family:var(--head);font-size:18px}.flow p{font-size:14px;color:var(--soft);margin:2px 0 0}
+.tsc{overflow-x:auto;border-radius:16px;margin-top:8px}
+table.rules{width:100%;border-collapse:collapse;background:#fff;font-size:14px}
+table.rules th,table.rules td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bg);vertical-align:top}
+table.rules th{background:#F7F6FE;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--soft)}
+table.rules td:last-child{font-weight:700}
+.gs.gbtn2{border:0;cursor:pointer;font:inherit;color:var(--ink)}
+.gs.gbtn2:hover{background:#F7F6FE}
+.priv{background:#E8F1EA;border-radius:18px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;color:#1F3D2E;margin-top:8px}
+.priv>i{font-size:24px;color:#2F7D5B}
+.priv b{display:block}.priv p{font-size:14px;margin:2px 0 0}
+
+/* My profile */
+.pf{background:#fff;border-radius:22px;padding:18px;margin-top:8px}
+.pf-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:12px}
+.pf-av{width:84px;height:84px;border-radius:50%;background:var(--line);color:var(--brand);font-family:var(--head);font-weight:800;font-size:30px;display:flex;align-items:center;justify-content:center;border:3px solid var(--brand)}
+.pf-name{font-family:var(--head);font-size:22px;font-weight:800}
+.pf-row{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--bg);flex-wrap:wrap}
+.pf-row .lab{width:150px;font-size:13px;color:var(--soft);font-weight:700;margin:0}
+.pf-row .val{flex:1;min-width:180px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pf-row .val.plain-v{font-weight:500;color:var(--soft)}
+.pf-row .inp{max-width:260px}
+.lock{font-size:12px;color:var(--soft);font-weight:600;display:inline-flex;gap:4px;align-items:center;background:var(--bg);border-radius:10px;padding:2px 9px}
+.prev{font-size:13px;color:var(--soft);width:100%;margin:0}
+
+/* AdCoins at the moments that matter */
+.rwd{display:flex;gap:10px;align-items:center;background:#FFF4E0;color:#6B3D00;border-radius:16px;padding:10px 14px;font-size:14px;font-weight:600}
+.rwd>i{font-size:22px;color:#B7791F;flex-shrink:0}
+.fb-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.pop{display:inline-flex;align-items:center;gap:6px;background:#FFF4E0;color:#6B3D00;border-radius:14px;padding:4px 12px;font-weight:800;font-size:14px}
+.pop.quiet{background:var(--bg);color:var(--soft);font-weight:700}
+.welcome{display:flex;gap:12px;align-items:flex-start;background:#FFF4E0;color:#6B3D00;border-radius:20px;padding:14px 16px;margin-bottom:12px}
+.welcome>i{font-size:24px;color:#B7791F;margin-top:2px}
+.welcome p{margin:2px 0 6px;font-size:14px}
+.welcome .linkbtn{color:#6B3D00;text-decoration:underline}
+.buy .buyrows{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.buy .buyrows div{background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.buy .buyrows span{display:block;font-size:12px;color:var(--soft)}
+.buy .buyrows b{font-size:18px;font-family:var(--head)}
+.giftpop{display:flex;gap:14px;align-items:center}
+.giftpop .gi{width:56px;height:56px;border-radius:50%;background:#FAC775;display:flex;align-items:center;justify-content:center;font-size:30px;color:#412402;flex-shrink:0}
+.giftpop h2{font-size:20px}
+.giftpop .gnote{font-size:14px;margin:4px 0;color:var(--soft)}
+.giftpop .btn{margin-top:8px}
+.homepage .welcome{order:0}
+
+/* admin: wishlist votes and R&D Gifts */
+.wbar{display:grid;grid-template-columns:140px 1fr 90px;gap:10px;align-items:center;font-size:14px;padding:5px 0}
+.wbar .tr{height:14px;border-radius:7px;background:var(--line);overflow:hidden}.wbar .tr i{display:block;height:100%;background:var(--brand);border-radius:7px}
+.wbar span:last-child{text-align:right;font-weight:700}
+@media (max-width:560px){.wbar{grid-template-columns:100px 1fr 74px}}
+.giftform label{margin-top:12px}
+.giftform .who2{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+.giftform .who2 label{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-size:14px;margin:0;min-height:44px}
+.giftform input[type=radio]{width:20px;height:20px;accent-color:var(--brand);margin:0}
+.giftform .acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+/* tap targets: the coin counter is a link now, and the profile's Change link sits in a row of its own */
+.pill.c{min-height:44px}
+.pf-row .more{display:inline-flex;align-items:center;min-height:44px;padding:0 8px}
+.earn .amt{white-space:nowrap;min-width:78px}

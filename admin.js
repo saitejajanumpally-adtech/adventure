@@ -1,5 +1,5 @@
-import { GAMES, LEVELS, GAME_LEVELS, BADGES, PETS } from './data.js';
-import { h, ic, fill, toast } from './ui.js';
+import { GAMES, LEVELS, GAME_LEVELS, BADGES, PETS, CURRENCY, SHOP_SOON } from './data.js';
+import { h, ic, fill, toast, modal } from './ui.js';
 import { validatePack, parseJson, buildPrompt, normalizeItem } from './validate.js';
 import { dateKey, weekKey } from './util.js';
 import { resetProfile, qkey } from './store.js';
@@ -185,6 +185,8 @@ function insightsTab(S) {
     fill(body,
       h('div', { class: 'kpis' }, k(kpi.signedIn, 'People signed in'), k(kpi.totalSignIns, 'Total sign-ins'), k(kpi.activeRange, 'Active in the range'), k(kpi.active30, 'Active in the last 30 days'), k(kpi.neverPlayed, 'Signed in, never played')),
       h('p', { class: 'muted small' }, allTime ? 'All time uses each player\'s lifetime totals. Sign-ins are counted from the day tracking started.' : 'Ranges use daily activity, which is recorded from the day tracking started. Choose All time for lifetime totals.'),
+      h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'What players want'), h('p', { class: 'muted small' }, 'Votes from the "I want this" buttons in the shop. It is a vote, not a promise.'),
+        SHOP_SOON.map((x) => { const n = users.filter((u) => u.wants && u.wants[x.id]).length; return h('div', { class: 'wbar' }, h('span', {}, x.title), h('span', { class: 'tr', role: 'img', 'aria-label': `${n} of ${users.length} players` }, h('i', { style: `width:${users.length ? Math.round((n / users.length) * 100) : 0}%` })), h('span', {}, `${n} of ${users.length}`)); })),
       h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'By game'), h('p', { class: 'muted small' }, 'Rounds, not rankings. Level spread shows how many players are at level 1 to 5 in that game, by correct answers.'),
         tscroll(h('table', { class: 'tbl' }, h('thead', {}, h('tr', {}, ['Game', 'Players', 'Active in range', 'Rounds', 'Accuracy', 'Avg score', 'Perfect', 'Level spread'].map((t) => h('th', {}, t)))),
           h('tbody', {}, games.map((g) => h('tr', {}, h('td', {}, h('b', {}, g.title)), h('td', {}, g.players), h('td', {}, g.active), h('td', {}, g.rounds), h('td', {}, g.accuracy == null ? '\u2013' : `${g.accuracy}%`), h('td', {}, g.avgScore ?? '\u2013'), h('td', {}, g.perfect), h('td', {}, lvlBar(g.spread)))))))),
@@ -385,7 +387,48 @@ function reportsTab(S, H) {
 }
 
 /* ---------- People ---------- */
-function peopleTab(S) {
+/* ---------- R&D Gifts ---------- */
+function askConfirm(title, text, label) {
+  return new Promise((resolve) => {
+    const m = modal(h('div', { class: 'how' }, h('h2', {}, title), h('p', { class: 'muted' }, text),
+      h('div', { class: 'center-row gapb' }, h('button', { class: 'btn ghost', onclick: () => { m.close(); resolve(false); } }, 'Cancel'), h('button', { class: 'btn', id: 'confirm-go', onclick: () => { m.close(); resolve(true); } }, label))), { label: title });
+  });
+}
+function giftDialog(S, users, giftMax, done) {
+  const who1 = h('input', { type: 'radio', name: 'gwho', id: 'gw1', checked: true });
+  const whoAll = h('input', { type: 'radio', name: 'gwho', id: 'gw2' });
+  const sel = h('select', { id: 'gift-player' }, users.slice().sort((a, b) => nameOf(a).localeCompare(nameOf(b))).map((u) => h('option', { value: u.uid }, `${nameOf(u)}${u.email ? ` (${u.email})` : ''}`)));
+  const sync = () => { sel.disabled = whoAll.checked; };
+  who1.addEventListener('change', sync); whoAll.addEventListener('change', sync);
+  const amount = h('input', { id: 'gift-amount', class: 'inp', type: 'number', min: 1, max: giftMax, value: 50 });
+  const note = h('input', { id: 'gift-note', class: 'inp', maxlength: 80, placeholder: 'For example: Thanks for suggesting a great question!' });
+  const err = h('p', { class: 'err', role: 'alert' });
+  let m, busy = false;
+  const go = h('button', { class: 'btn inline', id: 'gift-go', onclick: async () => {
+    if (busy) return;
+    const n = Number(amount.value), msg = note.value.trim(), all = whoAll.checked;
+    if (!(Number.isInteger(n) && n >= 1 && n <= giftMax)) { err.textContent = `Enter a whole number from 1 to ${giftMax}.`; return; }
+    if (!msg) { err.textContent = 'Add a short message. The player will see it.'; return; }
+    const targets = all ? users : users.filter((u) => u.uid === sel.value);
+    if (!targets.length) { err.textContent = 'Choose a player.'; return; }
+    err.textContent = '';
+    if (all && !(await askConfirm(`Give ${n} ${CURRENCY} to everyone?`, `This gives ${n} ${CURRENCY} to ${targets.length} players (${(n * targets.length).toLocaleString()} in total). Each player sees your message. Continue?`, 'Give to everyone'))) return;
+    busy = true; go.disabled = true;
+    try {
+      const count = await S.store.sendGift(targets.map((u) => u.uid), n, msg, S.user.email, all ? `Everyone (${targets.length})` : nameOf(targets[0]));
+      m.close(); toast(`R&D Gift sent to ${count} ${count === 1 ? 'player' : 'players'}.`); done();
+    } catch (e) { console.error(e); err.textContent = 'Could not send. Check your admin access.'; busy = false; go.disabled = false; }
+  } }, ic('gift'), 'Give gift');
+  m = modal(h('div', { class: 'giftform' }, h('h2', {}, 'Give an R&D Gift'),
+    h('p', { class: 'muted small' }, `${CURRENCY} go straight to the player's balance and count towards their level. Players see it as "R&D Gift".`),
+    h('label', {}, 'Who'), h('div', { class: 'who2' }, h('label', { for: 'gw1' }, who1, 'One player'), h('label', { for: 'gw2' }, whoAll, `Everyone (${users.length} players)`)),
+    h('label', { for: 'gift-player' }, 'Player (for "One player")'), sel,
+    h('label', { for: 'gift-amount' }, `Amount (most you can give at once: ${giftMax})`), amount,
+    h('label', { for: 'gift-note' }, 'Message the player will see'), note, err,
+    h('div', { class: 'acts' }, h('button', { class: 'btn ghost inline', onclick: () => m.close() }, 'Cancel'), go)), { label: 'Give an R&D Gift' });
+}
+
+function peopleTab(S, H) {
   const body = h('div', {}, h('p', { class: 'muted' }, 'Loading…'));
   const domain = `@${CONFIG.ALLOWED_DOMAIN}`;
   async function load() {
@@ -409,6 +452,14 @@ function peopleTab(S) {
         f.length > 100 ? h('p', { class: 'muted small' }, `Showing the first 100 of ${f.length}. Use the search box.`) : null));
     };
     q.addEventListener('input', drawPlayers);
+    const histBody = h('div', {});
+    const loadHist = async () => {
+      try {
+        const list = await S.store.listGiftLog();
+        fill(histBody, list.length ? list.slice(0, 50).map((x) => h('div', { class: 'actrow' }, h('span', { class: 'a gift' }, `+${x.n}`), h('span', {}, `${x.label} \u00B7 \u201C${x.note}\u201D`), h('small', {}, `${niceDate(x.at)} \u00B7 ${x.by}`))) : h('p', { class: 'muted small' }, 'No gifts yet.'));
+      } catch { fill(histBody, h('p', { class: 'err small' }, 'Could not load the gift history.')); }
+    };
+    loadHist();
     fill(body,
       h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, `Admins (${admins.length})`), h('p', { class: 'muted small' }, 'Admins can see names, progress and scores, and change settings.'),
         tscroll(h('table', { class: 'tbl' }, h('thead', {}, h('tr', {}, ['Name', 'Email', ''].map((t) => h('th', {}, t)))),
@@ -422,7 +473,9 @@ function peopleTab(S) {
           err.textContent = '';
           try { await saveList([...admins, email]); toast('Admin added.'); } catch { err.textContent = 'Could not save. Check your admin access.'; }
         } }, 'Add admin')), err),
-      h('div', { class: 'card' }, h('div', { class: 'row wrap' }, h('h3', { style: 'margin:0' }, `Players (${users.length})`), h('div', { class: 'grow' }), q), table));
+      h('div', { class: 'card' }, h('div', { class: 'row wrap gap' }, h('h3', { style: 'margin:0' }, `Players (${users.length})`), h('div', { class: 'grow' }),
+        h('button', { class: 'btn inline', id: 'give-gift', onclick: () => giftDialog(S, users, H.eff().giftMax, loadHist) }, ic('gift'), 'Give an R&D Gift'), q), table),
+      h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Gift history'), h('p', { class: 'muted small' }, 'So there is always a record of who gave what.'), histBody));
     drawPlayers();
   }
   load();
@@ -481,6 +534,9 @@ function settingsTab(S, H) {
   const [fSk, iSk] = num('s-sk', 'Skip appears after (seconds)', e.adSkip);
   const [fPr, iPr] = num('s-pr', 'Ad-free pass price (AdCoins)', e.adFreePrice);
   const [fDy, iDy] = num('s-dy', 'Ad-free pass length (days)', e.adFreeDays);
+  const [fHp, iHp] = num('s-hp', 'One ad-free hint: price (AdCoins)', e.adHintPrice);
+  const [fHm, iHm] = num('s-hm', 'Most ad-free hints a player can keep', e.adHintMax);
+  const [fGm, iGm] = num('s-gm', 'Most AdCoins in one R&D Gift', e.giftMax);
   const feat = h('select', { id: 's-feat' }, h('option', { value: '' }, 'None (recommend automatically)'), LIVE_GAMES.filter((g) => g.kind !== 'mission').map((g) => h('option', { value: g.id }, g.title)));
   feat.value = e.featured;
   const hide = {};
@@ -489,18 +545,26 @@ function settingsTab(S, H) {
     hide[g.id] = b;
     return h('div', { class: 'sw tight' }, h('span', {}, g.title), b);
   });
+  const shopSw = {};
+  const shopToggles = SHOP_SOON.map((x) => {
+    const b = h('button', { class: `tg ${e.shopHidden.includes(x.id) ? '' : 'on'}`, role: 'switch', 'aria-checked': String(!e.shopHidden.includes(x.id)), 'aria-label': `Show ${x.title} in the shop`, onclick: () => { const on = b.classList.toggle('on'); b.setAttribute('aria-checked', String(on)); } });
+    shopSw[x.id] = b;
+    return h('div', { class: 'sw tight' }, h('span', {}, x.title), b);
+  });
   const err = h('p', { class: 'err', role: 'alert' });
   const save = async () => {
-    const v = { floorGoal: Number(iFloor.value), weekDays: Number(iWd.value), weekBonus: Number(iWb.value), adSeconds: Number(iAs.value), adSkip: Number(iSk.value), adFreePrice: Number(iPr.value), adFreeDays: Number(iDy.value) };
-    if (!(v.floorGoal >= 1 && v.weekDays >= 1 && v.weekDays <= 7 && v.weekBonus >= 0 && v.adSeconds >= 1 && v.adSkip >= 0 && v.adSkip <= v.adSeconds && v.adFreePrice >= 1 && v.adFreeDays >= 1)) { err.textContent = 'Check the numbers: weekly days must be 1 to 7, and the skip time cannot be longer than the ad.'; return; }
+    const v = { floorGoal: Number(iFloor.value), weekDays: Number(iWd.value), weekBonus: Number(iWb.value), adSeconds: Number(iAs.value), adSkip: Number(iSk.value), adFreePrice: Number(iPr.value), adFreeDays: Number(iDy.value), adHintPrice: Number(iHp.value), adHintMax: Number(iHm.value), giftMax: Number(iGm.value) };
+    if (!(v.floorGoal >= 1 && v.weekDays >= 1 && v.weekDays <= 7 && v.weekBonus >= 0 && v.adSeconds >= 1 && v.adSkip >= 0 && v.adSkip <= v.adSeconds && v.adFreePrice >= 1 && v.adFreeDays >= 1 && v.adHintPrice >= 1 && v.adHintMax >= 1 && v.giftMax >= 1)) { err.textContent = 'Check the numbers: weekly days must be 1 to 7, and the skip time cannot be longer than the ad.'; return; }
     err.textContent = '';
-    const obj = { ...cur, ...v, featured: feat.value, hidden: LIVE_GAMES.filter((g) => !hide[g.id].classList.contains('on')).map((g) => g.id) };
+    const obj = { ...cur, ...v, featured: feat.value, hidden: LIVE_GAMES.filter((g) => !hide[g.id].classList.contains('on')).map((g) => g.id), shopHidden: SHOP_SOON.filter((x) => !shopSw[x.id].classList.contains('on')).map((x) => x.id) };
     try { await S.store.saveSettings(obj); S.remote = obj; toast('Settings saved. People see them the next time they open the app.'); } catch { toast('Could not save. Check your admin access.'); }
   };
   return h('div', {}, h('h1', { style: 'margin-bottom:10px' }, 'Game settings'),
     h('div', { class: 'g2' },
-      h('div', {}, h('div', { class: 'card' }, h('p', { class: 'muted small' }, 'Changes apply the next time someone opens the app.'), h('div', { class: 'fgrid' }, fFloor, fWd, fWb, fAs, fSk, fPr, fDy, field('Featured game this week', feat)), err, h('button', { class: 'btn', onclick: save }, 'Save settings'))),
-      h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Show or hide a game'), h('p', { class: 'muted small' }, 'A hidden game shows as "Coming soon" for everyone. Press Save settings after changing it.'), toggles)));
+      h('div', {}, h('div', { class: 'card' }, h('p', { class: 'muted small' }, 'Changes apply the next time someone opens the app.'), h('div', { class: 'fgrid' }, fFloor, fWd, fWb, fAs, fSk, fPr, fDy, fHp, fHm, fGm, field('Featured game this week', feat)), err, h('button', { class: 'btn', onclick: save }, 'Save settings'))),
+      h('div', {},
+        h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Show or hide a game'), h('p', { class: 'muted small' }, 'A hidden game shows as "Coming soon" for everyone. Press Save settings after changing it.'), toggles),
+        h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Shop shelf'), h('p', { class: 'muted small' }, 'Coming-soon items players can vote for. Switch one off to hide it from the shop; its votes are kept. Press Save settings after changing it.'), shopToggles))));
 }
 
 /* ---------- Announcements ---------- */

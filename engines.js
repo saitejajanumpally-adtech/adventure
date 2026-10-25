@@ -21,10 +21,10 @@ export function makeTimer() {
   return t;
 }
 
-export function feedbackBox(ok, why, extra, label) {
+export function feedbackBox(ok, why, extra, label, badge) {
   return h('div', { class: `fb ${ok ? 'ok' : 'bad'}`, role: 'status' },
     hooks.companion ? h('div', { class: 'fb-pet' }, petFigure(hooks.companion, ok ? 'correct' : 'oops', 'sm')) : null,
-    h('div', { class: 'fb-body' }, h('b', {}, label || (ok ? 'Correct' : 'Not quite')), why ? h('p', {}, why) : null, extra));
+    h('div', { class: 'fb-body' }, h('div', { class: 'fb-head' }, h('b', {}, label || (ok ? 'Correct' : 'Not quite')), badge || null), why ? h('p', {}, why) : null, extra));
 }
 
 const REASONS = [['wrong', 'Wrong answer'], ['unclear', 'Unclear'], ['outdated', 'Outdated'], ['other', 'Other']];
@@ -42,7 +42,7 @@ function reportRow(it, ctx) {
 
 /* Plays the joke ad before a hint, unless the player has an ad-free pass. The clock pauses while it runs. */
 async function adBreak(ctx) {
-  if (!ctx.adsOn()) return;
+  if (ctx.skipAd()) return;
   ctx.timer.pause();
   try { await ctx.showAd(ctx.hostPet); } finally { ctx.timer.resume(); }
 }
@@ -78,7 +78,9 @@ function askOne(box, it, i, n, ctx) {
       right.classList.add('ok'); if (!ok) chosen.classList.add('bad');
       sh.coach.react(ok ? 'right' : 'wrong');
       const next = h('button', { class: 'btn', onclick: () => resolve({ ok, hinted }) }, i + 1 === n ? 'See results' : 'Next');
-      fill(fbHolder, feedbackBox(ok, it.why, h('div', { class: 'fb-actions' }, next, reportRow(it, ctx))));
+      const chip = !ok ? null : seenBefore === false ? h('span', { class: 'pop' }, ic('coin'), `+${hinted ? 5 : 10} AdCoins`)
+        : seenBefore ? h('span', { class: 'pop quiet', title: 'A question you have seen before only earns AdCoins if you beat your best replay.' }, 'Seen before') : null;
+      fill(fbHolder, feedbackBox(ok, it.why, h('div', { class: 'fb-actions' }, next, reportRow(it, ctx)), null, chip));
       next.focus();
     };
     const mkBtn = (k, label, cls, onPick) => h('button', { class: `opt ${cls}`.trim(), onclick: onPick }, h('span', { class: 'l', 'aria-hidden': 'true' }, letter(k)), h('span', { class: 'ot' }, label));

@@ -7,6 +7,15 @@ export const CATS = [
 
 export const CURRENCY = 'AdCoins';
 
+/* Shop. Admins can change these numbers in Game settings. */
+export const SHOP_DEFAULTS = { adHintPrice: 20, adHintMax: 10, giftMax: 500 };
+export const SHOP_SOON = [
+  { id: 'themes', title: 'Colour themes', icon: 'palette', text: 'Make AdVenture mint, sunset or midnight.' },
+  { id: 'shield', title: 'Streak shield', icon: 'shield-check', text: 'Miss one day without losing your streak.' },
+  { id: 'titles', title: 'Companion titles', icon: 'id-badge-2', text: 'Show a title such as Yield Hunter on your profile.' },
+  { id: 'costumes', title: 'Pet costumes', icon: 'hanger', text: 'Hats and scarves for your companion.' }
+];
+
 /* Pets. Images live in /pets as {id}-{mood}.webp (or .png). Moods without an image map to the closest real one (see ui.js). */
 export const PETS = [
   { id: 'penguin', name: 'Waddles', species: 'Penguin', emoji: '\u{1F427}', line: 'I slide along the ad path from page load to impression.' },
@@ -22,15 +31,15 @@ export const MOODS = ['hello', 'explain', 'celebrate', 'happy', 'think', 'correc
 
 const SCORE10 = '10 AdCoins for each correct answer. 20 more for a perfect round with no hints.';
 export const GAMES = [
-  { id: 'daily-warmup', cat: 'daily', title: 'Daily warm-up', tag: 'Start your day sharp', icon: 'sun', kind: 'mission', live: true, pet: 'rabbit',
+  { id: 'daily-warmup', cat: 'daily', earn: 'Up to 50 AdCoins a round, plus a 30 AdCoin bonus the first time each day.', title: 'Daily warm-up', tag: 'Start your day sharp', icon: 'sun', kind: 'mission', live: true, pet: 'rabbit',
     blurb: 'Three quick puzzles picked just for you each day.',
     how: { steps: ['Three questions appear, one at a time.', 'Answer each one. You see straight away if you were right, and why.', 'Finish all three to complete today\'s mission and earn a bonus.'],
       example: 'Question 1 might be a myth or fact about fill rate.', scoring: SCORE10 + ' Finishing the mission earns a 30 AdCoin bonus once a day.' } },
-  { id: 'myth-or-fact', cat: 'daily', title: 'Myth or fact', tag: 'Spot the myth', icon: 'bulb', kind: 'tf', live: true, size: 6, pet: 'cat',
+  { id: 'myth-or-fact', cat: 'daily', earn: 'Up to 80 AdCoins a round: 10 per right answer, +20 for a perfect round.', title: 'Myth or fact', tag: 'Spot the myth', icon: 'bulb', kind: 'tf', live: true, size: 6, pet: 'cat',
     blurb: 'Decide if each statement is true, then see why.',
     how: { steps: ['Read the statement.', 'Tap Myth if it is false, or Fact if it is true.', 'Read the explanation. That is where the learning happens.'],
       example: '"Ad requests and impressions are the same thing." The right answer is Myth.', scoring: SCORE10 } },
-  { id: 'acronym-decoder', cat: 'daily', title: 'Acronym decoder', tag: 'Crack the letters', icon: 'abc', kind: 'mcq', live: true, size: 6, pet: 'dog',
+  { id: 'acronym-decoder', cat: 'daily', earn: 'Up to 80 AdCoins a round: 10 per right answer, +20 for a perfect round.', title: 'Acronym decoder', tag: 'Crack the letters', icon: 'abc', kind: 'mcq', live: true, size: 6, pet: 'dog',
     blurb: 'CPM, SSP, VAST and friends: what do they stand for?',
     how: { steps: ['An acronym appears, like CPM.', 'Pick what it stands for from four choices.', 'Stuck? Tap Hint. It removes two wrong answers (after a short ad).'],
       example: '"What does SSP stand for?" The right answer is Supply-side platform.', scoring: SCORE10 + ' A question answered with a hint earns half.' } },
@@ -46,7 +55,7 @@ export const GAMES = [
     blurb: 'Solve AdTech clues in a small crossword.',
     how: { steps: ['Tap a clue from the list.', 'Type the answer and tap Check.', 'Letters appear in the grid when you are right.'],
       example: 'Clue: "Minimum acceptable price (5)". The answer is FLOOR.', scoring: '10 AdCoins for each word solved. 20 more if you solve every word.' } },
-  { id: 'odd-one-out', cat: 'concept', title: 'Odd one out', tag: 'Find the outlier', icon: 'search', kind: 'mcq', live: true, size: 6, pet: 'tiger',
+  { id: 'odd-one-out', cat: 'concept', earn: 'Up to 80 AdCoins a round: 10 per right answer, +20 for a perfect round.', title: 'Odd one out', tag: 'Find the outlier', icon: 'search', kind: 'mcq', live: true, size: 6, pet: 'tiger',
     blurb: 'Spot the one that does not belong.',
     how: { steps: ['Read the question.', 'Three options have something in common. One does not.', 'Tap the odd one out.'],
       example: 'CPM, CPC, CPA, CTR: CTR is a metric, the others are pricing models.', scoring: SCORE10 + ' A question answered with a hint earns half.' } },
@@ -104,6 +113,9 @@ export const TEXT_SIZES = [
 
 /* Shown in What's new until admins publish their own entries. */
 export const WHATS_NEW = [
+  { id: 'v5-adcoins', type: 'major', title: 'My AdCoins and the shop', text: 'See how to earn and spend AdCoins, and buy ad-free hints. Find it in your menu.', date: '2026-10-26' },
+  { id: 'v5-menu', type: 'major', title: 'A clearer menu and My profile', text: 'Your menu is grouped now, and you can change your nickname in My profile.', date: '2026-10-26' },
+  { id: 'v5-home', type: 'major', title: 'A fresher home page', text: 'Every section explains itself, and the rules are in How AdVenture works.', date: '2026-10-26' },
   { id: 'v4-hints', type: 'major', title: 'A hint in every game', text: 'Puzzle games now have hints too, with a limited number per round.', date: '2026-10-26' },
   { id: 'v4-pets', type: 'major', title: 'Pets and Settings are separate', text: 'Choose your companion on My pets. Settings is for settings.', date: '2026-10-26' },
   { id: 'v4-text', type: 'major', title: 'Text size', text: 'Pick Compact, Standard or Comfortable in Settings.', date: '2026-10-26' },
@@ -231,8 +243,9 @@ export const TOUR = [
   { pet: 'cat', title: 'Pick a game', text: 'The games are grouped by what they train. Greyed-out ones are coming soon, so keep an eye out.' },
   { pet: 'dog', title: 'Need help?', text: 'Tap Hint when you are stuck. Fair warning: it plays a joke ad first, because that is the AdTech way. You can buy a pass to skip the ad later.' },
   { pet: 'elephant', title: 'I remember everything', text: 'You will not see a question again until you have seen them all. New questions earn AdCoins. Replays only earn when you beat your best.' },
-  { pet: 'tiger', title: 'Levels and badges', text: 'AdCoins take you from Rookie to AdTech Legend, and badges mark the milestones. Check your scorecard from your profile at the top right.' },
-  { pet: 'bear', title: 'Profile and settings', text: 'Tap your initials at the top right for your scorecard, settings and more. See something wrong in a question? Report it and an admin will review it.' }
+  { pet: 'tiger', title: 'Levels and badges', text: 'AdCoins take you from Rookie to AdTech Legend, and badges mark the milestones. Your scorecard is in the menu at the top right.' },
+  { pet: 'rabbit', title: 'Collect AdCoins, spend them', text: 'Right answers to new questions earn AdCoins. Spend them on ad-free hints and passes. My AdCoins in the menu shows how to earn and spend them, and How AdVenture works explains every rule.' },
+  { pet: 'bear', title: 'Your menu', text: 'Tap Menu at the top right for your profile, scorecard, pets, AdCoins and settings. See something wrong in a question? Report it and an admin will review it.' }
 ];
 
 /* ---------- Starter content (used until R&D publishes their own packs) ---------- */

@@ -15,16 +15,17 @@ export const newProfile = (name = '') => ({
   name, coins: 0, streak: 0, bestStreak: 0, lastDay: '', missionDay: '', lastGame: '',
   played: {}, seenAll: {}, replayBest: {}, bestTime: {}, met: {}, howSeen: {}, reported: {},
   badges: {}, weekKey: '', weekDays: [], weekBonusKey: '', perfectRounds: 0,
+  adHints: 0, log: [], wants: {}, giftIds: [], introSeen: false,
   fullName: '', email: '', nickname: '', spent: 0, adFreeUntil: 0, newSeen: '',
   signIns: 0, firstSeen: 0, lastSeen: 0, activity: {},
   companion: 'panda', tourDone: false,
-  settings: { petMode: 'fixed', liveTimer: false, motion: true, coach: true, textSize: 'standard' }
+  settings: { petMode: 'fixed', liveTimer: false, motion: true, coach: true, textSize: 'standard', useAdHints: true }
 });
 
 /* What an admin reset keeps: identity, sign-in tracking, companion and the pets already met. */
 export function resetProfile(p) {
   const f = newProfile(p.name);
-  return { ...f, fullName: p.fullName || '', email: p.email || '', nickname: p.nickname || '', signIns: p.signIns || 0, firstSeen: p.firstSeen || 0, lastSeen: p.lastSeen || 0, tourDone: true, companion: p.companion || 'panda', met: p.met || {} };
+  return { ...f, fullName: p.fullName || '', email: p.email || '', nickname: p.nickname || '', signIns: p.signIns || 0, firstSeen: p.firstSeen || 0, lastSeen: p.lastSeen || 0, tourDone: true, companion: p.companion || 'panda', met: p.met || {}, giftIds: p.giftIds || [], introSeen: !!p.introSeen };
 }
 
 export const qkey = (id) => String(id).replace(/[^\w-]/g, '_');
@@ -42,6 +43,7 @@ const cached = (key) => { const c = LS.get(key); return c && Date.now() - c.at <
 const cacheIt = (key, data) => LS.set(key, { at: Date.now(), data });
 const previewOf = (it) => String(it.q || it.title || '').slice(0, 180);
 const rkey = (game, id) => `${game}__${id}`.replace(/[^\w-]/g, '_');
+const giftId = () => `g${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
 
 /* ---------------- Demo store: no Firebase, data stays in this browser ---------------- */
 function demoStore() {
@@ -80,6 +82,14 @@ function demoStore() {
     },
     async getQStats(game) { return LS.get('rda_demo_qstats_' + game, {}); },
     async listReportLog() { return LS.get('rda_demo_reportlog', []); },
+    async getGifts(uid) { return LS.get('rda_demo_gifts_' + uid, { total: 0, list: [] }); },
+    async sendGift(uids, n, note, by, label) {
+      const item = { id: giftId(), n, note, at: Date.now() };
+      uids.forEach((uid) => { const g = LS.get('rda_demo_gifts_' + uid, { total: 0, list: [] }); g.total += n; g.list.push(item); LS.set('rda_demo_gifts_' + uid, g); });
+      const log = LS.get('rda_demo_giftlog', []); log.unshift({ id: item.id, at: item.at, by, label, count: uids.length, n, note }); LS.set('rda_demo_giftlog', log.slice(0, 100));
+      return uids.length;
+    },
+    async listGiftLog() { return LS.get('rda_demo_giftlog', []); },
     async loadPack(game) {
       const live = LS.get('rda_demo_pack_' + game);
       return live ? { items: live.items, version: live.version, source: 'live' } : { items: starter(game), version: 0, source: 'starter' };
@@ -266,6 +276,25 @@ async function firebaseStore() {
     },
     async countReports() {
       try { const snap = await F.getDocs(F.query(F.collection(db, 'reports'), F.limit(50))); return snap.size; } catch { return 0; }
+    },
+    /* R&D Gifts: one small document per player holds the running total and the list of gifts. Only admins write it,
+       so a gift can never be overwritten by a player who happens to be mid-game. */
+    async getGifts(uid) {
+      const snap = await F.getDoc(F.doc(db, 'gifts', uid));
+      return snap.exists() ? { total: snap.data().total || 0, list: snap.data().list || [] } : { total: 0, list: [] };
+    },
+    async sendGift(uids, n, note, by, label) {
+      const item = { id: giftId(), n, note, at: Date.now() };
+      let done = 0;
+      for (let i = 0; i < uids.length; i += 20) {
+        await Promise.all(uids.slice(i, i + 20).map(async (uid) => { await F.setDoc(F.doc(db, 'gifts', uid), { total: F.increment(n), list: F.arrayUnion(item) }, { merge: true }); done++; }));
+      }
+      await F.addDoc(F.collection(db, 'giftlog'), { gid: item.id, at: item.at, by, label, count: done, n, note });
+      return done;
+    },
+    async listGiftLog() {
+      const snap = await F.getDocs(F.query(F.collection(db, 'giftlog'), F.orderBy('at', 'desc'), F.limit(100)));
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     },
     async resolveReport(id, status = 'kept', by = '', note = '') {
       const ref = F.doc(db, 'reports', id), snap = await F.getDoc(ref);
