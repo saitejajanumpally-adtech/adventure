@@ -70,6 +70,16 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // R&D Gifts. One document per player with a running total and the list of gifts. Only admins write it;
+    // the player (and admins) can read it. The log of who gave what is for admins only.
+    match /gifts/{uid} {
+      allow read: if (inDomain() && request.auth.uid == uid) || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /giftlog/{id} {
+      allow read, write: if isAdmin();
+    }
+
     // Help and feedback. Anyone in the domain can send their own; only admins read, update or delete.
     match /feedback/{id} {
       allow create: if inDomain()
