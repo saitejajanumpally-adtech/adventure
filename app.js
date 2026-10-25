@@ -2,7 +2,7 @@ import { CONFIG } from './config.js';
 import { CATS, GAMES, MODES, LEVELS, TIPS, GAME_TIPS, PETS, TOUR, CURRENCY, BADGES, LINES, GAME_LEVELS, TEXT_SIZES, WHATS_NEW, WHATS_NEW_MINOR } from './data.js';
 import { shuffle, mulberry32, seedFrom, dateKey, yesterdayKey, weekKey, weekdayIndex, parseDevice } from './util.js';
 import { createStore } from './store.js';
-import { h, ic, fill, toast, petFigure, petById, wordmark, modal, fmtTime, initialsOf, confetti } from './ui.js';
+import { h, ic, fill, toast, petFigure, preloadPets, PET_MOODS, petById, wordmark, modal, fmtTime, initialsOf, confetti } from './ui.js';
 import { showHintAd } from './ads.js';
 import { makeTimer, runQuiz, runFlow, runMatch, runSort, runCross, hooks } from './engines.js';
 import { adminView } from './admin.js';
@@ -466,8 +466,10 @@ function buildPlayShell(g, hostPet) {
   const petBox = h('div', { class: 'cpet' });
   const bubble = h('div', { class: 'cbubble', role: 'status' });
   const cnote = h('p', { class: 'cnote' });
+  const coachFig = petFigure(hostPet, 'explain', 'pcoach'); // one picture for the whole round: only its mood changes, so it never flickers
+  petBox.append(coachFig);
   const setBubble = (main, mood, sub) => {
-    fill(petBox, petFigure(hostPet, mood, 'pcoach'));
+    coachFig.setMood(mood);
     fill(bubble, h('p', {}, main), sub ? h('p', { class: 'sub' }, sub) : null);
   };
   const tips = GAME_TIPS[g.id] || [''];
@@ -730,6 +732,7 @@ async function onUser(u, msg) {
     p.lastSeen = Date.now();
     S.store.saveProfile(u, p).catch(() => {});
     applyPrefs();
+    startPetPreload(S.profile.companion);
   } catch (e) {
     console.error(e);
     S.user = null; S.loginMsg = 'Could not load your profile. Check your connection and try again.';
@@ -738,7 +741,20 @@ async function onUser(u, msg) {
   route();
 }
 
+/* Pet images load in order of need: the sign-in pet first (the page waits up to 2 seconds for it), then the tour and
+   companion-picker poses, then everything else quietly in the background. */
+function startPetPreload(companion) {
+  const ids = PETS.map((x) => x.id);
+  const order = companion ? [companion, ...ids.filter((x) => x !== companion)] : ids;
+  return preloadPets({
+    first: companion ? PET_MOODS.map((m) => [companion, m]) : [['penguin', 'hello']],
+    then: ids.flatMap((id) => [[id, 'hello'], [id, 'explain']]),
+    later: order.flatMap((id) => PET_MOODS.map((m) => [id, m])),
+  });
+}
+
 export async function boot() {
+  const petsReady = startPetPreload(null);
   S.store = await createStore();
   window.addEventListener('hashchange', route);
   // Close the profile menu on an outside click or Escape, and tell screen readers it is closed.
@@ -750,5 +766,6 @@ export async function boot() {
   });
   document.addEventListener('click', () => closeMenus(false));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenus(true); });
+  await petsReady; // at most 2 seconds, so the sign-in pet is already there when the page appears
   await S.store.init(onUser);
 }

@@ -7,7 +7,7 @@ export const CATS = [
 
 export const CURRENCY = 'AdCoins';
 
-/* Pets. Images live in /pets as {id}-{mood}.webp (or .png). Missing images fall back to the emoji. */
+/* Pets. Images live in /pets as {id}-{mood}.webp (or .png). Moods without an image map to the closest real one (see ui.js). */
 export const PETS = [
   { id: 'penguin', name: 'Waddles', species: 'Penguin', emoji: '\u{1F427}', line: 'I slide along the ad path from page load to impression.' },
   { id: 'panda', name: 'Bamboo', species: 'Panda', emoji: '\u{1F43C}', line: 'Calm and careful. I like finding the right pairs.' },

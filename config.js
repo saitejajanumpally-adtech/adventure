@@ -35,5 +35,5 @@ export const CONFIG = {
   // The pet offers help after this many idle seconds (quiz and puzzle games with a hint).
   IDLE_NUDGE_SECONDS: 15,
 
-  APP_VERSION: '4.0'
+  APP_VERSION: '4.2'
 };
