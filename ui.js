@@ -33,25 +33,57 @@ export function toast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2800);
 }
 
-/* Pet picture. Tries pets/{pet}-{mood}.webp/.png, then -happy, then -hello, then shows the emoji. */
-const missing = new Set();
+/* ---------- pet pictures ----------
+   Each pet has these moods as real pictures in /pets (petname-mood.webp). Other mood names map to the closest real one. */
+export const PET_MOODS = ['hello', 'explain', 'celebrate', 'happy', 'correct', 'oops', 'encourage', 'proud', 'sleepy'];
+const MOOD_ALIAS = { think: 'explain', streak: 'celebrate', hurt: 'oops' };
+const realMood = (m) => (PET_MOODS.includes(m) ? m : MOOD_ALIAS[m] || 'happy');
+
+const loads = new Map(); // picture address -> promise of true/false
+const loadUrl = (url) => {
+  if (!loads.has(url)) loads.set(url, new Promise((done) => { const i = new Image(); i.onload = () => done(true); i.onerror = () => done(false); i.src = url; }));
+  return loads.get(url);
+};
+const found = new Map(); // "pet|mood" -> promise of the address of a picture that really loads, or null
+function pictureFor(petId, mood) {
+  const key = `${petId}|${mood}`;
+  if (!found.has(key)) {
+    const tries = [...new Set([realMood(mood), 'happy', 'hello'])].flatMap((m) => [`pets/${petId}-${m}.webp`, `pets/${petId}-${m}.png`]);
+    found.set(key, (async () => { for (const u of tries) if (await loadUrl(u)) return u; return null; })());
+  }
+  return found.get(key);
+}
+
+/* Loads pictures in order of need: "first" (the page waits for these, but never longer than 2 seconds),
+   then "then", then "later" a few at a time in the background. Returns a promise for the first step. */
+export function preloadPets({ first = [], then = [], later = [] } = {}) {
+  const run = (list) => Promise.all(list.map(([p, m]) => pictureFor(p, m)));
+  const firstDone = run(first);
+  firstDone.then(() => run(then)).then(async () => {
+    for (let i = 0; i < later.length; i += 4) await run(later.slice(i, i + 4));
+  }).catch(() => {});
+  return Promise.race([firstDone, new Promise((r) => setTimeout(r, 2000))]);
+}
+
+/* Pet picture. Shows the emoji until the picture is ready. figure.setMood('oops') swaps the picture in place,
+   so a pet that stays on screen (the coach) never flickers or reloads. */
 export function petFigure(petId, mood = 'happy', size = 'md') {
   const pet = petById(petId);
   const wrap = h('div', { class: `pet-fig m-${mood} ${size}`, role: 'img', 'aria-label': `${pet.name} the ${pet.species}` },
     h('span', { class: 'emo', 'aria-hidden': 'true' }, pet.emoji));
-  if (typeof Image === 'undefined') return wrap;
-  const tries = [...new Set([mood, 'happy', 'hello'])].flatMap((m) => [`pets/${pet.id}-${m}.webp`, `pets/${pet.id}-${m}.png`]).filter((u) => !missing.has(u));
-  let i = 0;
-  const next = () => {
-    if (i >= tries.length) return;
-    const url = tries[i++];
-    const img = new Image();
-    img.alt = ''; img.className = 'pet-img';
-    img.onload = () => wrap.replaceChildren(img);
-    img.onerror = () => { missing.add(url); next(); };
-    img.src = url;
+  if (typeof Image === 'undefined') { wrap.setMood = () => {}; return wrap; }
+  let img = null, latest = 0;
+  wrap.setMood = (m) => {
+    wrap.className = wrap.className.split(' ').map((c) => (c.startsWith('m-') ? `m-${m}` : c)).join(' ');
+    const mine = ++latest;
+    pictureFor(petId, m).then((url) => {
+      if (mine !== latest || !url) return; // a newer mood was asked for, or no picture exists (the emoji stays)
+      if (!img) { img = new Image(); img.alt = ''; img.className = 'pet-img'; }
+      if (img.getAttribute('src') !== url) img.src = url;
+      if (img.parentNode !== wrap) wrap.replaceChildren(img);
+    });
   };
-  next();
+  wrap.setMood(mood);
   return wrap;
 }
 
