@@ -26,13 +26,13 @@ const THEME = {
 };
 
 /* Plays a joke ad before a hint. Resolves when the ad ends or is skipped. */
-export function showHintAd(petId) {
+export function showHintAd(petId, opts = {}) {
   return new Promise((resolve) => {
     const ad = pickAd(petId);
     const th = THEME[ad.fmt] || THEME.video;
     const choice = ad.fmt === 'cookie' || ad.fmt === 'install'; // two buttons instead of a Skip button
-    const total = Math.max(0.2, Number(CONFIG.AD_SECONDS) || 5) * 1000;
-    const skipAt = Math.min(total, (Number(CONFIG.AD_SKIP_AFTER) || 3) * 1000);
+    const total = Math.max(0.2, Number(opts.seconds ?? CONFIG.AD_SECONDS) || 5) * 1000;
+    const skipAt = Math.min(total, (Number(opts.skipAfter ?? CONFIG.AD_SKIP_AFTER) || 3) * 1000);
     const t0 = Date.now();
     let done = false, timer, unlocked = false, m;
 

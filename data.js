@@ -85,6 +85,32 @@ export const BADGES = [
   { id: 'yield', title: 'Yield Pro', desc: 'Reach level 5', icon: 'rocket', coins: 0 }
 ];
 
+/* Level inside one game, from the total number of correct answers in that game. */
+export const GAME_LEVELS = [0, 15, 40, 80, 150];
+
+/* Hint limits for the puzzle games. Quiz games get one hint per question. */
+export const HINTS = {
+  'stack-sorter': { perRound: 3, perCard: 1 },
+  'ad-flow-builder': { perRound: 2 },
+  'crossword': { perRound: 3 },
+  'jargon-match': { perRound: 1 }
+};
+
+export const TEXT_SIZES = [
+  { id: 'compact', label: 'Compact' },
+  { id: 'standard', label: 'Standard' },
+  { id: 'comfortable', label: 'Comfortable' }
+];
+
+/* Shown in What's new until admins publish their own entries. */
+export const WHATS_NEW = [
+  { id: 'v4-hints', type: 'major', title: 'A hint in every game', text: 'Puzzle games now have hints too, with a limited number per round.', date: '2026-10-26' },
+  { id: 'v4-pets', type: 'major', title: 'Pets and Settings are separate', text: 'Choose your companion on My pets. Settings is for settings.', date: '2026-10-26' },
+  { id: 'v4-text', type: 'major', title: 'Text size', text: 'Pick Compact, Standard or Comfortable in Settings.', date: '2026-10-26' },
+  { id: 'v4-pass', type: 'major', title: 'Ad-free hints', text: 'Spend AdCoins on a pass that skips the joke ad before hints.', date: '2026-10-26' }
+];
+export const WHATS_NEW_MINOR = 'Smaller fixes and polish: layout, wording and speed tweaks.';
+
 export const TIPS = [
   'Fill rate is ads served divided by ad requests. A low number means requests are going unsold.',
   'eCPM is revenue per thousand impressions. It lets you compare CPM, CPC and CPA deals on one scale.',
@@ -196,7 +222,7 @@ export const TOUR = [
   { pet: 'panda', title: 'Start with the quest', text: 'The Daily quest on the home page is the best place to begin. Three quick puzzles, about five minutes, picked just for you.' },
   { pet: 'rabbit', title: 'Keep your streak', text: 'Play any game each day to keep your streak going. Play on five days in a week for a bonus.' },
   { pet: 'cat', title: 'Pick a game', text: 'The games are grouped by what they train. Greyed-out ones are coming soon, so keep an eye out.' },
-  { pet: 'dog', title: 'Need help?', text: 'Tap Hint when you are stuck. Fair warning: it plays a joke ad first, because that is the AdTech way. Tap ? on a game page for a quick how-to.' },
+  { pet: 'dog', title: 'Need help?', text: 'Tap Hint when you are stuck. Fair warning: it plays a joke ad first, because that is the AdTech way. You can buy a pass to skip the ad later.' },
   { pet: 'elephant', title: 'I remember everything', text: 'You will not see a question again until you have seen them all. New questions earn AdCoins. Replays only earn when you beat your best.' },
   { pet: 'tiger', title: 'Levels and badges', text: 'AdCoins take you from Rookie to AdTech Legend, and badges mark the milestones. Check your scorecard from your profile at the top right.' },
   { pet: 'bear', title: 'Profile and settings', text: 'Tap your initials at the top right for your scorecard, settings and more. See something wrong in a question? Report it and an admin will review it.' }
@@ -226,20 +252,20 @@ const ACRONYMS = [
 
 const tf = (q, answer, why) => ({ q, answer, why });
 const MYTH_HINTS = {
-  'A higher CTR always means a campaign is more profitable.': 'Think about what clicks do and do not prove.',
-  'In a first-price auction, the winner pays the price they bid.': 'The name of the auction tells you what the winner pays.',
-  'Ad requests and impressions are the same thing.': 'One happens before an ad is served, the other after.',
-  'Header bidding lets several demand sources bid on the same impression before the ad server decides.': 'Think about the word header and when it runs.',
+  'A higher CTR always means a campaign is more profitable.': 'A click shows interest. Does it show a purchase or revenue?',
+  'In a first-price auction, the winner pays the price they bid.': 'Think about whose price gets paid: the winner\'s own bid, or someone else\'s?',
+  'Ad requests and impressions are the same thing.': 'One counts when an ad is asked for, the other when one is actually served.',
+  'Header bidding lets several demand sources bid on the same impression before the ad server decides.': 'It runs in the page, before the ad server picks a winner. Who gets to bid at that point?',
   'A viewable impression means the ad was clicked.': 'Viewable is about what could be seen, not what was done.',
-  'ads.txt lets publishers declare who is authorised to sell their inventory.': 'It is a public file about who may sell.',
-  'Every major browser treats third-party cookies the same way.': 'Ask yourself if browsers ever agree on privacy.',
-  'A lower floor price always increases publisher revenue.': 'Watch the word always.',
-  'eCPM lets you compare revenue across different pricing models.': 'The e stands for effective.',
-  'Programmatic advertising only means real-time bidding auctions.': 'Watch the word only.',
-  'A DSP is the tool publishers use to sell their inventory.': 'D and S: which side of the market is it?',
-  'Slow bidders in header bidding can hurt page speed.': 'Pages may wait for bids to come back.',
+  'ads.txt lets publishers declare who is authorised to sell their inventory.': 'Think about how a buyer could check that a seller is genuine.',
+  'Every major browser treats third-party cookies the same way.': 'Think about browsers made by different companies with different business models.',
+  'A lower floor price always increases publisher revenue.': 'Picture the floor dropping. What happens to the price of each sale?',
+  'eCPM lets you compare revenue across different pricing models.': 'Think about putting CPC and CPA income on the same scale as CPM.',
+  'Programmatic advertising only means real-time bidding auctions.': 'Programmatic means automated buying. Are all automated deals auctions?',
+  'A DSP is the tool publishers use to sell their inventory.': 'Who needs a platform to buy ad space: publishers or advertisers?',
+  'Slow bidders in header bidding can hurt page speed.': 'While the page waits for bids, what happens to loading?',
   'Blocked ads still earn revenue because they count as impressions.': 'What happens to an ad that never renders?',
-  'Frequency capping limits how often the same person sees an ad.': 'Frequency is how often.'
+  'Frequency capping limits how often the same person sees an ad.': 'A cap is a limit. A limit on what, per person?'
 };
 const MYTHS = [
   tf('A higher CTR always means a campaign is more profitable.', false, 'Clicks can be accidental or low value. Conversions and revenue tell you more than CTR alone.'),
@@ -351,6 +377,39 @@ const CW = [
     { answer: 'CONVERSION', clue: 'Desired action taken after seeing an ad' }, { answer: 'REVENUE', clue: 'Money earned by the publisher' },
     { answer: 'FRAUD', clue: 'Invalid traffic created on purpose' }, { answer: 'REPORTING', clue: 'Sharing results after a campaign' }] }
 ];
+
+const ACRONYM_HINTS = {
+  'What does CPM stand for?': 'It is a way of pricing display ads, based on a big batch of views.',
+  'What does SSP stand for?': 'It is the tool a publisher uses to sell ad space.',
+  'What does DSP stand for?': 'It is the tool an advertiser uses to buy ad space.',
+  'What does DMP stand for?': 'It stores and organises audience data for targeting.',
+  'What does CTR stand for?': 'It compares clicks with how many times the ad was shown.',
+  'What does RTB stand for?': 'An auction that runs while the page is loading.',
+  'What does PMP stand for?': 'An invite-only auction run by a publisher.',
+  'What does CTV stand for?': 'Ads on the living-room screen, delivered over the internet.',
+  'What does VAST stand for?': 'An IAB standard that tells a video player what to play.',
+  'What does eCPM stand for?': 'It puts revenue from different pricing models on one scale.',
+  'What does CPC stand for?': 'A pricing model where you pay only when someone clicks.',
+  'What does IAB stand for?': 'An industry body that publishes standards such as ads.txt.',
+  'What does SPO stand for?': 'Buyers use it to find the shortest, cleanest route to a publisher.',
+  'What does TCF stand for?': 'It is how people\'s privacy choices travel along with an ad request.',
+  'What does PII stand for?': 'Information that could identify one particular person.',
+  'What does DOOH stand for?': 'Ads on screens in public places, such as transit and malls.'
+};
+const ODD_HINTS = {
+  'Which one is not a supply-side platform?': 'Think about who is selling and who is buying.',
+  'Which one is not a pricing model?': 'Three of these set a price. One measures what happened.',
+  'Which one is not an ad format?': 'Three are things people see. One is a way of selling.',
+  'Which one is not a performance metric?': 'Three are measured after the fact. One is a setting you choose in advance.',
+  'Which one is not a way of identifying a user?': 'Three point to a person or a device. One is about money.',
+  'Which one is not a video ad standard?': 'Three describe how a video ad plays. One is about who may sell.',
+  'Which one is not a publisher-side tool?': 'Think about which one an advertiser would use.',
+  'Which one is not about privacy?': 'Three are about people\'s data rights. One is about price.',
+  'Which one is not a type of deal?': 'Three describe how inventory is bought. One describes who sees the ad.',
+  'Which one is not a type of inventory?': 'Three are kinds of ad space. One is a way of ordering buyers.'
+};
+ACRONYMS.forEach((m) => { if (ACRONYM_HINTS[m.q]) m.hint = ACRONYM_HINTS[m.q]; });
+ODD.forEach((m) => { if (ODD_HINTS[m.q]) m.hint = ODD_HINTS[m.q]; });
 
 export const STARTER = {
   'acronym-decoder': ACRONYMS, 'myth-or-fact': MYTHS, 'odd-one-out': ODD,

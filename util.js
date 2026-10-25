@@ -60,3 +60,13 @@ export function weekKey(d = new Date()) {
 }
 /* 0 = Monday ... 6 = Sunday */
 export function weekdayIndex(d = new Date()) { return (d.getDay() + 6) % 7; }
+
+/* Device type and browser name from the user agent, for feedback. Nothing else is read. */
+export function parseDevice(ua = '', width = 0) {
+  const u = String(ua);
+  const device = /iPad|Tablet|PlayBook|Silk/i.test(u) || (/Android/i.test(u) && !/Mobile/i.test(u)) ? 'Tablet'
+    : /Mobi|iPhone|iPod|Android/i.test(u) ? 'Phone' : 'Laptop or desktop';
+  const browser = /Edg\//.test(u) ? 'Edge' : /OPR\/|Opera/.test(u) ? 'Opera' : /Firefox\//.test(u) ? 'Firefox'
+    : /Chrome\/|CriOS\//.test(u) ? 'Chrome' : /Safari\//.test(u) ? 'Safari' : 'Other';
+  return { device, browser, width };
+}

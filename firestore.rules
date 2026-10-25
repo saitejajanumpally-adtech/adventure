@@ -15,13 +15,18 @@ service cloud.firestore {
         && request.auth.token.email.lower() in get(/databases/$(database)/documents/config/admins).data.emails;
     }
 
+    // Each person reads and writes their own profile. Admins can read every profile (for reports) and reset one.
     match /users/{uid} {
       allow read, write: if inDomain() && request.auth.uid == uid;
+      allow read, update: if isAdmin();
     }
 
+    // Everyone in the domain reads settings, announcements and the admin list. Only admins change them,
+    // and the admin list can never be emptied from the app.
     match /config/{doc} {
       allow read: if inDomain();
-      allow write: if false; // edit in the Firebase console
+      allow write: if isAdmin()
+        && (doc != 'admins' || (request.resource.data.emails is list && request.resource.data.emails.size() >= 1));
     }
 
     match /packs/{game} {
@@ -45,10 +50,24 @@ service cloud.firestore {
         || (inDomain()
           && !(request.auth.uid in resource.data.reporters)
           && request.resource.data.count == resource.data.count + 1
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['count', 'reporters', 'reasons'])
           && request.resource.data.reporters.diff(resource.data.reporters).affectedKeys().hasOnly([request.auth.uid])
-          && request.resource.data.reasons.diff(resource.data.reasons).affectedKeys().size() <= 1
-          && request.resource.data.game == resource.data.game
-          && request.resource.data.itemId == resource.data.itemId);
+          && request.resource.data.reasons.diff(resource.data.reasons).affectedKeys().size() <= 1);
+    }
+
+    // History of closed reports, kept for the export. Admins only.
+    match /reportlog/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Help and feedback. Anyone in the domain can send their own; only admins read, update or delete.
+    match /feedback/{id} {
+      allow create: if inDomain()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.type in ['problem', 'idea', 'question']
+        && request.resource.data.message is string
+        && request.resource.data.message.size() <= 2000;
+      allow read, update, delete: if isAdmin();
     }
 
     // Floor goal: one counter per week. Anyone in the domain can add exactly 1 at a time. No names are stored.
@@ -60,6 +79,14 @@ service cloud.firestore {
       allow update: if inDomain()
         && request.resource.data.keys().hasOnly(['count'])
         && request.resource.data.count == resource.data.count + 1;
+    }
+
+    // Right and wrong tallies per question (no names). Everyone adds to them after a round; only admins read them.
+    match /qstats/{game} {
+      allow read: if isAdmin();
+      allow create: if inDomain();
+      allow update: if inDomain()
+        && request.resource.data.diff(resource.data).affectedKeys().size() <= 12;
     }
   }
 }

@@ -15,9 +15,20 @@ export const newProfile = (name = '') => ({
   name, coins: 0, streak: 0, bestStreak: 0, lastDay: '', missionDay: '', lastGame: '',
   played: {}, seenAll: {}, replayBest: {}, bestTime: {}, met: {}, howSeen: {}, reported: {},
   badges: {}, weekKey: '', weekDays: [], weekBonusKey: '', perfectRounds: 0,
+  fullName: '', email: '', nickname: '', spent: 0, adFreeUntil: 0, newSeen: '',
+  signIns: 0, firstSeen: 0, lastSeen: 0, activity: {},
   companion: 'panda', tourDone: false,
-  settings: { petMode: 'fixed', liveTimer: false, motion: true, hintAds: true, coach: true }
+  settings: { petMode: 'fixed', liveTimer: false, motion: true, coach: true, textSize: 'standard' }
 });
+
+/* What an admin reset keeps: identity, sign-in tracking, companion and the pets already met. */
+export function resetProfile(p) {
+  const f = newProfile(p.name);
+  return { ...f, fullName: p.fullName || '', email: p.email || '', nickname: p.nickname || '', signIns: p.signIns || 0, firstSeen: p.firstSeen || 0, lastSeen: p.lastSeen || 0, tourDone: true, companion: p.companion || 'panda', met: p.met || {} };
+}
+
+export const qkey = (id) => String(id).replace(/[^\w-]/g, '_');
+const reporterInfo = (u, reason) => ({ name: u.fullName || u.name || '', email: u.email || '', at: Date.now(), reason });
 
 export function fixProfile(p, name = '') {
   const d = newProfile(name);
@@ -46,6 +57,29 @@ function demoStore() {
     async bumpFloor(week) { LS.set('rda_demo_floor_' + week, LS.get('rda_demo_floor_' + week, 0) + 1); },
     async saveProfile(_u, p) { LS.set('rda_demo_profile', p); },
     async isAdmin() { return true; },
+    async getSettings() { return LS.get('rda_demo_cfg', {}); },
+    async saveSettings(obj) { LS.set('rda_demo_cfg', obj); },
+    async getAnnounce() { return LS.get('rda_demo_announce', { banner: {}, entries: [], minor: '' }); },
+    async saveAnnounce(obj) { LS.set('rda_demo_announce', obj); },
+    async sendFeedback(f) {
+      const all = LS.get('rda_demo_feedback', []);
+      all.unshift({ id: 'f' + Date.now(), ...f, createdAt: Date.now(), status: 'open' });
+      LS.set('rda_demo_feedback', all);
+    },
+    async listFeedback() { return LS.get('rda_demo_feedback', []); },
+    async updateFeedback(id, patch) { LS.set('rda_demo_feedback', LS.get('rda_demo_feedback', []).map((x) => (x.id === id ? { ...x, ...patch } : x))); },
+    async countOpenFeedback() { return LS.get('rda_demo_feedback', []).filter((x) => x.status === 'open').length; },
+    async listUsers() { return [{ uid: user.uid, ...fixProfile(LS.get('rda_demo_profile'), user.name) }, ...LS.get('rda_demo_others', [])]; },
+    async resetUser(uid) { if (uid === user.uid) LS.set('rda_demo_profile', resetProfile(fixProfile(LS.get('rda_demo_profile'), user.name))); },
+    async getAdmins() { return LS.get('rda_demo_admins', [user.email]); },
+    async saveAdmins(list) { LS.set('rda_demo_admins', list); },
+    async bumpQStats(game, results) {
+      const all = LS.get('rda_demo_qstats_' + game, {});
+      results.forEach((r) => { const k = (r.ok ? 'r_' : 'w_') + qkey(r.id); all[k] = (all[k] || 0) + 1; });
+      LS.set('rda_demo_qstats_' + game, all);
+    },
+    async getQStats(game) { return LS.get('rda_demo_qstats_' + game, {}); },
+    async listReportLog() { return LS.get('rda_demo_reportlog', []); },
     async loadPack(game) {
       const live = LS.get('rda_demo_pack_' + game);
       return live ? { items: live.items, version: live.version, source: 'live' } : { items: starter(game), version: 0, source: 'starter' };
@@ -65,18 +99,22 @@ function demoStore() {
       if (!v) throw new Error('Version not found');
       return this.publishPack(game, v.items, `Restored version ${v.version}`, by);
     },
-    async report(game, item, reason, uid) {
-      const all = reports(), k = rkey(game, item.id), r = all[k];
+    async report(game, item, reason, u) {
+      const all = reports(), k = rkey(game, item.id), r = all[k], uid = u.uid;
       if (r) {
         if (r.reporters[uid]) return 'already';
-        r.count++; r.reporters[uid] = true; r.reasons[reason] = (r.reasons[reason] || 0) + 1;
-      } else all[k] = { id: k, game, itemId: item.id, count: 1, reporters: { [uid]: true }, reasons: { [reason]: 1 }, preview: previewOf(item), createdAt: Date.now() };
+        r.count++; r.reporters[uid] = reporterInfo(u, reason); r.reasons[reason] = (r.reasons[reason] || 0) + 1;
+      } else all[k] = { id: k, game, itemId: item.id, count: 1, reporters: { [uid]: reporterInfo(u, reason) }, reasons: { [reason]: 1 }, preview: previewOf(item), createdAt: Date.now() };
       LS.set('rda_demo_reports', all);
       return 'ok';
     },
     async listReports() { return Object.values(reports()).sort((a, b) => b.createdAt - a.createdAt); },
     async countReports() { return Object.keys(reports()).length; },
-    async resolveReport(id) { const all = reports(); delete all[id]; LS.set('rda_demo_reports', all); }
+    async resolveReport(id, status = 'kept', by = '', note = '') {
+      const all = reports(), r = all[id];
+      if (r) { const log = LS.get('rda_demo_reportlog', []); log.unshift({ ...r, status, resolvedBy: by, resolvedAt: Date.now(), note }); LS.set('rda_demo_reportlog', log.slice(0, 500)); }
+      delete all[id]; LS.set('rda_demo_reports', all);
+    }
   };
 }
 
@@ -111,7 +149,7 @@ async function firebaseStore() {
       const snap = await F.getDoc(F.doc(db, 'users', u.uid));
       return fixProfile(snap.exists() ? snap.data() : null, u.name);
     },
-    async saveProfile(u, p) { await F.setDoc(F.doc(db, 'users', u.uid), { ...p, email: u.email, updatedAt: Date.now() }, { merge: true }); },
+    async saveProfile(u, p) { await F.setDoc(F.doc(db, 'users', u.uid), { ...p, email: u.email, fullName: u.fullName || p.fullName || '', updatedAt: Date.now() }, { merge: true }); },
     async getFloor(week) {
       const key = 'rda_floor_' + week, hit = LS.get(key);
       if (hit && Date.now() - hit.at < 10 * 60 * 1000) return hit.n;
@@ -131,6 +169,50 @@ async function firebaseStore() {
         const list = snap.exists() ? (snap.data().emails || []) : [];
         return list.map((e) => String(e).toLowerCase()).includes(u.email.toLowerCase());
       } catch { return false; }
+    },
+    async getSettings() {
+      const key = 'rda_cfg', hit = LS.get(key);
+      if (hit && Date.now() - hit.at < 10 * 60 * 1000) return hit.data;
+      let data = {};
+      try { const snap = await F.getDoc(F.doc(db, 'config', 'settings')); data = snap.exists() ? snap.data() : {}; } catch { data = hit ? hit.data : {}; }
+      LS.set(key, { at: Date.now(), data });
+      return data;
+    },
+    async saveSettings(obj) { await F.setDoc(F.doc(db, 'config', 'settings'), obj); LS.del('rda_cfg'); },
+    async getAnnounce() {
+      const key = 'rda_announce', hit = LS.get(key);
+      if (hit && Date.now() - hit.at < 10 * 60 * 1000) return hit.data;
+      let data = { banner: {}, entries: [], minor: '' };
+      try { const snap = await F.getDoc(F.doc(db, 'config', 'announce')); if (snap.exists()) data = { ...data, ...snap.data() }; } catch { if (hit) data = hit.data; }
+      LS.set(key, { at: Date.now(), data });
+      return data;
+    },
+    async saveAnnounce(obj) { await F.setDoc(F.doc(db, 'config', 'announce'), obj); LS.del('rda_announce'); },
+    async sendFeedback(f) { await F.addDoc(F.collection(db, 'feedback'), { ...f, createdAt: Date.now(), status: 'open' }); },
+    async listFeedback() {
+      const snap = await F.getDocs(F.query(F.collection(db, 'feedback'), F.orderBy('createdAt', 'desc'), F.limit(500)));
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    },
+    async updateFeedback(id, patch) { await F.updateDoc(F.doc(db, 'feedback', id), patch); },
+    async countOpenFeedback() {
+      try { const snap = await F.getDocs(F.query(F.collection(db, 'feedback'), F.where('status', '==', 'open'), F.limit(99))); return snap.size; } catch { return 0; }
+    },
+    async listUsers() {
+      const snap = await F.getDocs(F.query(F.collection(db, 'users'), F.limit(1000)));
+      return snap.docs.map((d) => ({ uid: d.id, ...fixProfile(d.data(), (d.data() || {}).name || '') }));
+    },
+    async resetUser(uid, fresh) { await F.setDoc(F.doc(db, 'users', uid), { ...fresh, updatedAt: Date.now() }); },
+    async getAdmins() { const snap = await F.getDoc(F.doc(db, 'config', 'admins')); return snap.exists() ? (snap.data().emails || []) : []; },
+    async saveAdmins(list) { await F.setDoc(F.doc(db, 'config', 'admins'), { emails: list }); },
+    async bumpQStats(game, results) {
+      const data = {};
+      results.forEach((r) => { data[(r.ok ? 'r_' : 'w_') + qkey(r.id)] = F.increment(1); });
+      if (Object.keys(data).length) await F.setDoc(F.doc(db, 'qstats', game), data, { merge: true });
+    },
+    async getQStats(game) { const snap = await F.getDoc(F.doc(db, 'qstats', game)); return snap.exists() ? snap.data() : {}; },
+    async listReportLog() {
+      const snap = await F.getDocs(F.query(F.collection(db, 'reportlog'), F.orderBy('resolvedAt', 'desc'), F.limit(500)));
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     },
     async loadPack(game) {
       const key = 'rda_pack_' + game;
@@ -164,17 +246,17 @@ async function firebaseStore() {
       if (!snap.exists()) throw new Error('Version not found');
       return this.publishPack(game, snap.data().items, `Restored version ${snap.data().version}`, by);
     },
-    async report(game, item, reason, uid) {
-      const ref = F.doc(db, 'reports', rkey(game, item.id));
+    async report(game, item, reason, u) {
+      const ref = F.doc(db, 'reports', rkey(game, item.id)), uid = u.uid;
       return F.runTransaction(db, async (tx) => {
         const snap = await tx.get(ref);
         if (!snap.exists()) {
-          tx.set(ref, { game, itemId: item.id, count: 1, reporters: { [uid]: true }, reasons: { [reason]: 1 }, preview: previewOf(item), createdAt: Date.now() });
+          tx.set(ref, { game, itemId: item.id, count: 1, reporters: { [uid]: reporterInfo(u, reason) }, reasons: { [reason]: 1 }, preview: previewOf(item), createdAt: Date.now() });
           return 'ok';
         }
         const d = snap.data();
         if (d.reporters && d.reporters[uid]) return 'already';
-        tx.update(ref, { count: (d.count || 0) + 1, [`reporters.${uid}`]: true, [`reasons.${reason}`]: ((d.reasons && d.reasons[reason]) || 0) + 1 });
+        tx.update(ref, { count: (d.count || 0) + 1, [`reporters.${uid}`]: reporterInfo(u, reason), [`reasons.${reason}`]: ((d.reasons && d.reasons[reason]) || 0) + 1 });
         return 'ok';
       });
     },
@@ -185,7 +267,11 @@ async function firebaseStore() {
     async countReports() {
       try { const snap = await F.getDocs(F.query(F.collection(db, 'reports'), F.limit(50))); return snap.size; } catch { return 0; }
     },
-    async resolveReport(id) { await F.deleteDoc(F.doc(db, 'reports', id)); }
+    async resolveReport(id, status = 'kept', by = '', note = '') {
+      const ref = F.doc(db, 'reports', id), snap = await F.getDoc(ref);
+      if (snap.exists()) await F.addDoc(F.collection(db, 'reportlog'), { ...snap.data(), reportId: id, status, resolvedBy: by, resolvedAt: Date.now(), note });
+      await F.deleteDoc(ref);
+    }
   };
 }
 
