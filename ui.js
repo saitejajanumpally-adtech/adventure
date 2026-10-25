@@ -88,3 +88,27 @@ export function modal(content, { dismissible = true, label = 'Dialog' } = {}) {
   box.focus();
   return { close, box };
 }
+
+/* Initials for the profile circle, from the Google name (or the email as a fallback). */
+export function initialsOf(user) {
+  const clean = (s) => String(s || '').trim();
+  let parts = clean(user && (user.fullName || '')).split(/\s+/).filter(Boolean);
+  if (parts.length === 0 && user && user.email) parts = clean(user.email.split('@')[0]).split(/[._-]+/).filter(Boolean);
+  if (parts.length === 0 && user && user.name) parts = clean(user.name).split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  const first = parts[0][0], last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return (first + last).toUpperCase();
+}
+
+/* A short burst of confetti. Skipped when animations are off. */
+export function confetti() {
+  if (document.body.classList.contains('nomotion')) return;
+  const colors = ['#534AB7', '#FAC775', '#7F77DD', '#B5D4F4', '#C0DD97', '#CECBF6'];
+  const host = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  for (let i = 0; i < 42; i++) {
+    const p = h('i', { style: `left:${Math.random() * 100}%;background:${colors[i % colors.length]};animation-delay:${Math.random() * 0.5}s;animation-duration:${1.6 + Math.random() * 1.2}s;transform:rotate(${Math.random() * 360}deg)` });
+    host.append(p);
+  }
+  document.body.append(host);
+  setTimeout(() => host.remove(), 3200);
+}

@@ -50,5 +50,16 @@ service cloud.firestore {
           && request.resource.data.game == resource.data.game
           && request.resource.data.itemId == resource.data.itemId);
     }
+
+    // Floor goal: one counter per week. Anyone in the domain can add exactly 1 at a time. No names are stored.
+    match /floor/{week} {
+      allow read: if inDomain();
+      allow create: if inDomain()
+        && request.resource.data.keys().hasOnly(['count'])
+        && request.resource.data.count == 1;
+      allow update: if inDomain()
+        && request.resource.data.keys().hasOnly(['count'])
+        && request.resource.data.count == resource.data.count + 1;
+    }
   }
 }

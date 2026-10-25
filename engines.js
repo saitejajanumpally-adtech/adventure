@@ -39,43 +39,61 @@ function reportRow(it, ctx) {
   return h('div', {}, btn, row);
 }
 
-/* ---------- quiz (myth or fact, acronym, odd one out, daily mission) ---------- */
+/* ---------- quiz (myth or fact, acronym, odd one out, daily quest) ---------- */
 function askOne(box, it, i, n, ctx) {
+  const sh = ctx.shell;
   return new Promise((resolve) => {
-    let hinted = false;
-    const top = h('div', { class: 'q-head' }, h('span', {}, `Question ${i + 1} of ${n}`), h('div', { class: 'bar small' }, h('div', { class: 'fill', style: `width:${(i / n) * 100}%` })));
-    const opts = h('div', { class: 'opts' });
+    let hinted = false, answered = false, btns = [], order = [];
+    sh.setHeader(`Question ${i + 1} of ${n}`, (i / n) * 100);
+    sh.coach.reset();
+    const opts = h('div', { class: `opts ${it.kind === 'tf' ? 'two' : ''}`.trim() });
     const fbHolder = h('div', {});
-    const hintBox = h('div', { class: 'hintbox', role: 'status' });
-    let btns = [], order = [];
+    const letter = (k) => (it.kind === 'tf' ? (k === 0 ? 'M' : 'F') : 'ABCD'[k]);
+    const onKey = (e) => {
+      if (!box.isConnected) { document.removeEventListener('keydown', onKey); return; }
+      if (e.ctrlKey || e.metaKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test((e.target && e.target.tagName) || '')) return;
+      const k = String(e.key).toLowerCase();
+      let idx = it.kind === 'tf' ? ({ m: 0, f: 1 }[k] ?? -1) : Math.max('abcd'.indexOf(k), '1234'.indexOf(k));
+      if (idx >= 0 && btns[idx] && !btns[idx].disabled) { e.preventDefault(); btns[idx].click(); }
+    };
+    const offKey = () => document.removeEventListener('keydown', onKey);
+
+    const finish = (ok, chosen, right) => {
+      if (answered) return;
+      answered = true; offKey();
+      btns.forEach((b) => { b.disabled = true; });
+      sh.lockHint();
+      right.classList.add('ok'); if (!ok) chosen.classList.add('bad');
+      sh.coach.react(ok ? 'right' : 'wrong');
+      const next = h('button', { class: 'btn', onclick: () => resolve({ ok, hinted }) }, i + 1 === n ? 'See results' : 'Next');
+      fill(fbHolder, feedbackBox(ok, it.why, h('div', { class: 'fb-actions' }, next, reportRow(it, ctx))));
+      next.focus();
+    };
+    const mkBtn = (k, label, cls, onPick) => h('button', { class: `opt ${cls}`.trim(), onclick: onPick }, h('span', { class: 'l', 'aria-hidden': 'true' }, letter(k)), h('span', { class: 'ot' }, label));
+    if (it.kind === 'tf') {
+      btns = [['Myth', false], ['Fact', true]].map(([label, val], k) => mkBtn(k, label, 'tf', () => finish(val === it.answer, btns[val ? 1 : 0], btns[it.answer ? 1 : 0])));
+    } else {
+      order = shuffle(it.options.map((t, idx) => ({ t, idx })));
+      btns = order.map((o, k) => mkBtn(k, o.t, '', () => finish(o.idx === it.answer, btns[k], btns[order.findIndex((x) => x.idx === it.answer)])));
+    }
+    opts.append(...btns);
+    fill(box, h('h2', { class: 'qtext' }, it.q), opts, fbHolder);
+    document.addEventListener('keydown', onKey);
+
     const canHint = it.kind === 'mcq' || !!it.hint;
-    const hintBtn = canHint ? h('button', { class: 'linkbtn hintbtn', onclick: async () => {
-      hintBtn.disabled = true; hinted = true;
-      if (ctx.hintAds) { ctx.timer.pause(); try { await ctx.showAd(); } finally { ctx.timer.resume(); } }
-      if (it.hint) fill(hintBox, h('p', {}, `Hint: ${it.hint}`), h('p', { class: 'muted small' }, 'This question now earns half AdCoins.'));
+    sh.setHint(canHint ? async () => {
+      if (hinted || answered) return;
+      hinted = true; sh.hintBusy();
+      if (ctx.hintAds) { ctx.timer.pause(); try { await ctx.showAd(ctx.hostPet); } finally { ctx.timer.resume(); } }
+      if (!box.isConnected || answered) return;
+      if (it.hint) sh.coach.hintSay(`Hint: ${it.hint}`);
       else {
         const wrong = shuffle(order.map((o, k) => (o.idx === it.answer ? -1 : k)).filter((k) => k >= 0)).slice(0, 2);
         wrong.forEach((k) => { btns[k].disabled = true; btns[k].classList.add('gone'); });
-        fill(hintBox, h('p', {}, 'Two wrong answers removed.'), h('p', { class: 'muted small' }, 'This question now earns half AdCoins.'));
+        sh.coach.hintSay('Two wrong answers removed.');
       }
-    } }, ic('ad-2'), 'Hint (plays an ad)') : null;
-
-    const finish = (ok, chosen, right) => {
-      btns.forEach((b) => { b.disabled = true; });
-      if (hintBtn) hintBtn.disabled = true;
-      right.classList.add('ok'); if (!ok) chosen.classList.add('bad');
-      const next = h('button', { class: 'btn', onclick: () => resolve({ ok, hinted }) }, i + 1 === n ? 'See results' : 'Next');
-      fill(fbHolder, feedbackBox(ok, it.why, h('div', {}, h('div', { class: 'row gap wrap' }, next, reportRow(it, ctx)))));
-      next.focus();
-    };
-    if (it.kind === 'tf') {
-      btns = [['Myth', false], ['Fact', true]].map(([label, val]) => h('button', { class: 'opt tf', onclick: () => finish(val === it.answer, btns[val ? 1 : 0], btns[it.answer ? 1 : 0]) }, label));
-    } else {
-      order = shuffle(it.options.map((t, idx) => ({ t, idx })));
-      btns = order.map((o, k) => h('button', { class: 'opt', onclick: () => finish(o.idx === it.answer, btns[k], btns[order.findIndex((x) => x.idx === it.answer)]) }, o.t));
-    }
-    opts.append(...btns);
-    fill(box, top, h('h2', { class: 'qtext' }, it.q), opts, hintBtn ? h('div', { class: 'hintrow' }, hintBtn) : null, hintBox, fbHolder);
+      sh.hintUsed();
+    } : null);
   });
 }
 
@@ -95,6 +113,7 @@ export async function runQuiz(box, items, ctx) {
 export function runFlow(box, pz, ctx) {
   return new Promise((resolve) => {
     const n = pz.steps.length;
+    ctx.shell.setHeader('Put the steps in order', 0); ctx.shell.setHint(null); ctx.shell.coach.reset();
     let order = shuffle(pz.steps.map((t, idx) => ({ t, idx })));
     if (order.every((s, k) => s.idx === k)) order.push(order.shift());
     let checked = false;
@@ -119,6 +138,7 @@ export function runFlow(box, pz, ctx) {
     const check = () => {
       checked = true; draw(); checkBtn.remove(); hint.remove();
       const correct = order.filter((s, k) => s.idx === k).length;
+      ctx.shell.setHeader('Put the steps in order', 100); ctx.shell.coach.react(correct === n ? 'right' : 'wrong');
       out.append(feedbackBox(correct === n, pz.why, h('div', {},
         correct === n ? null : h('p', { class: 'muted' }, 'Correct order:'),
         correct === n ? null : h('ol', { class: 'plain' }, pz.steps.map((s) => h('li', {}, s))),
@@ -141,8 +161,10 @@ export function runFlow(box, pz, ctx) {
 export function runMatch(box, pz, ctx) {
   return new Promise((resolve) => {
     const n = pz.pairs.length;
+    ctx.shell.setHeader('Match each term', 0); ctx.shell.setHint(null); ctx.shell.coach.reset();
     const finish = (correct, win, mistakes) => resolve({ correct, total: n, perfect: win && mistakes === 0, items: [{ id: pz.id, game: ctx.gameId, coins: correct * 10 }] });
     function round() {
+      ctx.shell.setHeader('Match each term', 0);
       const defs = shuffle(pz.pairs.map((p, idx) => ({ d: p.def, idx })));
       let sel = null, mistakes = 0, lives = 3, over = false;
       const matched = new Set();
@@ -160,15 +182,16 @@ export function runMatch(box, pz, ctx) {
       const pick = (d, btn) => {
         if (over) return;
         if (sel == null) { msg.textContent = 'Pick a term first.'; return; }
-        if (d.idx === sel) { matched.add(sel); sel = null; msg.textContent = 'Matched.'; }
+        if (d.idx === sel) { matched.add(sel); sel = null; msg.textContent = 'Matched.'; ctx.shell.setHeader(`Matched ${matched.size} of ${n}`, (matched.size / n) * 100); ctx.shell.coach.react('right'); }
         else {
           mistakes++; lives--; sel = null; drawHearts();
           btn.classList.add('shake'); setTimeout(() => btn.classList.remove('shake'), 500);
           msg.textContent = lives > 0 ? `Not that one. ${lives} ${lives === 1 ? 'life' : 'lives'} left.` : 'Out of lives.';
+          ctx.shell.coach.react('wrong');
         }
         paint();
         if (matched.size === n) {
-          over = true; paint();
+          over = true; paint(); ctx.shell.coach.react(mistakes === 0 ? 'great' : 'right');
           out.append(feedbackBox(mistakes === 0, mistakes === 0 ? 'No mistakes.' : `You made ${mistakes} wrong ${mistakes === 1 ? 'match' : 'matches'}.`,
             h('button', { class: 'btn', onclick: () => finish(Math.max(0, n - mistakes), true, mistakes) }, 'See results')));
         } else if (lives <= 0) {
@@ -193,10 +216,12 @@ export function runSort(box, pz, ctx) {
     const cols = pz.layers.map(() => []);
     const layersEl = h('div', { class: 'layers' });
     let i = 0, correct = 0;
+    ctx.shell.setHint(null);
     const drawLayers = () => fill(layersEl, pz.layers.map((l, k) =>
       h('div', { class: 'layer' }, h('b', {}, l), h('ul', {}, cols[k].map((x) => h('li', { class: x.ok ? 'ok' : 'bad' }, x.name))))));
     const draw = () => {
       const c = cards[i], last = i + 1 === cards.length, fb = h('div', {});
+      ctx.shell.setHeader(`Card ${i + 1} of ${cards.length}`, (i / cards.length) * 100); ctx.shell.coach.reset();
       const btns = pz.layers.map((l, k) => h('button', { class: 'opt', onclick: () => {
         const ok = k === c.layer;
         if (ok) correct++;
@@ -205,6 +230,7 @@ export function runSort(box, pz, ctx) {
         btns[c.layer].classList.add('ok');
         if (!ok) btns[k].classList.add('bad');
         drawLayers();
+        ctx.shell.coach.react(ok ? 'right' : 'wrong');
         const why = [ok ? '' : `${c.name} belongs in "${pz.layers[c.layer]}".`, last ? pz.why : ''].filter(Boolean).join(' ');
         const nextBtn = h('button', { class: 'btn', onclick: () => {
           if (last) resolve({ correct, total: cards.length, perfect: correct === cards.length, items: [{ id: pz.id, game: ctx.gameId, coins: correct * 10 }] });
@@ -213,7 +239,7 @@ export function runSort(box, pz, ctx) {
         fill(fb, feedbackBox(ok, why, nextBtn));
         nextBtn.focus();
       } }, l));
-      fill(box, h('div', { class: 'q-head' }, h('span', {}, `Card ${i + 1} of ${cards.length}`)), h('h2', { class: 'qtext' }, pz.title),
+      fill(box, h('h2', { class: 'qtext' }, pz.title),
         h('p', { class: 'muted' }, 'Where does this belong?'), h('div', { class: 'bigcard' }, c.name), h('div', { class: 'opts' }, btns), layersEl, fb);
       drawLayers();
     };
@@ -226,13 +252,20 @@ export function runCross(box, pz, ctx) {
   return new Promise((resolve) => {
     const g = generateGrid(pz.words);
     if (!g) { fill(box, h('p', {}, 'This crossword could not be built. Try another game.'), h('a', { class: 'btn', href: '#/home' }, 'Home')); return; }
-    const avail = Math.min(box.clientWidth || 340, 640);
-    const cell = Math.max(22, Math.min(40, Math.floor((avail - 8) / g.cols) - 2));
     const solved = new Set(), filled = new Set();
     let selIdx = null;
+    ctx.shell.setHint(null); ctx.shell.coach.reset();
     const startNum = new Map(g.entries.map((e) => [`${e.r},${e.c}`, e.n]));
     const cellsOf = (e) => Array.from({ length: e.answer.length }, (_, k) => `${e.r + (e.dir === 'down' ? k : 0)},${e.c + (e.dir === 'across' ? k : 0)}`);
-    const gridEl = h('div', { class: 'cw-grid', style: `grid-template-columns:repeat(${g.cols},${cell}px);grid-auto-rows:${cell}px;font-size:${Math.round(cell * 0.55)}px` });
+    const gridEl = h('div', { class: 'cw-grid' });
+    // Cell size follows the space available, again whenever the screen is resized or rotated.
+    const sizeGrid = () => {
+      if (!box.isConnected) { window.removeEventListener('resize', sizeGrid); return; }
+      const avail = Math.min(box.clientWidth || 340, 640);
+      const cell = Math.max(18, Math.min(40, Math.floor((avail - 8) / g.cols) - 2));
+      gridEl.style.cssText = `grid-template-columns:repeat(${g.cols},${cell}px);grid-auto-rows:${cell}px;font-size:${Math.round(cell * 0.55)}px`;
+    };
+    window.addEventListener('resize', sizeGrid);
     const panel = h('div', { class: 'cw-panel', hidden: true });
     const cluesEl = h('div', { class: 'clues' });
     const status = h('p', { class: 'muted', role: 'status' });
@@ -250,26 +283,28 @@ export function runCross(box, pz, ctx) {
         h('button', { class: `clue ${solved.has(i) ? 'ok' : ''} ${selIdx === i ? 'sel' : ''}`, disabled: solved.has(i), onclick: () => { selIdx = i; err.textContent = ''; paint(); input.value = ''; input.focus(); } }, `${e.n}. ${e.clue} (${e.answer.length})`)));
       fill(cluesEl, list('across'), list('down'));
       status.textContent = `${solved.size} of ${g.entries.length} solved`;
+      ctx.shell.setHeader(`${solved.size} of ${g.entries.length} solved`, (solved.size / g.entries.length) * 100);
       panel.hidden = selIdx == null;
       if (selIdx != null) { const e = g.entries[selIdx]; label.textContent = `${e.n} ${e.dir === 'across' ? 'Across' : 'Down'}, ${e.answer.length} letters`; input.maxLength = e.answer.length; }
     };
     const done = () => {
       const all = solved.size === g.entries.length;
       box.append(feedbackBox(all, all ? 'Every clue solved.' : 'The remaining answers are now shown.',
-        h('button', { class: 'btn', onclick: () => resolve({ correct: solved.size, total: g.entries.length, perfect: all, items: [{ id: pz.id, game: ctx.gameId, coins: solved.size * 10 }] }) }, 'See results')));
+        h('button', { class: 'btn', onclick: () => { window.removeEventListener('resize', sizeGrid); resolve({ correct: solved.size, total: g.entries.length, perfect: all, items: [{ id: pz.id, game: ctx.gameId, coins: solved.size * 10 }] }); } }, 'See results')));
       panel.hidden = true;
     };
     const submit = () => {
       if (selIdx == null) return;
       const e = g.entries[selIdx], v = input.value.toUpperCase().replace(/[^A-Z]/g, '');
       if (v !== e.answer) { err.textContent = v.length === e.answer.length ? 'Not quite. Try again.' : `Needs ${e.answer.length} letters.`; input.classList.add('shake'); setTimeout(() => input.classList.remove('shake'), 500); return; }
-      err.textContent = ''; solved.add(selIdx); cellsOf(e).forEach((k) => filled.add(k)); selIdx = null; input.value = '';
+      err.textContent = ''; solved.add(selIdx); cellsOf(e).forEach((k) => filled.add(k)); selIdx = null; input.value = ''; ctx.shell.coach.react('right');
       paint(); if (solved.size === g.entries.length) done();
     };
     input.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') submit(); });
     panel.append(label, h('div', { class: 'row gap' }, input, h('button', { class: 'btn inline', onclick: submit }, 'Check')), err);
     const giveUp = h('button', { class: 'linkbtn', onclick: () => { g.entries.forEach((e, i) => { if (!solved.has(i)) cellsOf(e).forEach((k) => filled.add(k)); }); selIdx = null; paint(); giveUp.remove(); done(); } }, 'Give up and show answers');
     fill(box, h('h2', { class: 'qtext' }, pz.title), status, h('div', { class: 'cw-wrap' }, gridEl), panel, cluesEl, giveUp);
+    sizeGrid();
     paint();
   });
 }

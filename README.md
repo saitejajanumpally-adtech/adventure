@@ -1,34 +1,24 @@
-# ADVenture by R&D Labs
+# R&D AdVenture (build 3)
 
-A game-style AdTech learning app for DataBeat: 8 games, a daily mission, AdCoins and levels, a pet companion and tour,
-Google login restricted to @databeat.io, and an admin area for new questions and reported questions.
+A static web app: GitHub Pages for the site, Firebase for login and data.
 
-It is a plain static site (no build step) for GitHub Pages and Firebase's free plan.
+## Upgrading from the earlier version (do this in order)
+1. Unzip this file on your computer. You will see a folder called `adventure`.
+2. In your GitHub repository, upload everything inside `adventure` and replace the existing files.
+   `config.js` already contains your Firebase details, so you do not need to edit it.
+3. Open Firebase, then Firestore Database, then Rules. Replace the rules with the contents of `firestore.rules`
+   (this adds the floor goal counter) and press Publish.
+4. Wait about a minute, then open the live site with a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on a Mac).
 
-## Quick try (no setup)
+## What is in this build
+- Full logo (wordmark, flask and R&D Labs) in the top bar on every screen
+- New home page: mascot hero with quest, recommended game, level journey, weekly dots, tinted game panels, badges, floor goal
+- New play screen: coach panel beside the question (hideable), plain question counter, X to quit, A/B/C/D and M/F keys
+- 16 joke ads in 5 formats, two per pet, each with plain-words AdTech small print
+- 80 pet lines (8 pets x 5 situations x 2 variants)
+- 6 badges with AdCoin rewards, weekly goal bonus (30 AdCoins for 5 days in a week), floor goal (300 rounds a week, no names)
+- Profile circle shows your initials; the menu holds scorecard, pet collection, settings, tour and sign out
+- Pet pictures are included in `pets/`
 
-Run `python3 -m http.server` in this folder and open http://localhost:8000.
-The app starts in demo mode: a fake login, and progress stays in that browser.
-
-## Going live
-
-Follow the step-by-step guide that came with this package ("ADVenture Setup Guide").
-It covers Firebase, GitHub Pages, testing, adding your logo and pet images, and how to use Claude Code to check the site on different screens.
-
-## Folders and files
-
-| Path | Purpose |
-| --- | --- |
-| `index.html`, `styles.css` | Page and look |
-| `app.js` | Screens, tour, home, settings, routing |
-| `engines.js` | The eight games, hints, timer |
-| `ads.js` | The joke ad that plays before a hint |
-| `admin.js` | Add-questions and Reports screens |
-| `data.js` | Game list, pets, tour, how-to text, joke ads, starter questions |
-| `store.js` | Data layer (demo mode and Firebase) |
-| `validate.js` | Upload checks and the AI prompts |
-| `crossword.js`, `util.js`, `ui.js` | Helpers |
-| `config.js` | Your settings: domain, Firebase keys, demo switch |
-| `firestore.rules` | Database security rules |
-| `pets/` | Pet images go here (see `pets/README.txt`) |
-| `assets/` | Your logo goes here (see `assets/README.txt`) |
+## Settings you can change in config.js
+`FLOOR_GOAL` (default 300 rounds per week), `WEEK_GOAL_DAYS` (5), `WEEK_BONUS` (30), `AD_SECONDS` (5), `AD_SKIP_AFTER` (3).

@@ -50,3 +50,13 @@ export function pickItems(items, n, seenIds = [], rnd = Math.random) {
   const old = shuffle(items.filter((x) => seen.has(x.id)), rnd);
   return fresh.concat(old).slice(0, n);
 }
+
+/* Monday of the week that contains d, as YYYY-MM-DD. */
+export function weekKey(d = new Date()) {
+  const m = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const back = (m.getDay() + 6) % 7; // Monday = 0
+  m.setDate(m.getDate() - back);
+  return dateKey(m);
+}
+/* 0 = Monday ... 6 = Sunday */
+export function weekdayIndex(d = new Date()) { return (d.getDay() + 6) % 7; }

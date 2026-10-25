@@ -120,6 +120,7 @@ export function validatePack(game, data, existing = []) {
     out.valid.forEach((p) => {
       const g = generateGrid(p.words, 120);
       if (g && g.dropped) out.warnings.push(`"${p.title}": ${g.dropped} word(s) will not fit the grid and are skipped.`);
+      if (g && g.cols > 16) out.warnings.push(`"${p.title}": the grid is ${g.cols} columns wide and may scroll sideways on phones. Shorter words help.`);
     });
   }
   return out;

@@ -19,5 +19,12 @@ export const CONFIG = {
 
   // Joke ad before a hint: total length and when the Skip button appears (seconds).
   AD_SECONDS: 5,
-  AD_SKIP_AFTER: 3
+  AD_SKIP_AFTER: 3,
+
+  // Floor goal: completed puzzle rounds across the whole floor each week (no names are shown).
+  FLOOR_GOAL: 300,
+
+  // Weekly goal: play on this many different days in a Monday to Sunday week for a bonus.
+  WEEK_GOAL_DAYS: 5,
+  WEEK_BONUS: 30
 };

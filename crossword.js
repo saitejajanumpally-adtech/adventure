@@ -71,7 +71,8 @@ function area(lay) {
     const [r, c] = k.split(',').map(Number);
     minR = Math.min(minR, r); minC = Math.min(minC, c); maxR = Math.max(maxR, r); maxC = Math.max(maxC, c);
   }
-  return Math.max(maxR - minR + 1, maxC - minC + 1) * 1000 + (maxR - minR + 1) * (maxC - minC + 1);
+  const w = maxC - minC + 1, hh = maxR - minR + 1;
+  return (w > 15 ? 1e6 : 0) + Math.max(w, hh) * 1000 + w * hh; // prefer compact grids, and keep them narrow enough for phones
 }
 
 export function generateGrid(words, tries = 300) {

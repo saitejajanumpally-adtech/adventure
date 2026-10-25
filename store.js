@@ -14,8 +14,9 @@ const LS = {
 export const newProfile = (name = '') => ({
   name, coins: 0, streak: 0, bestStreak: 0, lastDay: '', missionDay: '', lastGame: '',
   played: {}, seenAll: {}, replayBest: {}, bestTime: {}, met: {}, howSeen: {}, reported: {},
+  badges: {}, weekKey: '', weekDays: [], weekBonusKey: '', perfectRounds: 0,
   companion: 'panda', tourDone: false,
-  settings: { petMode: 'fixed', liveTimer: false, motion: true, hintAds: true }
+  settings: { petMode: 'fixed', liveTimer: false, motion: true, hintAds: true, coach: true }
 });
 
 export function fixProfile(p, name = '') {
@@ -33,7 +34,7 @@ const rkey = (game, id) => `${game}__${id}`.replace(/[^\w-]/g, '_');
 
 /* ---------------- Demo store: no Firebase, data stays in this browser ---------------- */
 function demoStore() {
-  const user = { uid: 'demo', email: `demo@${CONFIG.ALLOWED_DOMAIN}`, name: 'Teja' };
+  const user = { uid: 'demo', email: `demo@${CONFIG.ALLOWED_DOMAIN}`, name: 'Teja', fullName: 'Saiteja Janumpally' };
   const reports = () => LS.get('rda_demo_reports', {});
   return {
     demo: true,
@@ -41,6 +42,8 @@ function demoStore() {
     async signIn(onUser) { LS.del('rda_demo_signed_out'); onUser(user); },
     async signOut(onUser) { LS.set('rda_demo_signed_out', true); onUser(null); },
     async loadProfile() { return fixProfile(LS.get('rda_demo_profile'), user.name); },
+    async getFloor(week) { return LS.get('rda_demo_floor_' + week, 0); },
+    async bumpFloor(week) { LS.set('rda_demo_floor_' + week, LS.get('rda_demo_floor_' + week, 0) + 1); },
     async saveProfile(_u, p) { LS.set('rda_demo_profile', p); },
     async isAdmin() { return true; },
     async loadPack(game) {
@@ -88,7 +91,7 @@ async function firebaseStore() {
   const auth = A.getAuth(app);
   const db = F.getFirestore(app);
   const domainOk = (u) => !!u && u.emailVerified && (u.email || '').toLowerCase().endsWith('@' + CONFIG.ALLOWED_DOMAIN);
-  const shape = (u) => ({ uid: u.uid, email: u.email, name: (u.displayName || u.email).split(' ')[0] });
+  const shape = (u) => ({ uid: u.uid, email: u.email, name: (u.displayName || u.email).split(' ')[0], fullName: u.displayName || '' });
 
   return {
     demo: false,
@@ -109,6 +112,19 @@ async function firebaseStore() {
       return fixProfile(snap.exists() ? snap.data() : null, u.name);
     },
     async saveProfile(u, p) { await F.setDoc(F.doc(db, 'users', u.uid), { ...p, email: u.email, updatedAt: Date.now() }, { merge: true }); },
+    async getFloor(week) {
+      const key = 'rda_floor_' + week, hit = LS.get(key);
+      if (hit && Date.now() - hit.at < 10 * 60 * 1000) return hit.n;
+      let n = 0;
+      try { const snap = await F.getDoc(F.doc(db, 'floor', week)); n = snap.exists() ? snap.data().count || 0 : 0; } catch { n = hit ? hit.n : 0; }
+      LS.set(key, { at: Date.now(), n });
+      return n;
+    },
+    async bumpFloor(week) {
+      const key = 'rda_floor_' + week, hit = LS.get(key);
+      if (hit) LS.set(key, { at: hit.at, n: hit.n + 1 });
+      await F.setDoc(F.doc(db, 'floor', week), { count: F.increment(1) }, { merge: true });
+    },
     async isAdmin(u) {
       try {
         const snap = await F.getDoc(F.doc(db, 'config', 'admins'));

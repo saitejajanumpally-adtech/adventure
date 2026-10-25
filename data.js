@@ -1,13 +1,13 @@
 export const CATS = [
-  { id: 'daily', title: 'Daily habit', bg: '#CECBF6', fg: '#26215C' },
-  { id: 'concept', title: 'Concept builders', bg: '#B5D4F4', fg: '#042C53' },
-  { id: 'current', title: 'Staying current', bg: '#FAEEDA', fg: '#633806' },
-  { id: 'fun', title: 'Fun and fast', bg: '#D3D1C7', fg: '#2C2C2A' }
+  { id: 'daily', title: 'Daily habit', tagline: 'Quick brain boosters', bg: '#CECBF6', fg: '#26215C', panel: '#E4E2FA', tagInk: '#4F4A8A' },
+  { id: 'concept', title: 'Concept builders', tagline: 'Build your skills', bg: '#B5D4F4', fg: '#042C53', panel: '#DCEAF9', tagInk: '#2B5A8A' },
+  { id: 'current', title: 'Staying current', tagline: 'Stay ahead', bg: '#FAEEDA', fg: '#633806', panel: '#FBF3E4', tagInk: '#7A4A12' },
+  { id: 'fun', title: 'Fun and fast', tagline: 'Quick and fun', bg: '#D3D1C7', fg: '#2C2C2A', panel: '#E9E8E2', tagInk: '#4A4A46' }
 ];
 
 export const CURRENCY = 'AdCoins';
 
-/* Pets. Put images in /pets named {id}-{mood}.webp (or .png). Missing images fall back to the emoji. */
+/* Pets. Images live in /pets as {id}-{mood}.webp (or .png). Missing images fall back to the emoji. */
 export const PETS = [
   { id: 'penguin', name: 'Waddles', species: 'Penguin', emoji: '\u{1F427}', line: 'I slide along the ad path from page load to impression.' },
   { id: 'panda', name: 'Bamboo', species: 'Panda', emoji: '\u{1F43C}', line: 'Calm and careful. I like finding the right pairs.' },
@@ -22,43 +22,43 @@ export const MOODS = ['hello', 'explain', 'celebrate', 'happy', 'think', 'correc
 
 const SCORE10 = '10 AdCoins for each correct answer. 20 more for a perfect round with no hints.';
 export const GAMES = [
-  { id: 'daily-warmup', cat: 'daily', title: 'Daily warm-up', icon: 'sun', kind: 'mission', live: true, pet: 'rabbit',
+  { id: 'daily-warmup', cat: 'daily', title: 'Daily warm-up', tag: 'Start your day sharp', icon: 'sun', kind: 'mission', live: true, pet: 'rabbit',
     blurb: 'Three quick puzzles picked just for you each day.',
     how: { steps: ['Three questions appear, one at a time.', 'Answer each one. You see straight away if you were right, and why.', 'Finish all three to complete today\'s mission and earn a bonus.'],
       example: 'Question 1 might be a myth or fact about fill rate.', scoring: SCORE10 + ' Finishing the mission earns a 30 AdCoin bonus once a day.' } },
-  { id: 'myth-or-fact', cat: 'daily', title: 'Myth or fact', icon: 'bulb', kind: 'tf', live: true, size: 6, pet: 'cat',
+  { id: 'myth-or-fact', cat: 'daily', title: 'Myth or fact', tag: 'Spot the myth', icon: 'bulb', kind: 'tf', live: true, size: 6, pet: 'cat',
     blurb: 'Decide if each statement is true, then see why.',
     how: { steps: ['Read the statement.', 'Tap Myth if it is false, or Fact if it is true.', 'Read the explanation. That is where the learning happens.'],
       example: '"Ad requests and impressions are the same thing." The right answer is Myth.', scoring: SCORE10 } },
-  { id: 'acronym-decoder', cat: 'daily', title: 'Acronym decoder', icon: 'abc', kind: 'mcq', live: true, size: 6, pet: 'dog',
+  { id: 'acronym-decoder', cat: 'daily', title: 'Acronym decoder', tag: 'Crack the letters', icon: 'abc', kind: 'mcq', live: true, size: 6, pet: 'dog',
     blurb: 'CPM, SSP, VAST and friends: what do they stand for?',
     how: { steps: ['An acronym appears, like CPM.', 'Pick what it stands for from four choices.', 'Stuck? Tap Hint. It removes two wrong answers (after a short ad).'],
       example: '"What does SSP stand for?" The right answer is Supply-side platform.', scoring: SCORE10 + ' A question answered with a hint earns half.' } },
-  { id: 'ad-flow-builder', cat: 'concept', title: 'Ad-flow builder', icon: 'route', kind: 'flow', live: true, pet: 'penguin',
+  { id: 'ad-flow-builder', cat: 'concept', title: 'Ad-flow builder', tag: 'Follow the ad', icon: 'route', kind: 'flow', live: true, pet: 'penguin',
     blurb: 'Put the steps of an ad request in the right order.',
     how: { steps: ['You see the steps of one ad process in a jumbled order.', 'Drag the grip on the left to reorder, or use the up and down arrows.', 'Tap Check order when you are ready.'],
       example: 'A page load starts with "User opens the page" and ends with "The ad renders".', scoring: '10 AdCoins for each step in the right place. 20 more for a perfect order.' } },
-  { id: 'jargon-match', cat: 'concept', title: 'Jargon match', icon: 'arrows-shuffle', kind: 'match', live: true, pet: 'panda',
+  { id: 'jargon-match', cat: 'concept', title: 'Jargon match', tag: 'Pair the terms', icon: 'arrows-shuffle', kind: 'match', live: true, pet: 'panda',
     blurb: 'Pair each term with its meaning. You have three lives.',
     how: { steps: ['Terms are on the left and meanings are on the right.', 'Tap a term, then tap its meaning.', 'You have 3 lives. Each wrong match costs one. Lose all three and you can try again.'],
       example: 'Tap "Fill rate", then "Share of requests that return an ad".', scoring: '10 AdCoins for each correct pair, minus pairs you got wrong. 20 more for a perfect set.' } },
-  { id: 'crossword', cat: 'concept', title: 'Crossword', icon: 'grid-dots', kind: 'cross', live: true, pet: 'elephant',
+  { id: 'crossword', cat: 'concept', title: 'Crossword', tag: 'Solve the grid', icon: 'grid-dots', kind: 'cross', live: true, pet: 'elephant',
     blurb: 'Solve AdTech clues in a small crossword.',
     how: { steps: ['Tap a clue from the list.', 'Type the answer and tap Check.', 'Letters appear in the grid when you are right.'],
       example: 'Clue: "Minimum acceptable price (5)". The answer is FLOOR.', scoring: '10 AdCoins for each word solved. 20 more if you solve every word.' } },
-  { id: 'odd-one-out', cat: 'concept', title: 'Odd one out', icon: 'search', kind: 'mcq', live: true, size: 6, pet: 'tiger',
+  { id: 'odd-one-out', cat: 'concept', title: 'Odd one out', tag: 'Find the outlier', icon: 'search', kind: 'mcq', live: true, size: 6, pet: 'tiger',
     blurb: 'Spot the one that does not belong.',
     how: { steps: ['Read the question.', 'Three options have something in common. One does not.', 'Tap the odd one out.'],
       example: 'CPM, CPC, CPA, CTR: CTR is a metric, the others are pricing models.', scoring: SCORE10 + ' A question answered with a hint earns half.' } },
-  { id: 'stack-sorter', cat: 'concept', title: 'Stack sorter', icon: 'stack-2', kind: 'sort', live: true, pet: 'bear',
+  { id: 'stack-sorter', cat: 'concept', title: 'Stack sorter', tag: 'Stack it right', icon: 'stack-2', kind: 'sort', live: true, pet: 'bear',
     blurb: 'Place each tool in the right layer of the stack.',
     how: { steps: ['A card appears, like "DSP".', 'Tap the layer where it belongs, such as Sell side, Exchange or Buy side.', 'You see straight away if you were right.'],
       example: '"SSP" goes in Sell side, because it helps publishers sell.', scoring: '10 AdCoins for each card in the right layer. 20 more for a perfect stack.' } },
-  { id: 'industry-update', cat: 'current', title: 'Industry update', icon: 'news', live: false },
-  { id: 'privacy-quiz', cat: 'current', title: 'Privacy quiz', icon: 'shield-lock', live: false },
-  { id: 'rapid-fire', cat: 'fun', title: 'Rapid fire', icon: 'bolt', live: false },
-  { id: 'number-sense', cat: 'fun', title: 'Number sense', icon: 'calculator', live: false },
-  { id: 'who-am-i', cat: 'fun', title: 'Who am I?', icon: 'help-circle', live: false }
+  { id: 'industry-update', cat: 'current', title: 'Industry update', tag: 'What just changed', icon: 'news', live: false },
+  { id: 'privacy-quiz', cat: 'current', title: 'Privacy quiz', tag: 'Know the rules', icon: 'shield-lock', live: false },
+  { id: 'rapid-fire', cat: 'fun', title: 'Rapid fire', tag: 'Beat the clock', icon: 'bolt', live: false },
+  { id: 'number-sense', cat: 'fun', title: 'Number sense', tag: 'Guess the number', icon: 'calculator', live: false },
+  { id: 'who-am-i', cat: 'fun', title: 'Who am I?', tag: 'Guess from clues', icon: 'help-circle', live: false }
 ];
 
 export const MODES = [
@@ -73,6 +73,16 @@ export const MODES = [
 export const LEVELS = [
   { t: 0, n: 'Rookie' }, { t: 100, n: 'Tag Trainee' }, { t: 250, n: 'Ad Explorer' }, { t: 450, n: 'Bid Strategist' },
   { t: 700, n: 'Yield Pro' }, { t: 1000, n: 'Stack Master' }, { t: 1400, n: 'Exchange Expert' }, { t: 1900, n: 'AdTech Legend' }
+];
+
+/* Badges are worked out from the player's record, so they need no extra database writes. */
+export const BADGES = [
+  { id: 'first', title: 'First Steps', desc: 'Finish your first game', icon: 'star', coins: 10 },
+  { id: 'flawless', title: 'Flawless', desc: 'A round with every answer right and no hints', icon: 'sparkles', coins: 10 },
+  { id: 'fire', title: 'On Fire', desc: 'Play 7 days in a row', icon: 'flame', coins: 30 },
+  { id: 'pals', title: 'Pet Pals', desc: 'Meet all 8 pets', icon: 'paw', coins: 20 },
+  { id: 'allround', title: 'All-Rounder', desc: 'Play every one of the 8 games once', icon: 'trophy', coins: 30 },
+  { id: 'yield', title: 'Yield Pro', desc: 'Reach level 5', icon: 'rocket', coins: 0 }
 ];
 
 export const TIPS = [
@@ -99,28 +109,97 @@ export const GAME_TIPS = {
   'stack-sorter': ['Ask who pays and who gets paid. It usually tells you the layer.', 'Think of the stack as a supply chain from publisher to advertiser.']
 };
 
-/* Joke ads shown before a hint. All fictional. */
+/* What each pet says. Five situations, two variants each. */
+export const LINES = {
+  penguin: {
+    right: ['Smooth sliding! That is correct.', 'Right on the ice. Nicely done.'],
+    wrong: ['Slipped on that one. Shake it off.', 'Not quite. Even penguins wobble.'],
+    hint: ['Hint time! Let me waddle you through it.', 'A little nudge coming up.'],
+    great: ['Perfect run! You glided through that.', 'Flawless slide. I am flapping with pride.'],
+    keep: ['Good waddle. Another round will help.', 'Almost there. Slide back in and try again.']
+  },
+  panda: {
+    right: ['Lovely. Calm and correct.', 'Yes, that is the one.'],
+    wrong: ['That is okay. Breathe and try the next.', 'Close. Every mistake teaches something.'],
+    hint: ['Let us think it through together.', 'A gentle hint is on its way.'],
+    great: ['Beautifully done. Everything matched.', 'A perfect round. So peaceful.'],
+    keep: ['Slow and steady wins. One more round?', 'You are growing. Let us go again.']
+  },
+  cat: {
+    right: ['Hmm, correct. I am almost impressed.', 'Fine, that one is right. Do not let it go to your head.'],
+    wrong: ['Not quite. Sceptics learn from this.', 'Interesting guess. Wrong, but interesting.'],
+    hint: ['Need a clue? Watch the ad, then we will talk.', 'A hint, but first a word from our sponsor.'],
+    great: ['Flawless. I would say I am surprised, but I am not.', 'Top marks. I knew you had it in you.'],
+    keep: ['Not your best, but you are learning. Go again.', 'Even cats miss. Try the next round.']
+  },
+  elephant: {
+    right: ['Correct, and I will remember that you got it.', 'Yes. That one is stored forever.'],
+    wrong: ['Not this time. I will remind you later.', 'Wrong, but you will remember it now.'],
+    hint: ['Let me jog your memory.', 'Here is something to help you remember.'],
+    great: ['Perfect. I will never forget this round.', 'Every answer right. Unforgettable.'],
+    keep: ['Memory grows with practice. Try again.', 'You will remember it next time.']
+  },
+  rabbit: {
+    right: ['Yes! Boing! You nailed it!', 'Hop hop hooray, that is right!'],
+    wrong: ['Oops, close! Hop back and try the next one.', 'No worries, mistakes help you grow.'],
+    hint: ['Hint time! Quick ad, then I will help.', 'Ooh, a clue! Let us watch this ad first.'],
+    great: ['Perfect round! I am bouncing off the walls!', 'Wow! You are on fire today!'],
+    keep: ['Good effort! One more round?', 'Almost there. Let us hop again!']
+  },
+  tiger: {
+    right: ['Sharp eyes. Correct.', 'Spotted it. Well done.'],
+    wrong: ['Missed that one. Look closer next time.', 'Not it. Stay sharp.'],
+    hint: ['Here is where to look.', 'Focus. This should help.'],
+    great: ['Perfect hunt. Nothing got past you.', 'Clean sweep. Excellent.'],
+    keep: ['Keep hunting. You are getting closer.', 'Sharpen up and go again.']
+  },
+  bear: {
+    right: ['Nice stacking! That is correct.', 'Everything in its place. Right answer.'],
+    wrong: ['Not quite. Let us tidy that up next time.', 'That one goes elsewhere. On to the next.'],
+    hint: ['Let us sort it out together.', 'Think in layers. Here is a nudge.'],
+    great: ['A perfectly organised round!', 'Stacked high. Every answer right.'],
+    keep: ['Good start. Let us restack and go again.', 'A tidier round next time. You have got this.']
+  },
+  dog: {
+    right: ['Good answer! Fetch that point!', 'Woof! Yes, that is right!'],
+    wrong: ['Oops! No worries, I will fetch the next one with you.', 'Not quite, but good try!'],
+    hint: ['I will sniff out a clue for you.', 'Hint coming right up, after this ad!'],
+    great: ['Perfect! Best round ever! Woof!', 'Every answer right! Who is a good learner?'],
+    keep: ['Good effort! Let us play again!', 'You are doing great. Another round?']
+  }
+};
+
+/* Joke ads shown before a hint. All brands are fictional. Each pet has two.
+   fmt: video, cookie, prize, countdown, install. small = the real AdTech idea in plain words. */
 export const ADS = [
-  { brand: 'FillMax', icon: 'chart-bar', bg: '#CECBF6', fg: '#26215C', head: 'Now with 100% fill rate!', sub: '0% revenue. But look at that fill.', cta: 'Fill my page', joke: 'Fill rate: 100%. Revenue: ask us later.' },
-  { brand: 'ClickBait Co.', icon: 'mood-happy', bg: '#FAC775', fg: '#412402', head: 'You will not believe this CPM!', sub: 'Marketers hate this one weird trick.', cta: 'Click here', joke: 'Click counted. Your CTR thanks you.' },
-  { brand: 'Header Hoarder', icon: 'route', bg: '#B5D4F4', fg: '#042C53', head: 'Page too fast? Add 47 more bidders!', sub: 'Your users love waiting. Probably.', cta: 'Add bidders', joke: 'Timeout set to forever. Good luck.' },
-  { brand: 'CrumbleFree Cookies', icon: 'cookie', bg: '#FAEEDA', fg: '#633806', head: '40% less crumbly!', sub: 'Still follows you around the internet.', cta: 'Accept all', joke: 'Consent given. Wait, what did we agree to?' },
-  { brand: 'ViewSure', icon: 'eye', bg: '#D3D1C7', fg: '#2C2C2A', head: 'Guaranteed viewable for 1.0 seconds!', sub: 'Not a millisecond more.', cta: 'Watch me', joke: 'Viewable. Technically.' },
-  { brand: '29 Seconds Studios', icon: 'clock', bg: '#F5C4B3', fg: '#4A1B0C', head: 'Tired of 30-second ads?', sub: 'Try our 29-second ad. Revolutionary.', cta: 'Save one second', joke: 'One second saved. Spend it wisely.' },
-  { brand: 'Programmatic Pizza', icon: 'sparkles', bg: '#C0DD97', fg: '#173404', head: 'Pizza delivered to the highest bidder!', sub: 'First-price auction. Extra cheese costs extra.', cta: 'Place bid', joke: 'You won the auction. Pizza not included.' },
-  { brand: 'Winner Alert', icon: 'trophy', bg: '#F4C0D1', fg: '#4B1528', head: 'You are visitor number 1,000,000!', sub: 'Claim your prize (a banner ad).', cta: 'Claim prize', joke: 'Prize claimed: this banner. Enjoy.' }
+  { pet: 'penguin', mood: 'explain', fmt: 'video', brand: "Waddles' Ad-Pipe", head: 'Your ad, from page load to impression, in a flash.*', small: '*Bids that arrive after the timeout are ignored, so speed matters.', cta: 'Try it free', joke: 'Pipe connected. Please mind the latency.' },
+  { pet: 'penguin', mood: 'celebrate', fmt: 'countdown', brand: 'Bidder Bonanza', head: 'Add 47 more bidders! Offer ends in', small: 'More bidders can lift the price, but each one can slow your page.', cta: 'Add bidders', joke: 'Timeout set to forever. Good luck.' },
+  { pet: 'panda', mood: 'celebrate', fmt: 'prize', brand: 'Lucky Visitor', head: 'You are visitor number 1,000,000! Claim your prize.', small: 'Fake prize banners chase clicks, not value. A high CTR is not the goal.', cta: 'Claim prize', joke: 'Prize claimed: this banner. Enjoy.' },
+  { pet: 'panda', mood: 'happy', fmt: 'install', brand: "Bamboo's Pair-Up", head: 'Match any term with any meaning.', small: 'Easy to mix up: an SSP sells for publishers, a DSP buys for advertisers.', cta: 'Install', alt: 'Maybe later', joke: 'Installed. Just kidding, you are already playing.' },
+  { pet: 'cat', mood: 'oops', fmt: 'cookie', brand: 'Cookie wall', head: 'We value your privacy', body: 'Our 847 partners would love to follow you around the internet. Please accept all, for science.', small: 'A consent signal tells partners what data they may use.', cta: 'Accept all', alt: 'Reject all (we will ask again tomorrow)', joke: 'Accepted. Whiskers is unimpressed.' },
+  { pet: 'cat', mood: 'explain', fmt: 'video', brand: 'ViewSure', head: 'Guaranteed viewable for 1 whole second!', small: 'A display ad counts as viewable at 50% of its pixels in view for 1 continuous second. That is not the same as being seen.', cta: 'Watch me', joke: 'Viewable. Technically.' },
+  { pet: 'dog', mood: 'explain', fmt: 'video', brand: 'Fetch-a-Meaning', head: 'CPM, CTR, RTB: fetched in seconds.', small: 'CPM is the price for 1,000 impressions.', cta: 'Fetch', joke: 'Fetched. Slightly chewed.' },
+  { pet: 'dog', mood: 'celebrate', fmt: 'countdown', brand: 'Mega Bargain', head: 'Bid $0 for premium ad space! Offer ends in', small: 'A bid below the floor price loses the auction.', cta: 'Place bid', joke: 'Bid placed. It lost, of course.' },
+  { pet: 'elephant', mood: 'proud', fmt: 'video', brand: "Ellie's Remember-It", head: 'Remember that shoe? We do. Forever.', small: 'Retargeting shows ads to past visitors. Frequency caps stop it getting creepy.', cta: 'Remember me', joke: 'Saved. Ellie never forgets.' },
+  { pet: 'elephant', mood: 'oops', fmt: 'prize', brand: 'Adblock Alert', head: 'Ad blocker detected! Please turn it off to continue.', small: 'A blocked ad never renders, so there is no impression and no revenue.', cta: 'Turn it off', joke: 'Turned off. The ad is delighted.' },
+  { pet: 'rabbit', mood: 'celebrate', fmt: 'countdown', brand: 'Fill-O-Matic', head: 'Fill rate 100%! Offer ends in', small: 'Fill rate is ads served divided by requests. Full but cheap can still lose money.', cta: 'Fill my page', joke: 'Fill rate: 100%. Revenue: ask us later.' },
+  { pet: 'rabbit', mood: 'happy', fmt: 'install', brand: "Hopper's Auto-Refresh", head: 'Refresh your ads every 5 seconds!', small: 'Refreshing before an ad has been on screen long enough can stop it counting as viewable.', cta: 'Install', alt: 'Maybe later', joke: 'Refreshed. Your viewability would like a word.' },
+  { pet: 'tiger', mood: 'explain', fmt: 'video', brand: 'Bot-Buster', head: 'Spots fake traffic before it bills you.', small: 'Invalid traffic is views or clicks that are not genuine human interest, such as bots. Advertisers should not pay for it.', cta: 'Spot it', joke: 'Spotted. It was a bot all along.' },
+  { pet: 'tiger', mood: 'celebrate', fmt: 'prize', brand: 'Seller Check', head: 'Which seller is not authorised? ads.txt knows.', small: 'ads.txt is a public file where a publisher lists who may sell its ad space.', cta: 'Check sellers', joke: 'Checked. One seller was not on the list.' },
+  { pet: 'bear', mood: 'celebrate', fmt: 'video', brand: "Bruno's Stack-O-Matic", head: 'Sorts your SSP, exchange and DSP in one click.', small: 'The sell side sells, the buy side buys, and the exchange connects them.', cta: 'Try it free', joke: 'Stack sorted. Results may vary.' },
+  { pet: 'bear', mood: 'happy', fmt: 'install', brand: 'SPO Lite', head: 'Skip the extra hops.', small: 'Supply path optimisation means buying through the most direct, transparent route to the publisher.', cta: 'Install', alt: 'Maybe later', joke: 'Installed. Fewer hops, fewer fees.' }
 ];
 
 /* Tool tour: one pet per slide */
 export const TOUR = [
   { pet: 'penguin', title: 'Welcome to AD\u25BCenture', text: 'This is your AdTech learning arena from R&D Labs. Play short puzzles, collect AdCoins and level up. I am Waddles, and my friends will show you around.' },
-  { pet: 'panda', title: 'Start with the mission', text: 'The Daily mission on the home page is the best place to begin. Three quick puzzles, about five minutes, picked just for you.' },
-  { pet: 'rabbit', title: 'Keep your streak', text: 'Play any game each day to keep your streak going. Little and often beats long and rare.' },
+  { pet: 'panda', title: 'Start with the quest', text: 'The Daily quest on the home page is the best place to begin. Three quick puzzles, about five minutes, picked just for you.' },
+  { pet: 'rabbit', title: 'Keep your streak', text: 'Play any game each day to keep your streak going. Play on five days in a week for a bonus.' },
   { pet: 'cat', title: 'Pick a game', text: 'The games are grouped by what they train. Greyed-out ones are coming soon, so keep an eye out.' },
-  { pet: 'dog', title: 'Need help?', text: 'Tap the ? on any game for a quick how-to. Stuck on a question? Tap Hint. Fair warning: it plays an ad first, because that is the AdTech way.' },
+  { pet: 'dog', title: 'Need help?', text: 'Tap Hint when you are stuck. Fair warning: it plays a joke ad first, because that is the AdTech way. Tap ? on a game page for a quick how-to.' },
   { pet: 'elephant', title: 'I remember everything', text: 'You will not see a question again until you have seen them all. New questions earn AdCoins. Replays only earn when you beat your best.' },
-  { pet: 'tiger', title: 'Levels and scorecard', text: 'AdCoins take you from Rookie to AdTech Legend. Check your scorecard from your profile at the top right.' },
-  { pet: 'bear', title: 'Profile and settings', text: 'Change your companion, pet style, timer and more from the gear icon. See something wrong in a question? Report it and an admin will review it.' }
+  { pet: 'tiger', title: 'Levels and badges', text: 'AdCoins take you from Rookie to AdTech Legend, and badges mark the milestones. Check your scorecard from your profile at the top right.' },
+  { pet: 'bear', title: 'Profile and settings', text: 'Tap your initials at the top right for your scorecard, settings and more. See something wrong in a question? Report it and an admin will review it.' }
 ];
 
 /* ---------- Starter content (used until R&D publishes their own packs) ---------- */
