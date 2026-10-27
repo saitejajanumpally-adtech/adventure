@@ -5,8 +5,8 @@ import { dateKey, weekKey } from './util.js';
 import { resetProfile, qkey } from './store.js';
 import { CONFIG } from './config.js';
 
-const PACK_GAMES = GAMES.filter((g) => g.live && g.kind !== 'mission');
-const LIVE_GAMES = GAMES.filter((g) => g.live);
+const PACK_GAMES = GAMES.filter((g) => g.live && g.kind !== 'mission' && !g.practice);
+const LIVE_GAMES = GAMES.filter((g) => g.live && !g.practice);
 const QUIZ = ['myth-or-fact', 'acronym-decoder', 'odd-one-out'];
 const REASON_LABEL = { wrong: 'Wrong answer', unclear: 'Unclear', outdated: 'Outdated', other: 'Other' };
 const TYPE_LABEL = { problem: 'Problem', idea: 'Idea', question: 'Question looks wrong' };

@@ -31,6 +31,10 @@ export const MOODS = ['hello', 'explain', 'celebrate', 'happy', 'think', 'correc
 
 const SCORE10 = '10 AdCoins for each correct answer. 20 more for a perfect round with no hints.';
 export const GAMES = [
+  { id: 'brain-gym', cat: 'practice', practice: true, earn: 'No AdCoins: it is practice.', title: 'Brain gym', tag: 'Practise your weak spots', icon: 'barbell', kind: 'practice', live: true, size: 5, pet: 'bear',
+    blurb: 'A short round made from questions you got wrong before.',
+    how: { steps: ['Up to five questions you missed before appear, easy ones first.', 'Answer each one. You see straight away if you were right, and why.', 'Every one you get right is cleared from your weak spots.'],
+      example: 'A myth or fact you got wrong last week comes back for another try.', scoring: 'Brain gym does not earn AdCoins and does not change your streak, so there is no pressure.' } },
   { id: 'daily-warmup', cat: 'daily', earn: 'Up to 50 AdCoins a round, plus a 30 AdCoin bonus the first time each day.', title: 'Daily warm-up', tag: 'Start your day sharp', icon: 'sun', kind: 'mission', live: true, pet: 'rabbit',
     blurb: 'Three quick puzzles picked just for you each day.',
     how: { steps: ['Three questions appear, one at a time.', 'Answer each one. You see straight away if you were right, and why.', 'Finish all three to complete today\'s mission and earn a bonus.'],

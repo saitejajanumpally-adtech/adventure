@@ -20,7 +20,7 @@ const applyPrefs = () => {
   TEXT_SIZES.forEach((t) => document.body.classList.toggle(`ts-${t.id}`, (S.profile.settings.textSize || 'standard') === t.id));
 };
 const seenOf = (g) => (S.profile.seenAll && S.profile.seenAll[g]) || [];
-const LIVE = GAMES.filter((g) => g.live);
+const LIVE = GAMES.filter((g) => g.live && !g.practice);
 
 /* Settings the admin can change in the app. They win over config.js. */
 const eff = () => ({
@@ -202,6 +202,13 @@ function gameCard(g) {
     h('div', {}, h('b', {}, g.title), h('span', {}, g.tag), h('small', { class: 'gmeta', 'data-game': g.id }, played ? `Level ${gameLevel(played.correct)}` : 'Not played yet')));
 }
 
+function gymCard() {
+  const n = missedCount();
+  if (!n) return null;
+  return h('section', { class: 'gymcard', 'aria-label': 'Brain gym' }, h('span', { class: 'gic' }, ic('barbell')),
+    h('div', {}, h('b', {}, 'Brain gym'), h('p', { class: 'muted' }, `${plural(n, 'question')} you missed ${n === 1 ? 'is' : 'are'} waiting. A short practice round with no pressure.`)),
+    h('a', { class: 'btn inline', href: '#/play/brain-gym' }, 'Practise'));
+}
 function renderHome() {
   const p = S.profile, today = dateKey(), lv = levelInfo(p.coins), done = p.missionDay === today;
   const away = daysAway();
@@ -318,6 +325,7 @@ function renderHome() {
     bannerOn ? h('div', { class: 'banner', role: 'status' }, ic('speakerphone'), h('span', {}, bn.text)) : null,
     welcome,
     h('div', { class: 'hero2' }, hero, progress),
+    gymCard(),
     recBox,
     sectionHead('Find your kind of play', 'Small puzzles. Big “oh, that makes sense” moments.', h('span', { class: 'chip-count' }, `${liveCount} games to explore`)),
     sections, journey, extras,
@@ -348,6 +356,48 @@ function pickFresh(pool, n, seenArr) {
   const old = pool.filter((x) => seen.has(x.id)).sort((a, b) => seenArr.indexOf(a.id) - seenArr.indexOf(b.id));
   return fresh.concat(old).slice(0, n);
 }
+const GYM_GAMES = [['myth-or-fact', 'tf'], ['acronym-decoder', 'mcq'], ['odd-one-out', 'mcq']];
+const missedCount = () => Object.values(S.profile.missed || {}).reduce((n, a) => n + a.length, 0);
+// Up to five questions the player missed, easy first. Questions that no longer exist are dropped from the list.
+async function gymItems() {
+  const p = S.profile, out = [];
+  p.missed = p.missed || {};
+  for (const [gid, kind] of GYM_GAMES) {
+    const ids = p.missed[gid] || [];
+    if (!ids.length) continue;
+    const pool = await loadUsable(gid), live = new Set(pool.map((x) => x.id));
+    const keep = ids.filter((x) => live.has(x));
+    if (keep.length) p.missed[gid] = keep; else delete p.missed[gid];
+    pool.filter((x) => keep.includes(x.id)).forEach((x) => out.push({ ...x, kind, game: gid }));
+  }
+  return shuffle(out).slice(0, 5).sort((a, b) => difficultyOf(a) - difficultyOf(b));
+}
+function applyPractice(res) {
+  const p = S.profile; p.missed = p.missed || {};
+  let cleared = 0;
+  res.items.forEach((it) => {
+    if (!it.ok) return;
+    const had = p.missed[it.game] || [];
+    if (had.includes(it.id)) cleared++;
+    const rest = had.filter((x) => x !== it.id);
+    if (rest.length) p.missed[it.game] = rest; else delete p.missed[it.game];
+  });
+  p.cleared = (p.cleared || 0) + cleared;
+  save();
+  return { cleared, left: missedCount() };
+}
+function renderGymResult(res, r) {
+  const p = S.profile;
+  view(page(h('div', { class: 'stage result' },
+    petFigure(p.companion, r.left === 0 ? 'celebrate' : 'proud', 'phero'),
+    h('h1', {}, r.left === 0 ? 'All weak spots cleared' : 'Good practice'),
+    h('p', { class: 'score' }, `${res.correct} of ${res.total}`),
+    h('p', {}, r.cleared ? `${plural(r.cleared, 'weak spot')} cleared.` : 'Nothing cleared this time. Those questions will come back for another go.'),
+    h('p', { class: 'muted small' }, `${plural(r.left, 'weak spot')} still to practise. Brain gym earns no ${CURRENCY}, so there is no pressure.`),
+    h('div', { class: 'row gap wrap center-row' },
+      r.left ? h('a', { class: 'btn', href: '#/play/brain-gym', onclick: () => { if (location.hash === '#/play/brain-gym') setTimeout(route, 0); } }, 'Practise again') : null,
+      h('a', { class: `btn ${r.left ? 'ghost' : ''}`.trim(), href: '#/home' }, 'Back to home')))));
+}
 async function missionItems() {
   const out = [];
   for (const [gid, kind] of [['myth-or-fact', 'tf'], ['acronym-decoder', 'mcq'], ['odd-one-out', 'mcq']]) {
@@ -372,7 +422,7 @@ async function reportItem(game, item, reason) {
 /* ---------- game intro ---------- */
 async function renderIntro(id) {
   const g = gameById(id);
-  if (!g || !g.live || isHidden(g)) return go('/home');
+  if (!g || !g.live || g.practice || isHidden(g)) return go('/home');
   const c = catOf(g), pet = hostFor(id);
   S.host[id] = pet; meet(pet);
   const tips = GAME_TIPS[id] || [];
@@ -432,6 +482,13 @@ function applyResult(gameId, res, isMission, ms) {
   const ga = act.g[gameId] || { r: 0, c: 0, t: 0, s: 0, pf: 0 };
   ga.r++; ga.c += res.correct; ga.t += res.total; ga.s += roundCoins; ga.pf += res.perfect ? 1 : 0; act.g[gameId] = ga;
   p.activity[today] = act;
+  p.missed = p.missed || {};
+  res.items.forEach((it) => {
+    if (typeof it.ok !== 'boolean') return;
+    const arr = (p.missed[it.game] || []).filter((x) => x !== it.id);
+    if (!it.ok) arr.push(it.id);
+    if (arr.length) p.missed[it.game] = arr.slice(-40); else delete p.missed[it.game];
+  });
   const keep = Object.keys(p.activity).sort().slice(-400);
   Object.keys(p.activity).forEach((k) => { if (!keep.includes(k)) delete p.activity[k]; });
   if (res.correct === res.total && (!p.bestTime[gameId] || ms < p.bestTime[gameId])) p.bestTime[gameId] = ms;
@@ -613,19 +670,21 @@ async function play(id) {
   try {
     let items, pool = null;
     if (g.kind === 'mission') items = await missionItems();
+    else if (g.kind === 'practice') items = await gymItems();
     else {
       pool = await loadUsable(id);
       items = pickFresh(pool, g.size || 1, seenOf(id)).sort((a, b) => difficultyOf(a) - difficultyOf(b)).map((it) => ({ ...it, kind: g.kind, game: id }));
     }
     if (!box.isConnected) return;
-    if (!items.length) { fill(box, h('p', {}, 'No puzzles are available for this game right now.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); return; }
+    if (!items.length) { fill(box, h('p', {}, g.kind === 'practice' ? 'No weak spots right now. Play a few rounds first, and the questions you miss will show up here.' : 'No puzzles are available for this game right now.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); return; }
     timer.start();
     if (sh.clock) S.clock = setInterval(() => { sh.clock.querySelector('.ct').textContent = fmtTime(timer.ms()); }, 500);
-    const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), skipAd, hostPet, shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
-    const res = ['mission', 'tf', 'mcq'].includes(g.kind) ? await runQuiz(box, items, ctx)
+    const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), skipAd, hostPet, practice: g.kind === 'practice', shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
+    const res = ['mission', 'tf', 'mcq', 'practice'].includes(g.kind) ? await runQuiz(box, items, ctx)
       : await ({ flow: runFlow, match: runMatch, sort: runSort, cross: runCross }[g.kind])(box, items[0], ctx);
     timer.stop(); sh.destroy();
     const ms = timer.ms();
+    if (g.kind === 'practice') { renderGymResult(res, applyPractice(res)); return; }
     const r = applyResult(id, res, g.kind === 'mission', ms);
     const left = pool ? pool.filter((x) => !seenOf(id).includes(x.id)).length : null;
     renderResult(g, res, r, ms, left);

@@ -78,7 +78,7 @@ function askOne(box, it, i, n, ctx) {
       right.classList.add('ok'); if (!ok) chosen.classList.add('bad');
       sh.coach.react(ok ? 'right' : 'wrong');
       const next = h('button', { class: 'btn', onclick: () => resolve({ ok, hinted }) }, i + 1 === n ? 'See results' : 'Next');
-      const chip = !ok ? null : seenBefore === false ? h('span', { class: 'pop' }, ic('coin'), `+${hinted ? 5 : 10} AdCoins`)
+      const chip = !ok || ctx.practice ? null : seenBefore === false ? h('span', { class: 'pop' }, ic('coin'), `+${hinted ? 5 : 10} AdCoins`)
         : seenBefore ? h('span', { class: 'pop quiet', title: 'A question you have seen before only earns AdCoins if you beat your best replay.' }, 'Seen before') : null;
       fill(fbHolder, feedbackBox(ok, it.why, h('div', { class: 'fb-actions' }, next, reportRow(it, ctx)), null, chip));
       next.focus();
@@ -107,10 +107,10 @@ function askOne(box, it, i, n, ctx) {
         const wrong = shuffle(order.map((o, k) => (o.idx === it.answer ? -1 : k)).filter((k) => k >= 0)).slice(0, 2);
         wrong.forEach((k) => { btns[k].disabled = true; btns[k].classList.add('gone'); });
         sh.coach.hintAfter('Two wrong answers removed.', clue);
-        sh.note(`${clue} Two wrong answers removed. This question now earns half AdCoins.`.trim());
+        sh.note(`${clue} Two wrong answers removed.${ctx.practice ? '' : ' This question now earns half AdCoins.'}`.trim());
       } else {
         sh.coach.hintAfter('Here is a nudge.', clue);
-        sh.note(`${clue || 'Hint used.'} This question now earns half AdCoins.`);
+        sh.note(`${clue || 'Hint used.'}${ctx.practice ? '' : ' This question now earns half AdCoins.'}`);
       }
       sh.hintUsed({});
     } : null);
