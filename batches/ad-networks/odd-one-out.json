@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which of these is not a way advertisers pay for results?",
+      "options": [
+        "CPC",
+        "CPA",
+        "CPI",
+        "CTR"
+      ],
+      "answer": 3,
+      "why": "CTR is a rate that measures clicks. The others are ways of paying.",
+      "level": 2,
+      "id": "odd-fhn6r0"
+    },
+    {
+      "q": "Which of these is not something a network does for publishers?",
+      "options": [
+        "Finds advertisers",
+        "Sells unsold space",
+        "Handles billing",
+        "Writes the site content"
+      ],
+      "answer": 3,
+      "why": "Writing content is the publisher’s own job.",
+      "level": 1,
+      "id": "odd-z88a81"
+    }
+  ]
+}

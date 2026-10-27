@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a conversion is attributed",
+      "steps": [
+        "A user sees an ad",
+        "The user clicks or views it",
+        "The click or view is logged",
+        "The user later buys",
+        "The sale is matched to the earlier ad",
+        "Credit is given by the attribution model"
+      ],
+      "why": "Exposure is logged first, then matched to the sale, then credit is shared.",
+      "level": 2,
+      "id": "ad--w5dvgy"
+    },
+    {
+      "title": "How an incrementality test runs",
+      "steps": [
+        "Pick a goal metric",
+        "Split people into test and holdout groups",
+        "Show ads to the test group only",
+        "Run for the planned time",
+        "Compare the groups’ results",
+        "Report the extra effect of the ads"
+      ],
+      "why": "The holdout group shows what would have happened anyway.",
+      "level": 3,
+      "id": "ad--4b2otu"
+    }
+  ]
+}

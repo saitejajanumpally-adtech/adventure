@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does RON stand for in ad networks?",
+      "options": [
+        "Run of network",
+        "Real-time ordering node",
+        "Rate of net revenue",
+        "Remote origin name"
+      ],
+      "answer": 0,
+      "why": "Run of network means the ad can show anywhere across the network’s sites.",
+      "level": 2,
+      "id": "acr-hgbt0t"
+    },
+    {
+      "q": "What does CPA stand for?",
+      "options": [
+        "Cost per action",
+        "Cost per audience",
+        "Click path analysis",
+        "Campaign planning agreement"
+      ],
+      "answer": 0,
+      "why": "With CPA the advertiser pays when a user completes a chosen action.",
+      "level": 1,
+      "id": "acr-a371i1"
+    },
+    {
+      "q": "What does ROAS stand for?",
+      "options": [
+        "Return on ad spend",
+        "Rate of ad serving",
+        "Reach over audience size",
+        "Revenue on all sites"
+      ],
+      "answer": 0,
+      "why": "ROAS is the revenue earned for each unit spent on ads.",
+      "level": 2,
+      "id": "acr-41t7ju"
+    },
+    {
+      "q": "What does CPI stand for in app advertising?",
+      "options": [
+        "Cost per install",
+        "Cost per impression",
+        "Click per interaction",
+        "Campaign performance index"
+      ],
+      "answer": 0,
+      "why": "The advertiser pays each time the ad leads to an app install.",
+      "level": 1,
+      "id": "acr-ttqet5"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "items": [
+    {
+      "title": "Mobile app ads",
+      "words": [
+        {
+          "answer": "REWARDED",
+          "clue": "Video watched for a bonus"
+        },
+        {
+          "answer": "MEDIATION",
+          "clue": "Calling many ad networks for the best ad"
+        },
+        {
+          "answer": "INSTALL",
+          "clue": "What an app advertiser wants a user to do"
+        },
+        {
+          "answer": "BANNER",
+          "clue": "Small ad at the edge of the screen"
+        },
+        {
+          "answer": "INTERSTITIAL",
+          "clue": "Full-screen ad at a natural break"
+        },
+        {
+          "answer": "ATTRIBUTION",
+          "clue": "Crediting an install to an ad"
+        },
+        {
+          "answer": "IDFA",
+          "clue": "Apple’s advertising ID"
+        },
+        {
+          "answer": "GAID",
+          "clue": "Android’s advertising ID"
+        },
+        {
+          "answer": "SDK",
+          "clue": "Code the app includes to show ads"
+        }
+      ],
+      "level": 2,
+      "id": "cro-wgsw2y"
+    }
+  ]
+}

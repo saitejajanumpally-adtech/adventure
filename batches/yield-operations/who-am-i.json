@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Insertion order",
+      "answer": "Insertion order",
+      "clues": [
+        "I am a document.",
+        "A buyer and a seller agree campaign terms in me.",
+        "I state budget, dates and price.",
+        "IO is my short name."
+      ],
+      "wrong": [
+        "Bid request",
+        "Tag manager",
+        "Sitemap"
+      ],
+      "why": "The insertion order is the agreed record of a campaign.",
+      "level": 1,
+      "id": "who-eq1p4d"
+    },
+    {
+      "title": "eCPM",
+      "answer": "eCPM",
+      "clues": [
+        "I turn different deals into one comparable number.",
+        "I am revenue per thousand impressions.",
+        "Publishers use me to compare demand sources.",
+        "The e stands for effective."
+      ],
+      "wrong": [
+        "CTR",
+        "Fill rate",
+        "Viewability"
+      ],
+      "why": "eCPM lets a publisher compare CPM, CPC and CPA deals fairly.",
+      "level": 2,
+      "id": "who-tbm74n"
+    },
+    {
+      "title": "Sell-through rate",
+      "answer": "Sell-through rate",
+      "clues": [
+        "I am a percentage.",
+        "I tell how much of the available space was sold.",
+        "Low me means unsold inventory.",
+        "Sold impressions divided by available impressions."
+      ],
+      "wrong": [
+        "Fill rate",
+        "Click-through rate",
+        "Viewability rate"
+      ],
+      "why": "Sell-through is sold impressions as a share of what was available.",
+      "level": 3,
+      "id": "who-5lx588"
+    }
+  ]
+}

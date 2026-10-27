@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Sell-side terms",
+      "pairs": [
+        {
+          "term": "Impression",
+          "def": "One ad shown to a user"
+        },
+        {
+          "term": "Bid request",
+          "def": "A call asking buyers to bid"
+        },
+        {
+          "term": "Floor price",
+          "def": "The lowest accepted price"
+        },
+        {
+          "term": "PMP",
+          "def": "Invite-only auction with chosen buyers"
+        },
+        {
+          "term": "Sellers.json",
+          "def": "Public list of who sells through a platform"
+        }
+      ],
+      "level": 2,
+      "id": "jar-wxwjz0"
+    }
+  ]
+}

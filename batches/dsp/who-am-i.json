@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Bid shading",
+      "answer": "Bid shading",
+      "clues": [
+        "I only appear in some auctions.",
+        "I help buyers pay less.",
+        "I lower a bid toward the likely winning price.",
+        "I matter in first-price auctions."
+      ],
+      "wrong": [
+        "Floor price",
+        "Frequency cap",
+        "Header bidding"
+      ],
+      "why": "Bid shading reduces overpaying in first-price auctions.",
+      "level": 3,
+      "id": "who-9ooc2v"
+    },
+    {
+      "title": "Pacing",
+      "answer": "Pacing",
+      "clues": [
+        "I am about time.",
+        "I keep a campaign from running out of money too early.",
+        "I spread a budget across the whole flight.",
+        "Too fast and the money is gone by lunch."
+      ],
+      "wrong": [
+        "Viewability",
+        "Latency",
+        "Fill rate"
+      ],
+      "why": "Pacing controls the speed of spend.",
+      "level": 2,
+      "id": "who-pu36fs"
+    },
+    {
+      "title": "DMP",
+      "answer": "DMP",
+      "clues": [
+        "I hold audience data.",
+        "I group people into segments.",
+        "Marketers use me to build audiences to target.",
+        "My name means data management platform."
+      ],
+      "wrong": [
+        "SSP",
+        "CMP",
+        "CDN"
+      ],
+      "why": "A DMP organises audience data so buyers can target it.",
+      "level": 2,
+      "id": "who-n5w8gi"
+    }
+  ]
+}

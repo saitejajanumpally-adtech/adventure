@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How an SSP runs an auction",
+      "steps": [
+        "A user opens a page",
+        "The page asks the SSP for an ad",
+        "The SSP sends a bid request to DSPs",
+        "DSPs return their bids",
+        "The SSP applies the floor and picks the winner",
+        "The winning ad is returned to the page"
+      ],
+      "why": "The SSP collects bids, applies the floor, and returns the winner.",
+      "level": 2,
+      "id": "ad--dgof4y"
+    },
+    {
+      "title": "How a publisher sets up a PMP deal",
+      "steps": [
+        "The publisher and buyer agree terms",
+        "The publisher creates a deal ID in the SSP",
+        "The buyer’s DSP receives the deal ID",
+        "The buyer bids on matching impressions",
+        "The SSP picks the highest bid above the deal floor",
+        "The ad serves and the deal is reported"
+      ],
+      "why": "The deal ID links both sides before any bid happens.",
+      "level": 3,
+      "id": "ad--k2i16e"
+    }
+  ]
+}

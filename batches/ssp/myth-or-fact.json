@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "q": "A publisher uses an SSP to sell its ad space to many buyers.",
+      "answer": true,
+      "why": "The SSP connects the publisher’s inventory to many buyers at once.",
+      "level": 1,
+      "id": "myt-s1gcn3"
+    },
+    {
+      "q": "An SSP can connect a publisher to many DSPs at the same time.",
+      "answer": true,
+      "why": "Several DSPs can bid on the same impression through the SSP.",
+      "level": 1,
+      "id": "myt-owv22a"
+    },
+    {
+      "q": "An SSP can only work with one ad exchange.",
+      "answer": false,
+      "why": "SSPs commonly connect to many exchanges and buyers.",
+      "level": 2,
+      "id": "myt-b54hkp"
+    },
+    {
+      "q": "A header bidding wrapper and an SSP are always the same product.",
+      "answer": false,
+      "why": "A wrapper is code that collects bids in the page. An SSP is a platform that can be one of the bidders it calls.",
+      "level": 3,
+      "id": "myt-riiz6y"
+    },
+    {
+      "q": "An SSP can apply the floor prices a publisher sets.",
+      "answer": true,
+      "why": "Bids below the floor are not allowed to win.",
+      "level": 1,
+      "id": "myt-pjn3tz"
+    },
+    {
+      "q": "An SSP can help a publisher block unwanted advertisers or categories.",
+      "answer": true,
+      "why": "Publishers can set blocks for brands, sectors and sensitive categories.",
+      "level": 2,
+      "id": "myt-jwn5ns"
+    },
+    {
+      "q": "Sellers.json is a public list of who sells through an ad platform.",
+      "answer": true,
+      "why": "Buyers use it, with ads.txt, to check who is behind an impression.",
+      "level": 3,
+      "id": "myt-witqtr"
+    }
+  ]
+}

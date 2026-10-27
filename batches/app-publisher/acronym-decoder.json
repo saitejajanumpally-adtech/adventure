@@ -1,0 +1,69 @@
+{
+  "items": [
+    {
+      "q": "What does IDFA stand for?",
+      "options": [
+        "Identifier for advertisers",
+        "Internal data feed API",
+        "Ad format index",
+        "Identity for fraud analysis"
+      ],
+      "answer": 0,
+      "why": "The IDFA is the advertising identifier on Apple devices.",
+      "level": 2,
+      "id": "acr-a4huop"
+    },
+    {
+      "q": "What does GAID stand for?",
+      "options": [
+        "Google advertising ID",
+        "Global ad index data",
+        "Gaming ad identifier",
+        "General app install data"
+      ],
+      "answer": 0,
+      "why": "The GAID is the advertising identifier on Android devices.",
+      "level": 2,
+      "id": "acr-83j8sm"
+    },
+    {
+      "q": "What does ATT stand for in iOS privacy?",
+      "options": [
+        "App Tracking Transparency",
+        "Ad Tag Test",
+        "Audience Targeting Tool",
+        "Automatic Traffic Tracker"
+      ],
+      "answer": 0,
+      "why": "ATT is the prompt that asks users whether an app may track them.",
+      "level": 2,
+      "id": "acr-x5dz2m"
+    },
+    {
+      "q": "What does MMP stand for in mobile advertising?",
+      "options": [
+        "Mobile measurement partner",
+        "Mobile media planner",
+        "Mediated marketplace pricing",
+        "Multi-market publisher"
+      ],
+      "answer": 0,
+      "why": "An MMP is a third party that attributes installs and events to ad campaigns.",
+      "level": 3,
+      "id": "acr-cq9xoi"
+    },
+    {
+      "q": "What does IAP stand for in apps?",
+      "options": [
+        "In-app purchase",
+        "Interactive ad placement",
+        "Internal ad platform",
+        "Install attribution process"
+      ],
+      "answer": 0,
+      "why": "An IAP is something a user buys inside the app, such as extra lives or a subscription.",
+      "level": 1,
+      "id": "acr-tqv5cm"
+    }
+  ]
+}

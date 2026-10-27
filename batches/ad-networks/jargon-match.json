@@ -1,0 +1,35 @@
+{
+  "items": [
+    {
+      "title": "Ad network terms",
+      "pairs": [
+        {
+          "term": "RON",
+          "def": "Ad runs across all sites in the network"
+        },
+        {
+          "term": "Vertical network",
+          "def": "Focused on one topic or audience"
+        },
+        {
+          "term": "Blind network",
+          "def": "Does not name the sites"
+        },
+        {
+          "term": "Margin",
+          "def": "Gap between price charged and price paid"
+        },
+        {
+          "term": "Affiliate",
+          "def": "Partner paid for actions they drive"
+        },
+        {
+          "term": "CPA",
+          "def": "Price paid per completed action"
+        }
+      ],
+      "level": 2,
+      "id": "jar-epybb8"
+    }
+  ]
+}

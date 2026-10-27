@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "DSP terms",
+      "pairs": [
+        {
+          "term": "Pacing",
+          "def": "How fast a budget is spent"
+        },
+        {
+          "term": "Bid shading",
+          "def": "Lowering a bid toward the likely clearing price"
+        },
+        {
+          "term": "Frequency cap",
+          "def": "Limit on ads per person"
+        },
+        {
+          "term": "Retargeting",
+          "def": "Ads for past visitors"
+        },
+        {
+          "term": "Lookalike",
+          "def": "Audience like your best customers"
+        }
+      ],
+      "level": 2,
+      "id": "jar-qyogy5"
+    }
+  ]
+}

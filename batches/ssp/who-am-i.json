@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "PMP",
+      "answer": "PMP",
+      "clues": [
+        "I am invite-only.",
+        "Selected buyers can bid for premium inventory.",
+        "A publisher sets me up with chosen buyers.",
+        "My name means private marketplace."
+      ],
+      "wrong": [
+        "Open auction",
+        "Waterfall",
+        "Ad network"
+      ],
+      "why": "A PMP is a private auction for invited buyers.",
+      "level": 2,
+      "id": "who-sx1inu"
+    },
+    {
+      "title": "SPO",
+      "answer": "SPO",
+      "clues": [
+        "I make a path shorter.",
+        "Buyers use me to cut out extra middlemen.",
+        "I look at which routes to an impression are best.",
+        "My name means supply path optimisation."
+      ],
+      "wrong": [
+        "Bid shading",
+        "Frequency capping",
+        "Contextual targeting"
+      ],
+      "why": "SPO helps buyers reach the same inventory by the cleanest, cheapest path.",
+      "level": 3,
+      "id": "who-de90oj"
+    },
+    {
+      "title": "Sellers.json",
+      "answer": "Sellers.json",
+      "clues": [
+        "I am a public list.",
+        "I name who sells through an ad platform.",
+        "Buyers use me to check who is behind an impression.",
+        "I team up with ads.txt."
+      ],
+      "wrong": [
+        "robots.txt",
+        "CORS policy",
+        "Privacy policy"
+      ],
+      "why": "sellers.json lets buyers see who an ad platform represents.",
+      "level": 3,
+      "id": "who-lqoe5w"
+    }
+  ]
+}

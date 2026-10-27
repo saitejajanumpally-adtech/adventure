@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "q": "An ad network buys ad space from publishers and resells it to advertisers.",
+      "answer": true,
+      "why": "The network bundles space from many sites and sells it as one package.",
+      "level": 1,
+      "id": "myt-8inubp"
+    },
+    {
+      "q": "An ad network and an ad exchange are exactly the same thing.",
+      "answer": false,
+      "why": "A network buys and resells inventory itself. An exchange is an open marketplace where buyers and sellers trade in auctions.",
+      "level": 1,
+      "id": "myt-q4w3k"
+    },
+    {
+      "q": "A blind network may not tell the advertiser which sites their ads ran on.",
+      "answer": true,
+      "why": "Blind networks trade transparency for lower prices and wide reach.",
+      "level": 2,
+      "id": "myt-iip3w7"
+    },
+    {
+      "q": "A vertical ad network focuses on one kind of content or audience.",
+      "answer": true,
+      "why": "For example, a network that only sells space on travel or sports sites.",
+      "level": 2,
+      "id": "myt-mqm951"
+    },
+    {
+      "q": "An ad network always pays publishers exactly what it charges advertisers.",
+      "answer": false,
+      "why": "The network keeps a margin, the gap between what it charges and what it pays.",
+      "level": 1,
+      "id": "myt-xd7pq2"
+    },
+    {
+      "q": "Premium publishers sell only through ad networks.",
+      "answer": false,
+      "why": "Many sell directly, through private deals and through exchanges as well.",
+      "level": 2,
+      "id": "myt-f1zow6"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "MMP",
+      "answer": "MMP",
+      "clues": [
+        "I am a third party that works for advertisers.",
+        "I measure which ad led to an app install.",
+        "I sit between ad networks and the app to attribute installs.",
+        "My name means mobile measurement partner."
+      ],
+      "wrong": [
+        "SSP",
+        "CDN",
+        "DMP"
+      ],
+      "why": "An MMP attributes installs and in-app events to the campaigns that drove them.",
+      "level": 3,
+      "id": "who-gp6o5w"
+    },
+    {
+      "title": "Rewarded video",
+      "answer": "Rewarded video",
+      "clues": [
+        "Users choose me.",
+        "I give something back, like a bonus life.",
+        "I am a full-screen video ad.",
+        "Games love me for good completion."
+      ],
+      "wrong": [
+        "Banner",
+        "Native ad",
+        "Pop-under"
+      ],
+      "why": "A rewarded video is watched in exchange for a benefit inside the app.",
+      "level": 1,
+      "id": "who-1h5igf"
+    },
+    {
+      "title": "Interstitial",
+      "answer": "Interstitial",
+      "clues": [
+        "I take over the screen.",
+        "I appear at natural breaks, like between levels.",
+        "I am a full-screen ad that users do not choose to open.",
+        "Show me in the middle of a task and users get annoyed."
+      ],
+      "wrong": [
+        "Banner",
+        "Rewarded video",
+        "Sticky footer"
+      ],
+      "why": "Interstitials are full-screen ads shown at natural pauses.",
+      "level": 1,
+      "id": "who-odhcy4"
+    }
+  ]
+}

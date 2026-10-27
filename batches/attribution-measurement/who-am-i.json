@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Incrementality",
+      "answer": "Incrementality",
+      "clues": [
+        "I am about cause, not just correlation.",
+        "I ask what would have happened without the ad.",
+        "Holdout groups help measure me.",
+        "I tell you the extra sales an ad really drove."
+      ],
+      "wrong": [
+        "Viewability",
+        "Frequency",
+        "Click-through rate"
+      ],
+      "why": "Incrementality is the extra result caused by advertising.",
+      "level": 3,
+      "id": "who-e051o7"
+    },
+    {
+      "title": "Lookback window",
+      "answer": "Lookback window",
+      "clues": [
+        "I am a span of time.",
+        "I set how long a conversion can be credited to an ad.",
+        "Click windows are often shorter than view windows.",
+        "Too short and you miss sales. Too long and you over-credit."
+      ],
+      "wrong": [
+        "Frequency cap",
+        "Pacing",
+        "Latency"
+      ],
+      "why": "A lookback window decides how late a conversion can still count.",
+      "level": 2,
+      "id": "who-7pza7j"
+    },
+    {
+      "title": "Reach",
+      "answer": "Reach",
+      "clues": [
+        "I count people, not ads.",
+        "I tell you how many different people saw a campaign.",
+        "Frequency is my partner.",
+        "Show the same ad ten times to one person and I still say one."
+      ],
+      "wrong": [
+        "Impressions",
+        "Clicks",
+        "Conversions"
+      ],
+      "why": "Reach is the number of different people exposed.",
+      "level": 1,
+      "id": "who-tc2dko"
+    }
+  ]
+}

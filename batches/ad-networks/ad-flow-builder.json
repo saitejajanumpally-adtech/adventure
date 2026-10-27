@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How an ad network sells a campaign",
+      "steps": [
+        "The advertiser books a campaign with the network",
+        "The network picks matching publisher sites",
+        "Ads are served across those sites",
+        "The network tracks impressions and clicks",
+        "The network bills the advertiser",
+        "The network pays publishers after taking its margin"
+      ],
+      "why": "The network collects from the advertiser and pays publishers after keeping its margin.",
+      "level": 2,
+      "id": "ad--5raggl"
+    },
+    {
+      "title": "How a publisher joins an ad network",
+      "steps": [
+        "The publisher applies to the network",
+        "The network reviews the site",
+        "The publisher adds the network’s code to the pages",
+        "Test ads are served",
+        "Live ads start running",
+        "The publisher is paid on schedule"
+      ],
+      "why": "Approval comes first, then code, tests and live ads.",
+      "level": 1,
+      "id": "ad--te5h5v"
+    }
+  ]
+}

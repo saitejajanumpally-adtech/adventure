@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does IVT stand for?",
+      "options": [
+        "Invalid traffic",
+        "Internal video tag",
+        "Impression value target",
+        "Inventory verification test"
+      ],
+      "answer": 0,
+      "why": "IVT is traffic that is not a real person genuinely viewing an ad, such as bots.",
+      "level": 2,
+      "id": "acr-3dl660"
+    },
+    {
+      "q": "What does MMM stand for in measurement?",
+      "options": [
+        "Marketing mix modelling",
+        "Media and market metrics",
+        "Multi-media management",
+        "Mobile measurement method"
+      ],
+      "answer": 0,
+      "why": "MMM uses past data to estimate how each channel contributed to results.",
+      "level": 3,
+      "id": "acr-s3fwtz"
+    },
+    {
+      "q": "What does MTA stand for in attribution?",
+      "options": [
+        "Multi-touch attribution",
+        "Media tracking audit",
+        "Mobile tag analysis",
+        "Measured traffic average"
+      ],
+      "answer": 0,
+      "why": "MTA spreads credit across several touchpoints instead of just one.",
+      "level": 3,
+      "id": "acr-83y48d"
+    },
+    {
+      "q": "What does GRP stand for?",
+      "options": [
+        "Gross rating point",
+        "General reach percentage",
+        "Group reporting package",
+        "Global ranking position"
+      ],
+      "answer": 0,
+      "why": "GRPs measure the weight of a campaign: reach multiplied by frequency, as a percentage of the audience.",
+      "level": 3,
+      "id": "acr-twzt3m"
+    }
+  ]
+}

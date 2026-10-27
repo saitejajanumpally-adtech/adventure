@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Ad ops or yield management?",
+      "layers": [
+        "Ad operations",
+        "Yield management"
+      ],
+      "cards": [
+        {
+          "name": "Trafficking",
+          "layer": 0
+        },
+        {
+          "name": "Creative QA",
+          "layer": 0
+        },
+        {
+          "name": "Delivery checks",
+          "layer": 0
+        },
+        {
+          "name": "Floor price tuning",
+          "layer": 1
+        },
+        {
+          "name": "Partner mix",
+          "layer": 1
+        },
+        {
+          "name": "Auction rules",
+          "layer": 1
+        }
+      ],
+      "why": "Ad ops keeps campaigns running well. Yield management works on earning more from each impression.",
+      "level": 2,
+      "id": "sta-9h3ipd"
+    }
+  ]
+}

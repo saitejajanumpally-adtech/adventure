@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How an in-app ad is served with mediation",
+      "steps": [
+        "The app reaches an ad slot",
+        "The SDK asks the mediation layer for an ad",
+        "Mediation calls the ad networks",
+        "The best network returns an ad",
+        "The SDK shows the ad",
+        "Impression and click events are reported"
+      ],
+      "why": "Mediation asks several sources and keeps the best before anything is shown.",
+      "level": 2,
+      "id": "ad--eisbui"
+    },
+    {
+      "title": "How an app install is attributed",
+      "steps": [
+        "The user sees an ad",
+        "The user clicks the ad",
+        "The click is recorded with a device ID",
+        "The user installs and opens the app",
+        "The MMP matches the install to the click",
+        "The network receives the attribution"
+      ],
+      "why": "The click is stored first, then matched to the install after the app opens.",
+      "level": 3,
+      "id": "ad--ndw5ci"
+    }
+  ]
+}

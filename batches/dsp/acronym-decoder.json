@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "What does DCO stand for?",
+      "options": [
+        "Dynamic creative optimisation",
+        "Direct campaign ordering",
+        "Digital content outlet",
+        "Demand cost operations"
+      ],
+      "answer": 0,
+      "why": "DCO assembles ad variants automatically for the audience and context.",
+      "level": 3,
+      "id": "acr-ifonej"
+    },
+    {
+      "q": "What does KPI stand for?",
+      "options": [
+        "Key performance indicator",
+        "Keyword pricing index",
+        "Known publisher inventory",
+        "Key page impression"
+      ],
+      "answer": 0,
+      "why": "A KPI is the measure a campaign is judged on.",
+      "level": 1,
+      "id": "acr-ex487r"
+    }
+  ]
+}

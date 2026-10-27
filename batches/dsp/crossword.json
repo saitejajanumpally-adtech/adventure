@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "The buy side",
+      "words": [
+        {
+          "answer": "BUDGET",
+          "clue": "Money set aside for a campaign"
+        },
+        {
+          "answer": "PACING",
+          "clue": "Speed of spend"
+        },
+        {
+          "answer": "SHADING",
+          "clue": "Lowering a bid toward the clearing price"
+        },
+        {
+          "answer": "LOOKALIKE",
+          "clue": "Audience built from your best customers"
+        },
+        {
+          "answer": "CAMPAIGN",
+          "clue": "A planned set of ads"
+        },
+        {
+          "answer": "AUDIENCE",
+          "clue": "Group of people to reach"
+        },
+        {
+          "answer": "FREQUENCY",
+          "clue": "How often a person sees an ad"
+        },
+        {
+          "answer": "BIDDING",
+          "clue": "Offering a price for an impression"
+        }
+      ],
+      "level": 2,
+      "id": "cro-soiy1x"
+    }
+  ]
+}

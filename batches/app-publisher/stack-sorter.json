@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "title": "Who does what in mobile ads?",
+      "layers": [
+        "Publisher",
+        "Advertiser",
+        "Measurement partner"
+      ],
+      "cards": [
+        {
+          "name": "Ad unit",
+          "layer": 0
+        },
+        {
+          "name": "Mediation setup",
+          "layer": 0
+        },
+        {
+          "name": "app-ads.txt",
+          "layer": 0
+        },
+        {
+          "name": "Install campaign budget",
+          "layer": 1
+        },
+        {
+          "name": "Creative assets",
+          "layer": 1
+        },
+        {
+          "name": "Target cost per install",
+          "layer": 1
+        },
+        {
+          "name": "MMP dashboard",
+          "layer": 2
+        },
+        {
+          "name": "Install attribution",
+          "layer": 2
+        }
+      ],
+      "why": "Publishers set up where ads show, advertisers fund and design them, and a measurement partner credits installs.",
+      "level": 2,
+      "id": "sta-r9z38n"
+    }
+  ]
+}

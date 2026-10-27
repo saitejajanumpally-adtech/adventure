@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "The sell side",
+      "words": [
+        {
+          "answer": "SELLER",
+          "clue": "Party offering an impression"
+        },
+        {
+          "answer": "AUCTION",
+          "clue": "How impressions are priced"
+        },
+        {
+          "answer": "PMP",
+          "clue": "Invite-only marketplace"
+        },
+        {
+          "answer": "DEAL",
+          "clue": "Agreed terms between buyer and seller"
+        },
+        {
+          "answer": "BIDREQUEST",
+          "clue": "Call asking buyers to bid"
+        },
+        {
+          "answer": "WRAPPER",
+          "clue": "Page code that collects bids"
+        },
+        {
+          "answer": "SELLERSJSON",
+          "clue": "Public list of sellers"
+        },
+        {
+          "answer": "PATH",
+          "clue": "Route from seller to buyer"
+        }
+      ],
+      "level": 2,
+      "id": "cro-srrqpn"
+    }
+  ]
+}

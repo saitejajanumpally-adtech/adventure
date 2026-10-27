@@ -1,5 +1,39 @@
 {
   "batches": [
-    { "id": "web-publisher-ctv", "title": "Web Publisher + CTV, OTT, OOH and DOOH", "note": "Pilot batch: page speed, header bidding, ads.txt, streaming ads, ad pods and out-of-home." }
+    {
+      "id": "web-publisher-ctv",
+      "title": "Web Publisher + CTV, OTT, OOH and DOOH",
+      "note": "Pilot batch: page speed, header bidding, ads.txt, streaming ads, ad pods and out-of-home."
+    },
+    {
+      "id": "app-publisher",
+      "title": "App Publisher",
+      "note": "Mobile app ads: identifiers, SDKs, mediation, rewarded video, app-ads.txt and install attribution."
+    },
+    {
+      "id": "ad-networks",
+      "title": "Ad Networks",
+      "note": "How networks bundle inventory, margins, blind and vertical networks, and common results-based pricing."
+    },
+    {
+      "id": "ssp",
+      "title": "SSP and the Sell Side",
+      "note": "How supply-side platforms auction publisher inventory: floors, private deals, supply paths and transparency files."
+    },
+    {
+      "id": "dsp",
+      "title": "DSP and the Buy Side",
+      "note": "How advertisers buy: audiences, budgets, pacing, caps, bid shading and creative optimisation."
+    },
+    {
+      "id": "attribution-measurement",
+      "title": "Attribution and Measurement",
+      "note": "Attribution models, reach and frequency, lookback windows, invalid traffic and incrementality."
+    },
+    {
+      "id": "yield-operations",
+      "title": "Yield and Operations",
+      "note": "Maximising revenue per impression, trafficking, floors, discrepancies and daily ad operations."
+    }
   ]
 }

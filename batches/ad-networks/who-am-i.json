@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Ad network",
+      "answer": "Ad network",
+      "clues": [
+        "I sit between many publishers and many advertisers.",
+        "I buy bulk ad space and resell it.",
+        "I keep a margin between what I pay and what I charge.",
+        "Run of network is one way to buy from me."
+      ],
+      "wrong": [
+        "SSP",
+        "CMP",
+        "Ad server"
+      ],
+      "why": "A network aggregates inventory from publishers and sells it to advertisers.",
+      "level": 2,
+      "id": "who-vwy9vl"
+    },
+    {
+      "title": "Blind network",
+      "answer": "Blind network",
+      "clues": [
+        "Advertisers buy reach cheaply from me.",
+        "I may not tell advertisers which sites the ad ran on.",
+        "I trade transparency for price.",
+        "My name says something cannot be seen."
+      ],
+      "wrong": [
+        "Premium network",
+        "Vertical network",
+        "Affiliate network"
+      ],
+      "why": "On a blind network the buyer cannot choose or see the sites.",
+      "level": 3,
+      "id": "who-zeijct"
+    },
+    {
+      "title": "Margin",
+      "answer": "Margin",
+      "clues": [
+        "I am a difference between two prices.",
+        "A network earns me.",
+        "Buy low from publishers and sell high to advertisers.",
+        "I am the network’s cut."
+      ],
+      "wrong": [
+        "Floor price",
+        "Frequency cap",
+        "Fill rate"
+      ],
+      "why": "The margin is the gap between what the network charges and what it pays the publisher.",
+      "level": 2,
+      "id": "who-tf2m4w"
+    }
+  ]
+}

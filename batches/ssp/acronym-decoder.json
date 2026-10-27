@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "What does PMP stand for in programmatic?",
+      "options": [
+        "Private marketplace",
+        "Premium media package",
+        "Page measurement protocol",
+        "Programmatic media plan"
+      ],
+      "answer": 0,
+      "why": "A PMP is an invite-only auction for selected buyers.",
+      "level": 2,
+      "id": "acr-162swh"
+    },
+    {
+      "q": "What does PG stand for in programmatic deals?",
+      "options": [
+        "Programmatic guaranteed",
+        "Page group",
+        "Private gateway",
+        "Premium graphics"
+      ],
+      "answer": 0,
+      "why": "A programmatic guaranteed deal reserves a set amount of inventory at a fixed price, delivered automatically.",
+      "level": 3,
+      "id": "acr-isclzy"
+    }
+  ]
+}

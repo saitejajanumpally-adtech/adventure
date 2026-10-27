@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a DSP decides on a bid",
+      "steps": [
+        "The DSP receives a bid request",
+        "It checks the audience and context",
+        "It checks budget, pacing and frequency",
+        "It sets a bid price",
+        "It sends the bid back",
+        "It learns whether it won"
+      ],
+      "why": "The DSP filters first, then prices, then finds out the result.",
+      "level": 2,
+      "id": "ad--d8q9x5"
+    },
+    {
+      "title": "How a campaign is set up in a DSP",
+      "steps": [
+        "Agree goals and budget",
+        "Choose audience and inventory",
+        "Upload the creative",
+        "Set bids, pacing and caps",
+        "Launch the campaign",
+        "Review reports and optimise"
+      ],
+      "why": "Plan first, set controls, launch, then improve.",
+      "level": 1,
+      "id": "ad--77skcg"
+    }
+  ]
+}

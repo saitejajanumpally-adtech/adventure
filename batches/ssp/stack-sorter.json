@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Sell side or buy side?",
+      "layers": [
+        "Sell side",
+        "Buy side"
+      ],
+      "cards": [
+        {
+          "name": "SSP",
+          "layer": 0
+        },
+        {
+          "name": "Publisher ad server",
+          "layer": 0
+        },
+        {
+          "name": "Yield manager",
+          "layer": 0
+        },
+        {
+          "name": "DSP",
+          "layer": 1
+        },
+        {
+          "name": "Advertiser",
+          "layer": 1
+        },
+        {
+          "name": "Agency trading desk",
+          "layer": 1
+        }
+      ],
+      "why": "Sell-side tools work for publishers. Buy-side tools work for advertisers.",
+      "level": 1,
+      "id": "sta-m2km40"
+    }
+  ]
+}

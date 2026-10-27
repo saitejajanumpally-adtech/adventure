@@ -1,0 +1,35 @@
+{
+  "items": [
+    {
+      "title": "Measurement terms",
+      "pairs": [
+        {
+          "term": "Reach",
+          "def": "Different people who saw an ad"
+        },
+        {
+          "term": "Frequency",
+          "def": "Average times each person saw it"
+        },
+        {
+          "term": "CTR",
+          "def": "Clicks divided by impressions"
+        },
+        {
+          "term": "Conversion",
+          "def": "A valued action after an ad"
+        },
+        {
+          "term": "Attribution",
+          "def": "Giving credit to the ads that led to it"
+        },
+        {
+          "term": "Incrementality",
+          "def": "Extra results caused by the ad"
+        }
+      ],
+      "level": 2,
+      "id": "jar-9x5kuv"
+    }
+  ]
+}

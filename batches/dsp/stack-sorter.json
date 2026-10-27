@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "title": "Which DSP setting is it?",
+      "layers": [
+        "Targeting",
+        "Budget and delivery",
+        "Creative"
+      ],
+      "cards": [
+        {
+          "name": "Audience segment",
+          "layer": 0
+        },
+        {
+          "name": "Location",
+          "layer": 0
+        },
+        {
+          "name": "Daily budget",
+          "layer": 1
+        },
+        {
+          "name": "Pacing",
+          "layer": 1
+        },
+        {
+          "name": "Frequency cap",
+          "layer": 1
+        },
+        {
+          "name": "Video file",
+          "layer": 2
+        },
+        {
+          "name": "Headline",
+          "layer": 2
+        },
+        {
+          "name": "Landing page",
+          "layer": 2
+        }
+      ],
+      "why": "Targeting says who, budget says how much and how fast, creative says what they see.",
+      "level": 1,
+      "id": "sta-amgfpy"
+    }
+  ]
+}

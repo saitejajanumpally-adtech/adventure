@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "Ad networks",
+      "words": [
+        {
+          "answer": "NETWORK",
+          "clue": "Buys space in bulk and resells it"
+        },
+        {
+          "answer": "MARGIN",
+          "clue": "The network’s cut"
+        },
+        {
+          "answer": "BLIND",
+          "clue": "Type that hides the sites"
+        },
+        {
+          "answer": "VERTICAL",
+          "clue": "Network focused on one topic"
+        },
+        {
+          "answer": "AFFILIATE",
+          "clue": "Partner paid for results"
+        },
+        {
+          "answer": "REACH",
+          "clue": "How many different people see an ad"
+        },
+        {
+          "answer": "BULK",
+          "clue": "Large amount of ad space at once"
+        },
+        {
+          "answer": "CPA",
+          "clue": "Pay per completed action"
+        }
+      ],
+      "level": 2,
+      "id": "cro-unxoqh"
+    }
+  ]
+}

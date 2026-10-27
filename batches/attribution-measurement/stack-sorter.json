@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "title": "What kind of metric is it?",
+      "layers": [
+        "Exposure",
+        "Engagement",
+        "Outcome"
+      ],
+      "cards": [
+        {
+          "name": "Impressions",
+          "layer": 0
+        },
+        {
+          "name": "Reach",
+          "layer": 0
+        },
+        {
+          "name": "Frequency",
+          "layer": 0
+        },
+        {
+          "name": "Click-through rate",
+          "layer": 1
+        },
+        {
+          "name": "Video completion rate",
+          "layer": 1
+        },
+        {
+          "name": "Purchases",
+          "layer": 2
+        },
+        {
+          "name": "Sign-ups",
+          "layer": 2
+        },
+        {
+          "name": "Return on ad spend",
+          "layer": 2
+        }
+      ],
+      "why": "Exposure counts who saw it, engagement counts what they did with it, outcome counts the business result.",
+      "level": 1,
+      "id": "sta-mdvzwx"
+    }
+  ]
+}

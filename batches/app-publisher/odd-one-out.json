@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which of these is not a way an app earns money?",
+      "options": [
+        "In-app ads",
+        "In-app purchases",
+        "Subscriptions",
+        "Page speed"
+      ],
+      "answer": 3,
+      "why": "Page speed is a performance measure. The others bring in revenue.",
+      "level": 1,
+      "id": "odd-vtarli"
+    },
+    {
+      "q": "Which of these is not shown inside a mobile app?",
+      "options": [
+        "Rewarded video",
+        "Interstitial",
+        "App-open ad",
+        "Out-of-home poster"
+      ],
+      "answer": 3,
+      "why": "Out-of-home posters are outside, not in an app.",
+      "level": 1,
+      "id": "odd-yu877s"
+    }
+  ]
+}

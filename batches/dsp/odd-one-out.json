@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not a DSP control?",
+      "options": [
+        "Budget",
+        "Pacing",
+        "Frequency cap",
+        "Publisher floor price"
+      ],
+      "answer": 3,
+      "why": "The publisher sets the floor price, not the buyer.",
+      "level": 2,
+      "id": "odd-wpe1yo"
+    },
+    {
+      "q": "Which one is not a buy-side tool?",
+      "options": [
+        "DSP",
+        "Agency trading desk",
+        "Ad verification",
+        "SSP"
+      ],
+      "answer": 3,
+      "why": "An SSP is used by sellers.",
+      "level": 1,
+      "id": "odd-rlrq11"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not an attribution model?",
+      "options": [
+        "Last click",
+        "First click",
+        "Linear",
+        "Floor price"
+      ],
+      "answer": 3,
+      "why": "A floor price is about selling. The others are ways to share credit.",
+      "level": 1,
+      "id": "odd-b28wjo"
+    },
+    {
+      "q": "Which one is not about how many saw an ad?",
+      "options": [
+        "Reach",
+        "Frequency",
+        "Impressions",
+        "Return on ad spend"
+      ],
+      "answer": 3,
+      "why": "ROAS measures return on spend, not exposure.",
+      "level": 2,
+      "id": "odd-15pax0"
+    }
+  ]
+}

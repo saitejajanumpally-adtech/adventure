@@ -1,0 +1,60 @@
+{
+  "items": [
+    {
+      "q": "Yield management aims to maximise the revenue from each impression a publisher sells.",
+      "answer": true,
+      "why": "It balances price, fill and user experience to earn more from the same space.",
+      "level": 1,
+      "id": "myt-kwmw6a"
+    },
+    {
+      "q": "Raising a floor price always increases revenue.",
+      "answer": false,
+      "why": "A floor that is too high can leave impressions unsold, so total revenue can fall.",
+      "level": 2,
+      "id": "myt-cdxi5s"
+    },
+    {
+      "q": "An ad ops team sets up campaigns, checks delivery and fixes problems.",
+      "answer": true,
+      "why": "Trafficking, quality checks and troubleshooting are daily ad operations work.",
+      "level": 1,
+      "id": "myt-6cy1ys"
+    },
+    {
+      "q": "Impression counts from two different systems must always match exactly.",
+      "answer": false,
+      "why": "Small differences are normal because systems count at different moments and with different rules.",
+      "level": 2,
+      "id": "myt-7lp2rc"
+    },
+    {
+      "q": "A waterfall calls demand sources one after another in priority order.",
+      "answer": true,
+      "why": "It stops at the first source that fills the slot.",
+      "level": 1,
+      "id": "myt-6leztq"
+    },
+    {
+      "q": "Unified pricing rules let a publisher set floors that apply across demand sources.",
+      "answer": true,
+      "why": "One rule set avoids different floors for the same impression.",
+      "level": 3,
+      "id": "myt-2j8hl0"
+    },
+    {
+      "q": "Sell-through rate is the share of available impressions that were sold.",
+      "answer": true,
+      "why": "Low sell-through means a lot of unsold inventory.",
+      "level": 2,
+      "id": "myt-bg7bt2"
+    },
+    {
+      "q": "Ad ops only works inside the ad server and never affects page speed.",
+      "answer": false,
+      "why": "Slow tags and heavy creatives affect page speed, so ad ops watches them too.",
+      "level": 2,
+      "id": "myt-olkl3q"
+    }
+  ]
+}

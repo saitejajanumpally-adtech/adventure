@@ -1,0 +1,35 @@
+{
+  "items": [
+    {
+      "title": "Yield and ops terms",
+      "pairs": [
+        {
+          "term": "eCPM",
+          "def": "Revenue per thousand impressions, any deal type"
+        },
+        {
+          "term": "Sell-through",
+          "def": "Share of available impressions sold"
+        },
+        {
+          "term": "Discrepancy",
+          "def": "Difference between two systems’ counts"
+        },
+        {
+          "term": "Trafficking",
+          "def": "Setting up campaigns in the ad server"
+        },
+        {
+          "term": "Insertion order",
+          "def": "Agreement of campaign terms"
+        },
+        {
+          "term": "Waterfall",
+          "def": "Demand called in priority order"
+        }
+      ],
+      "level": 2,
+      "id": "jar-xes6rs"
+    }
+  ]
+}

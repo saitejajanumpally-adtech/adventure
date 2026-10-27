@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a campaign is trafficked",
+      "steps": [
+        "Receive the insertion order",
+        "Create the order and line items",
+        "Upload and attach the creatives",
+        "Quality-check tags and targeting",
+        "Launch the campaign",
+        "Monitor delivery and fix issues"
+      ],
+      "why": "Set up, check, launch, then watch.",
+      "level": 2,
+      "id": "ad--bxs5nn"
+    },
+    {
+      "title": "How to investigate a discrepancy",
+      "steps": [
+        "Spot the gap between two reports",
+        "Check the date range and time zone",
+        "Compare the counting rules",
+        "Look for blocked or lost ad calls",
+        "Agree an acceptable threshold",
+        "Fix the cause or document it"
+      ],
+      "why": "Start with the simplest causes, such as dates and rules, before digging deeper.",
+      "level": 3,
+      "id": "ad--lpyiy9"
+    }
+  ]
+}

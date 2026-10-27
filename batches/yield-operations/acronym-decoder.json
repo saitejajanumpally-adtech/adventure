@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "q": "What does RPM stand for in publishing?",
+      "options": [
+        "Revenue per mille",
+        "Reach per month",
+        "Requests per minute",
+        "Rate of paid media"
+      ],
+      "answer": 0,
+      "why": "RPM is the publisher’s revenue for every thousand page views or impressions.",
+      "level": 2,
+      "id": "acr-7bt4io"
+    },
+    {
+      "q": "What does IO stand for in ad operations?",
+      "options": [
+        "Insertion order",
+        "Inventory output",
+        "Impression offset",
+        "Ad index owner"
+      ],
+      "answer": 0,
+      "why": "An insertion order records what a buyer and seller agreed for a campaign.",
+      "level": 1,
+      "id": "acr-xko8yl"
+    },
+    {
+      "q": "What does SLA stand for?",
+      "options": [
+        "Service level agreement",
+        "Seller listing alert",
+        "Site load average",
+        "Supply link address"
+      ],
+      "answer": 0,
+      "why": "An SLA is a promise about how quickly or reliably something will be delivered.",
+      "level": 2,
+      "id": "acr-o003c5"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not something an SSP does?",
+      "options": [
+        "Sells publisher impressions",
+        "Applies floor prices",
+        "Connects to buyers",
+        "Plans an advertiser’s media budget"
+      ],
+      "answer": 3,
+      "why": "Budget planning happens on the buy side.",
+      "level": 2,
+      "id": "odd-fxyjut"
+    },
+    {
+      "q": "Which of these is not a sell-side tool?",
+      "options": [
+        "SSP",
+        "Publisher ad server",
+        "Yield manager",
+        "DSP"
+      ],
+      "answer": 3,
+      "why": "A DSP is used by buyers.",
+      "level": 1,
+      "id": "odd-itq2ft"
+    }
+  ]
+}

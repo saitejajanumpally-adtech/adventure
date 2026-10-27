@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "q": "A DSP lets an advertiser buy impressions from many sources through one platform.",
+      "answer": true,
+      "why": "One interface can reach many exchanges and SSPs.",
+      "level": 1,
+      "id": "myt-52dgc2"
+    },
+    {
+      "q": "A DSP bids on every impression it sees.",
+      "answer": false,
+      "why": "It bids only when the impression fits the targeting, budget and goals.",
+      "level": 2,
+      "id": "myt-79kzeb"
+    },
+    {
+      "q": "A DSP can apply frequency caps across the impressions it buys.",
+      "answer": true,
+      "why": "It can limit how often one person or device sees the same ad.",
+      "level": 2,
+      "id": "myt-ibwcbe"
+    },
+    {
+      "q": "Bid shading lowers a bid toward the likely winning price in first-price auctions.",
+      "answer": true,
+      "why": "It helps the buyer avoid paying much more than needed.",
+      "level": 3,
+      "id": "myt-b5anz5"
+    },
+    {
+      "q": "Advertisers always pay the second-highest bid in today’s auctions.",
+      "answer": false,
+      "why": "Many auctions are now first-price, where the winner pays their own bid.",
+      "level": 3,
+      "id": "myt-ve993p"
+    },
+    {
+      "q": "A DSP can buy both display and connected TV inventory.",
+      "answer": true,
+      "why": "Many DSPs cover several channels, including CTV and audio.",
+      "level": 2,
+      "id": "myt-rnn7v4"
+    },
+    {
+      "q": "Pacing controls how quickly a campaign spends its budget.",
+      "answer": true,
+      "why": "Good pacing spreads spend across the campaign instead of using it all at once.",
+      "level": 1,
+      "id": "myt-yl88ss"
+    }
+  ]
+}

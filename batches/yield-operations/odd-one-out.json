@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not an ad ops task?",
+      "options": [
+        "Trafficking campaigns",
+        "Checking delivery",
+        "Fixing broken creatives",
+        "Writing the news article"
+      ],
+      "answer": 3,
+      "why": "Writing articles is an editorial job.",
+      "level": 1,
+      "id": "odd-cybckg"
+    },
+    {
+      "q": "Which of these is not a way to lift yield?",
+      "options": [
+        "Tune floor prices",
+        "Improve ad placement",
+        "Add demand partners",
+        "Slow the page down"
+      ],
+      "answer": 3,
+      "why": "A slower page usually loses visitors and revenue.",
+      "level": 2,
+      "id": "odd-n6vj2m"
+    }
+  ]
+}

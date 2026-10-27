@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "q": "An app identifies users with cookies in the same way a website does.",
+      "answer": false,
+      "why": "Apps mostly use mobile advertising IDs, such as the IDFA on iOS and the GAID on Android.",
+      "level": 1,
+      "id": "myt-ekczeq"
+    },
+    {
+      "q": "In-app ads are usually requested through an SDK that the app includes.",
+      "answer": true,
+      "why": "The ad SDK is code from an ad platform that requests and shows ads inside the app.",
+      "level": 1,
+      "id": "myt-5p348a"
+    },
+    {
+      "q": "A rewarded video gives the user something in return for watching.",
+      "answer": true,
+      "why": "Users choose to watch and get a reward, such as an extra life or a bonus.",
+      "level": 1,
+      "id": "myt-jy3qyy"
+    },
+    {
+      "q": "app-ads.txt does for apps what ads.txt does for websites.",
+      "answer": true,
+      "why": "The developer lists authorised sellers on their website so buyers can check who may sell the app inventory.",
+      "level": 2,
+      "id": "myt-aoqup4"
+    },
+    {
+      "q": "Mediation lets an app request ads from several ad networks and choose among them.",
+      "answer": true,
+      "why": "A mediation layer calls many demand sources and picks the best result for each slot.",
+      "level": 2,
+      "id": "myt-jiiibo"
+    },
+    {
+      "q": "Interstitial ads work best when shown in the middle of a task.",
+      "answer": false,
+      "why": "They work best at natural breaks, such as between levels, so they do not interrupt the user.",
+      "level": 2,
+      "id": "myt-zbk3ph"
+    },
+    {
+      "q": "On iOS, apps must ask permission before tracking users across other companies’ apps and sites.",
+      "answer": true,
+      "why": "App Tracking Transparency asks the user, and without a yes the IDFA is not shared.",
+      "level": 2,
+      "id": "myt-p43yor"
+    }
+  ]
+}

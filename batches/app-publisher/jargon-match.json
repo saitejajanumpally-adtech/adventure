@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "App publisher terms",
+      "pairs": [
+        {
+          "term": "Mediation",
+          "def": "Calling several ad networks and picking the best"
+        },
+        {
+          "term": "SDK",
+          "def": "Code from an ad platform inside the app"
+        },
+        {
+          "term": "Rewarded video",
+          "def": "Ad watched in exchange for a bonus"
+        },
+        {
+          "term": "IDFA",
+          "def": "Apple’s advertising identifier"
+        },
+        {
+          "term": "app-ads.txt",
+          "def": "Lists sellers allowed to sell app space"
+        }
+      ],
+      "level": 1,
+      "id": "jar-q6dck3"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "Attribution and measurement",
+      "words": [
+        {
+          "answer": "ATTRIBUTION",
+          "clue": "Giving credit for a result"
+        },
+        {
+          "answer": "CONVERSION",
+          "clue": "The action an advertiser wants"
+        },
+        {
+          "answer": "REACH",
+          "clue": "Different people exposed"
+        },
+        {
+          "answer": "FREQUENCY",
+          "clue": "Times each person saw an ad"
+        },
+        {
+          "answer": "IMPRESSION",
+          "clue": "One ad shown"
+        },
+        {
+          "answer": "LOOKBACK",
+          "clue": "Window for crediting a sale"
+        },
+        {
+          "answer": "INCREMENTAL",
+          "clue": "Extra effect caused by ads"
+        },
+        {
+          "answer": "HOLDOUT",
+          "clue": "Group kept from seeing the ads"
+        }
+      ],
+      "level": 2,
+      "id": "cro-ypkiml"
+    }
+  ]
+}

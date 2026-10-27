@@ -1,0 +1,60 @@
+{
+  "items": [
+    {
+      "q": "Last-click attribution gives all the credit to the final click before a conversion.",
+      "answer": true,
+      "why": "Earlier ads that helped get there get no credit under this model.",
+      "level": 1,
+      "id": "myt-16gkp7"
+    },
+    {
+      "q": "Last-click attribution shows the whole customer journey.",
+      "answer": false,
+      "why": "It shows only the final click, so earlier steps are hidden.",
+      "level": 1,
+      "id": "myt-84fdba"
+    },
+    {
+      "q": "A view-through conversion counts someone who saw an ad but did not click.",
+      "answer": true,
+      "why": "The conversion is credited if it happens within a set time after the view.",
+      "level": 2,
+      "id": "myt-hj5cq"
+    },
+    {
+      "q": "An impression is the same thing as a click.",
+      "answer": false,
+      "why": "An impression is an ad being shown. A click is a user choosing to interact.",
+      "level": 1,
+      "id": "myt-6i0y23"
+    },
+    {
+      "q": "Incrementality testing asks what would have happened without the ad.",
+      "answer": true,
+      "why": "It compares a group that saw the ads with a similar group that did not.",
+      "level": 3,
+      "id": "myt-5pvgov"
+    },
+    {
+      "q": "A third-party vendor can verify viewability and invalid traffic.",
+      "answer": true,
+      "why": "Independent measurement gives buyers and sellers a shared view.",
+      "level": 2,
+      "id": "myt-8cdxzs"
+    },
+    {
+      "q": "A lookback window is how long after an ad a conversion can still be credited to it.",
+      "answer": true,
+      "why": "Longer windows credit more conversions, but can over-credit ads.",
+      "level": 2,
+      "id": "myt-h1s2wg"
+    },
+    {
+      "q": "Click-through rate is the best measure of brand awareness.",
+      "answer": false,
+      "why": "Awareness is better measured with reach, recall or brand lift. Many people notice ads without clicking.",
+      "level": 2,
+      "id": "myt-giej1i"
+    }
+  ]
+}

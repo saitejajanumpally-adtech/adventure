@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "title": "Network, exchange or ad server?",
+      "layers": [
+        "Ad network",
+        "Ad exchange",
+        "Ad server"
+      ],
+      "cards": [
+        {
+          "name": "Resells bulk inventory",
+          "layer": 0
+        },
+        {
+          "name": "Keeps a margin",
+          "layer": 0
+        },
+        {
+          "name": "Packages sites into one buy",
+          "layer": 0
+        },
+        {
+          "name": "Runs real-time auctions between many buyers",
+          "layer": 1
+        },
+        {
+          "name": "Open marketplace",
+          "layer": 1
+        },
+        {
+          "name": "Delivers the ad file",
+          "layer": 2
+        },
+        {
+          "name": "Counts impressions for a campaign",
+          "layer": 2
+        }
+      ],
+      "why": "A network resells, an exchange auctions, and an ad server delivers and counts.",
+      "level": 2,
+      "id": "sta-xdffwx"
+    }
+  ]
+}

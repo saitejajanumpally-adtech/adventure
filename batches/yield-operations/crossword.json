@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "Yield and operations",
+      "words": [
+        {
+          "answer": "YIELD",
+          "clue": "Revenue earned from ad space"
+        },
+        {
+          "answer": "TRAFFICKING",
+          "clue": "Setting campaigns up in the ad server"
+        },
+        {
+          "answer": "DISCREPANCY",
+          "clue": "Gap between two counts"
+        },
+        {
+          "answer": "WATERFALL",
+          "clue": "Demand called in priority order"
+        },
+        {
+          "answer": "ECPM",
+          "clue": "Effective revenue per thousand"
+        },
+        {
+          "answer": "INSERTION",
+          "clue": "Type of order that records campaign terms"
+        },
+        {
+          "answer": "DELIVERY",
+          "clue": "Whether a campaign is serving as planned"
+        },
+        {
+          "answer": "SELLTHROUGH",
+          "clue": "Share of available space sold"
+        }
+      ],
+      "level": 2,
+      "id": "cro-f1cg37"
+    }
+  ]
+}
