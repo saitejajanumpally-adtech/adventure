@@ -74,7 +74,10 @@ export const GAMES = [
     how: { steps: ['Ten questions from the quiz games come one after another.', 'Tap your answer. The next question appears straight away.', 'You have sixty seconds. When the clock runs out, the round ends.'],
       example: 'Myth or fact, then a missing acronym, then an odd one out, all in a row.', scoring: '5 AdCoins for each right answer on a question that is new to you. 20 more if you answer all ten right before the clock ends. There are no hints in Rapid fire.' } },
   { id: 'number-sense', cat: 'fun', title: 'Number sense', tag: 'Guess the number', icon: 'calculator', live: false },
-  { id: 'who-am-i', cat: 'fun', title: 'Who am I?', tag: 'Guess from clues', icon: 'help-circle', live: false }
+  { id: 'who-am-i', cat: 'fun', earn: 'Up to 70 AdCoins a round: 10 for a first-clue guess, less for each extra clue, +20 for a perfect round.', title: 'Who am I?', tag: 'Guess from clues', icon: 'help-circle', kind: 'who', live: true, size: 5, pet: 'dog',
+    blurb: 'An AdTech term gives you clues about itself. Guess it from as few as you can.',
+    how: { steps: ['A mystery AdTech term gives you its first clue. It is a vague one.', 'Pick your answer from four choices, or tap Another clue to make it easier.', 'The fewer clues you use, the more AdCoins you earn.'],
+      example: '"I work for publishers, not advertisers." Is that an SSP or a DSP? One more clue would help.', scoring: '10 AdCoins for a right answer after one clue, 8 after two, 6 after three, 5 after more. 20 more for a perfect round: every answer right using two clues or fewer.' } }
 ];
 
 export const MODES = [
@@ -97,7 +100,7 @@ export const BADGES = [
   { id: 'flawless', title: 'Flawless', desc: 'A round with every answer right and no hints', icon: 'sparkles', coins: 10 },
   { id: 'fire', title: 'On Fire', desc: 'Play 7 days in a row', icon: 'flame', coins: 30 },
   { id: 'pals', title: 'Pet Pals', desc: 'Meet all 8 pets', icon: 'paw', coins: 20 },
-  { id: 'allround', title: 'All-Rounder', desc: 'Play every one of the 9 games once', icon: 'trophy', coins: 30 },
+  { id: 'allround', title: 'All-Rounder', desc: `Play every one of the ${GAMES.filter((g) => g.live && !g.practice).length} games once`, icon: 'trophy', coins: 30 },
   { id: 'yield', title: 'Yield Pro', desc: 'Reach level 5', icon: 'rocket', coins: 0 }
 ];
 
@@ -156,6 +159,7 @@ export const GAME_TIPS = {
   'acronym-decoder': ['Many AdTech acronyms hide a clue in the last letter: P for platform, R for rate.', 'Say the full name out loud once. It sticks.'],
   'ad-flow-builder': ['Every ad starts with a page load. Follow the request step by step.', 'Ask what has to happen before each step can happen.'],
   'jargon-match': ['Match the easy pairs first. The leftovers get easier.', 'Wrong guesses cost a life, so think before you tap.'],
+  'who-am-i': ['Start with the vague clue. Fewer clues means more AdCoins.', 'Rule out the choices that clash with a clue.'],
   'crossword': ['Tap a clue, then type the answer.', 'Short crossing words help you check the long ones.'],
   'odd-one-out': ['First name what the other three have in common.', 'The odd one is often a tool in a list of metrics, or the reverse.'],
   'stack-sorter': ['Ask who pays and who gets paid. It usually tells you the layer.', 'Think of the stack as a supply chain from publisher to advertiser.']
@@ -438,9 +442,216 @@ const ODD_HINTS = {
 ACRONYMS.forEach((m) => { if (ACRONYM_HINTS[m.q]) m.hint = ACRONYM_HINTS[m.q]; });
 ODD.forEach((m) => { if (ODD_HINTS[m.q]) m.hint = ODD_HINTS[m.q]; });
 
+const WHO = [
+  {
+    "title": "SSP",
+    "answer": "SSP",
+    "level": 1,
+    "clues": [
+      "I work for publishers, not advertisers.",
+      "I connect a site's ad space to many buyers at once.",
+      "I run the auction for each impression on the sell side.",
+      "My name means supply-side platform."
+    ],
+    "wrong": [
+      "DSP",
+      "DMP",
+      "Ad verification tool"
+    ],
+    "why": "An SSP helps publishers sell their ad space to many buyers."
+  },
+  {
+    "title": "DSP",
+    "answer": "DSP",
+    "level": 1,
+    "clues": [
+      "I work for advertisers and agencies.",
+      "I decide which impressions are worth bidding on.",
+      "I bid in real-time auctions using the buyer's budget.",
+      "My name means demand-side platform."
+    ],
+    "wrong": [
+      "SSP",
+      "Ad server",
+      "CMP"
+    ],
+    "why": "A DSP is the buy-side tool that bids for advertisers."
+  },
+  {
+    "title": "Ad exchange",
+    "answer": "Ad exchange",
+    "level": 1,
+    "clues": [
+      "I sit between sellers and buyers.",
+      "Many SSPs and DSPs connect through me.",
+      "Impressions are traded in auctions on me.",
+      "Think of a stock market, but for ad impressions."
+    ],
+    "wrong": [
+      "Content delivery network",
+      "Tag manager",
+      "Data lake"
+    ],
+    "why": "An ad exchange is a marketplace where sellers and buyers trade impressions."
+  },
+  {
+    "title": "Cookie",
+    "answer": "Cookie",
+    "level": 1,
+    "clues": [
+      "I am a small piece of data stored in a browser.",
+      "I help a site remember a visitor between visits.",
+      "Browsers are limiting third-party versions of me.",
+      "Consent banners ask permission to set me."
+    ],
+    "wrong": [
+      "Pixel",
+      "Redirect",
+      "Crawler"
+    ],
+    "why": "Cookies store small bits of data in the browser. Third-party cookies are being phased down."
+  },
+  {
+    "title": "Floor price",
+    "answer": "Floor price",
+    "level": 1,
+    "clues": [
+      "A publisher sets me.",
+      "I am the lowest price accepted for an impression.",
+      "A bid below me cannot win.",
+      "I protect a publisher from selling too cheap."
+    ],
+    "wrong": [
+      "Bid shading",
+      "Frequency cap",
+      "Viewability rate"
+    ],
+    "why": "A floor price is the minimum a publisher will accept for an impression."
+  },
+  {
+    "title": "CPM",
+    "answer": "CPM",
+    "level": 1,
+    "clues": [
+      "I am a price, not a performance rate.",
+      "I am quoted per thousand.",
+      "My name means cost per mille.",
+      "I am the usual price unit for display impressions."
+    ],
+    "wrong": [
+      "CTR",
+      "CPA",
+      "ROAS"
+    ],
+    "why": "CPM is the cost for one thousand impressions."
+  },
+  {
+    "title": "Viewability",
+    "answer": "Viewability",
+    "level": 2,
+    "clues": [
+      "I measure whether an ad had a chance to be seen.",
+      "A common rule needs half the pixels on screen.",
+      "For display ads, that must last one continuous second.",
+      "I am about visibility, not clicks."
+    ],
+    "wrong": [
+      "Click-through rate",
+      "Fill rate",
+      "Latency"
+    ],
+    "why": "Viewability measures whether an ad was actually in view, not just served."
+  },
+  {
+    "title": "Header bidding",
+    "answer": "Header bidding",
+    "level": 2,
+    "clues": [
+      "I let several buyers compete before the ad server decides.",
+      "I run in the header of the page.",
+      "I replaced the old waterfall for many publishers.",
+      "Bids are collected at the same time, not one by one."
+    ],
+    "wrong": [
+      "Waterfall",
+      "Direct deal",
+      "Retargeting"
+    ],
+    "why": "Header bidding gets bids from many demand sources at once, so the best bid can win."
+  },
+  {
+    "title": "VAST",
+    "answer": "VAST",
+    "level": 2,
+    "clues": [
+      "I am a standard for video ads.",
+      "I am written in XML.",
+      "A video player reads me to know what to play and what to track.",
+      "My name means Video Ad Serving Template."
+    ],
+    "wrong": [
+      "OpenRTB",
+      "ads.txt",
+      "TCF"
+    ],
+    "why": "VAST tells a video player which ad to play and which events to report."
+  },
+  {
+    "title": "ads.txt",
+    "answer": "ads.txt",
+    "level": 2,
+    "clues": [
+      "I am a plain text file.",
+      "I live on a publisher's own website.",
+      "I list who is allowed to sell the publisher's ad space.",
+      "Buyers check me to fight fraud."
+    ],
+    "wrong": [
+      "robots.txt",
+      "sitemap.xml",
+      "Privacy policy"
+    ],
+    "why": "ads.txt lets a publisher publicly list the sellers it authorises."
+  },
+  {
+    "title": "Frequency cap",
+    "answer": "Frequency cap",
+    "level": 2,
+    "clues": [
+      "I limit how often something happens.",
+      "I protect people from seeing the same ad too many times.",
+      "An advertiser sets me per person or household.",
+      "Without me, retargeting can feel creepy."
+    ],
+    "wrong": [
+      "Floor price",
+      "Bid request",
+      "Fill rate"
+    ],
+    "why": "A frequency cap limits how many times one person sees the same ad."
+  },
+  {
+    "title": "Retargeting",
+    "answer": "Retargeting",
+    "level": 2,
+    "clues": [
+      "I show ads to people who visited before.",
+      "A product left in a basket might bring me out.",
+      "I rely on remembering a visitor.",
+      "Frequency caps keep me polite."
+    ],
+    "wrong": [
+      "Contextual targeting",
+      "Lookalike audience",
+      "Brand safety"
+    ],
+    "why": "Retargeting shows ads to people who already visited a site or app."
+  }
+];
+
 export const STARTER = {
   'acronym-decoder': ACRONYMS, 'myth-or-fact': MYTHS, 'odd-one-out': ODD,
-  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW
+  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW, 'who-am-i': WHO
 };
 
 /* Admin-edited ads and pet lines (saved with the announcements). Start from the built-in ones, then layer the changes on top. */

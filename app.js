@@ -4,7 +4,7 @@ import { shuffle, mulberry32, seedFrom, dateKey, yesterdayKey, weekKey, weekdayI
 import { createStore } from './store.js';
 import { h, ic, fill, toast, petFigure, preloadPets, PET_MOODS, petById, wordmark, modal, fmtTime, initialsOf, confetti } from './ui.js';
 import { showHintAd } from './ads.js';
-import { makeTimer, runQuiz, runRapid, runFlow, runMatch, runSort, runCross, hooks } from './engines.js';
+import { makeTimer, runQuiz, runRapid, runWho, runFlow, runMatch, runSort, runCross, hooks } from './engines.js';
 import { adminView } from './admin.js';
 import { difficultyOf } from './validate.js';
 
@@ -495,7 +495,7 @@ function applyResult(gameId, res, isMission, ms) {
   p.activity[today] = act;
   p.missed = p.missed || {};
   res.items.forEach((it) => {
-    if (typeof it.ok !== 'boolean') return;
+    if (typeof it.ok !== 'boolean' || !GYM_GAMES.some(([g]) => g === it.game)) return;
     const arr = (p.missed[it.game] || []).filter((x) => x !== it.id);
     if (!it.ok) arr.push(it.id);
     if (arr.length) p.missed[it.game] = arr.slice(-40); else delete p.missed[it.game];
@@ -526,7 +526,7 @@ function renderResult(g, res, r, ms, left) {
   const petLine = pick(res.perfect ? lines.great : ratio >= 0.7 ? lines.right : lines.keep); // only a truly perfect round gets the "perfect" lines
   const note = r.mode === 'mixed' ? 'Some of these were repeats, so only the new ones earned AdCoins.'
     : r.mode === 'replay' ? (r.gain > 0 ? `Replay bonus: you beat your best replay (${r.best}) and earned ${r.gain} more.` : `Replays earn ${CURRENCY} only when you beat your best replay${r.best ? ` (${r.best})` : ''}.`) : '';
-  const unit = g.kind === 'tf' || g.kind === 'mcq' || g.kind === 'mission' || g.kind === 'rapid' ? 'question' : 'puzzle';
+  const unit = g.kind === 'tf' || g.kind === 'mcq' || g.kind === 'mission' || g.kind === 'rapid' || g.kind === 'who' ? 'question' : 'puzzle';
   const pool = left == null ? '' : left === 0 ? `You have seen every ${unit} in this game. Replays earn ${CURRENCY} only when you beat your best.` : `${plural(left, `new ${unit}`)} left before repeats begin.`;
   const total = r.gain + r.bonus + r.weekBonus + r.badgeCoins;
   view(page(h('div', { class: 'stage result' },
@@ -692,7 +692,7 @@ async function play(id) {
     timer.start();
     if (sh.clock) S.clock = setInterval(() => { sh.clock.querySelector('.ct').textContent = fmtTime(timer.ms()); }, 500);
     const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), skipAd, hostPet, practice: g.kind === 'practice', seconds: g.seconds, shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
-    const res = g.kind === 'rapid' ? await runRapid(box, items, ctx) : ['mission', 'tf', 'mcq', 'practice'].includes(g.kind) ? await runQuiz(box, items, ctx)
+    const res = g.kind === 'rapid' ? await runRapid(box, items, ctx) : g.kind === 'who' ? await runWho(box, items, ctx) : ['mission', 'tf', 'mcq', 'practice'].includes(g.kind) ? await runQuiz(box, items, ctx)
       : await ({ flow: runFlow, match: runMatch, sort: runSort, cross: runCross }[g.kind])(box, items[0], ctx);
     timer.stop(); sh.destroy();
     const ms = timer.ms();

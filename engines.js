@@ -113,6 +113,63 @@ export function runRapid(box, items, ctx) {
   });
 }
 
+/* ---------- who am I: guess the term from clues ---------- */
+export async function runWho(box, items, ctx) {
+  const sh = ctx.shell;
+  let correct = 0, perfectAll = true;
+  const out = [];
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const r = await new Promise((resolve) => {
+      let shown = 1, answered = false;
+      sh.setHeader(`Puzzle ${i + 1} of ${items.length}`, (i / items.length) * 100);
+      sh.coach.reset(); sh.note(''); sh.setHint(null);
+      const order = shuffle([it.answer, ...it.wrong].map((t, idx) => ({ t, ok: idx === 0 })));
+      const list = h('ol', { class: 'who-clues', 'aria-label': 'Clues' });
+      const more = h('button', { class: 'btn ghost inline', onclick: () => { if (shown < it.clues.length && !answered) { shown++; drawClues(); } } }, ic('bulb'), 'Another clue');
+      const drawClues = () => {
+        fill(list, it.clues.slice(0, shown).map((c, k) => h('li', { class: k === shown - 1 ? 'new' : '' }, c)));
+        more.disabled = shown >= it.clues.length;
+        more.textContent = shown >= it.clues.length ? 'No more clues' : 'Another clue';
+        more.prepend(ic('bulb'));
+        const worth = Math.min(10, Math.max(5, 12 - 2 * shown));
+        sh.note(`Right now this is worth ${worth} AdCoins.`);
+      };
+      const fb = h('div', {});
+      const btns = order.map((o, k) => h('button', { class: 'opt', onclick: () => finish(o.ok, k) }, h('span', { class: 'l', 'aria-hidden': 'true' }, 'ABCD'[k]), h('span', { class: 'ot' }, o.t)));
+      const rightK = order.findIndex((o) => o.ok);
+      const onKey = (e) => {
+        if (!box.isConnected) { document.removeEventListener('keydown', onKey); return; }
+        if (answered || e.ctrlKey || e.metaKey || e.altKey || document.querySelector('.backdrop')) return;
+        const k = String(e.key).toLowerCase();
+        if (k === 'c') { e.preventDefault(); more.click(); return; }
+        const idx = Math.max('abcd'.indexOf(k), '1234'.indexOf(k));
+        if (idx >= 0 && btns[idx]) { e.preventDefault(); btns[idx].click(); }
+      };
+      const finish = (ok, k) => {
+        if (answered) return;
+        answered = true; document.removeEventListener('keydown', onKey);
+        btns.forEach((b) => { b.disabled = true; }); more.disabled = true;
+        sh.note('');
+        btns[rightK].classList.add('ok'); if (!ok) btns[k].classList.add('bad');
+        sh.coach.react(ok ? 'right' : 'wrong');
+        const coins = ok ? Math.min(10, Math.max(5, 12 - 2 * shown)) : 0;
+        const next = h('button', { class: 'btn', onclick: () => resolve({ ok, shown, coins }) }, i + 1 === items.length ? 'See results' : 'Next');
+        const chip = ok && !ctx.practice ? (ctx.isSeen && ctx.isSeen(it.game, it.id) ? h('span', { class: 'pop quiet' }, 'Seen before') : h('span', { class: 'pop' }, ic('coin'), `+${coins} AdCoins`)) : null;
+        fill(fb, feedbackBox(ok, `It was ${it.answer}. ${it.why}`, h('div', { class: 'fb-actions' }, next, reportRow(it, ctx)), null, chip));
+        next.focus();
+      };
+      drawClues();
+      fill(box, h('div', { class: 'qblock' }, h('p', { class: 'eyebrow' }, 'Who am I?'), h('h2', { class: 'qtext' }, 'Guess the AdTech term'), list, h('div', { class: 'who-more' }, more)), h('div', { class: 'opts' }, btns), fb);
+      document.addEventListener('keydown', onKey);
+    });
+    if (r.ok) correct++;
+    if (!r.ok || r.shown > 2) perfectAll = false;
+    out.push({ id: it.id, game: it.game, coins: r.coins, ok: r.ok });
+  }
+  return { correct, total: items.length, perfect: perfectAll && correct === items.length, hints: 0, items: out };
+}
+
 /* ---------- quiz (myth or fact, acronym, odd one out, daily quest) ---------- */
 function askOne(box, it, i, n, ctx) {
   const sh = ctx.shell;

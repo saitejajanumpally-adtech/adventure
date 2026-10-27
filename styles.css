@@ -810,3 +810,10 @@ table.rules td:last-child{font-weight:700}
 .rf-bar i{display:block;height:100%;background:var(--brand);transition:width .12s linear}
 .rf-bar.low i{background:#C0392B}
 
+/* ===== Who am I? clues ===== */
+.who-clues{list-style:none;margin:10px 0 6px;padding:0;display:flex;flex-direction:column;gap:8px;counter-reset:clue}
+.who-clues li{counter-increment:clue;background:var(--bg);border-radius:14px;padding:10px 14px 10px 44px;position:relative;font-size:calc(var(--o) - 1px)}
+.who-clues li::before{content:counter(clue);position:absolute;left:12px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.who-clues li.new{outline:2px solid var(--line)}
+.who-more{margin:4px 0 12px}
+

@@ -17,6 +17,7 @@ function why(raw) {
 }
 
 export function itemKey(game, it) {
+  if (game === 'who-am-i') return norm(it.answer + ' ' + (it.clues || [])[0]);
   if (game === 'jargon-match') return norm(it.title + ' ' + it.pairs.map((p) => p.term).join(' '));
   if (game === 'ad-flow-builder' || game === 'stack-sorter' || game === 'crossword') return norm(it.title);
   return norm(it.q);
@@ -71,6 +72,17 @@ export function normalizeItem(game, raw) {
     need(typeof a === 'boolean', 'answer must be "fact" or "myth"');
     it = { q, answer: a, why: why(raw) };
     const hn2 = hintOf(raw); if (hn2) it.hint = hn2;
+  } else if (game === 'who-am-i') {
+    const answer = str(raw.answer);
+    need(answer && answer.length <= 40, 'answer is missing (40 characters max)');
+    need(Array.isArray(raw.clues) && raw.clues.length >= 3 && raw.clues.length <= 5, 'needs 3 to 5 clues, from vague to obvious');
+    const clues = raw.clues.map(str);
+    need(clues.every((c) => c && c.length <= 140), 'a clue is empty or too long (140 characters max)');
+    need(Array.isArray(raw.wrong) && raw.wrong.length === 3, 'needs exactly 3 wrong choices');
+    const wrong = raw.wrong.map(str);
+    need(wrong.every(Boolean), 'a wrong choice is empty');
+    need(new Set([answer, ...wrong].map(norm)).size === 4, 'the four choices must be different from each other');
+    it = { title: answer, answer, clues, wrong, why: why(raw) };
   } else if (game === 'jargon-match') {
     const title = str(raw.title);
     need(title, 'title is missing');
@@ -190,6 +202,9 @@ Example:
   'stack-sorter': `Each item has 2 or 3 layers and 6 to 8 cards. Every card belongs to exactly one layer. "layer" is the index (starting at 0) of the layer in the "layers" list. Every layer needs at least one card.
 Example:
 {"items":[{"title":"Who sits where?","layers":["Sell side","Exchange","Buy side"],"cards":[{"name":"SSP","layer":0},{"name":"Ad exchange","layer":1},{"name":"DSP","layer":2},{"name":"Publisher ad server","layer":0}],"why":"Sell-side tools help publishers, buy-side tools help advertisers."}]}`,
+  'who-am-i': `Each item is one AdTech term that "speaks" in the first person. "answer" is the term. "clues" is a list of 3 to 5 clues that go from vague (first) to obvious (last), each under 140 characters, and each one must be true of the answer. "wrong" is exactly 3 believable wrong choices of the same kind (not silly ones), none of which also fits the clues.
+Example:
+{"items":[{"answer":"SSP","clues":["I work for publishers, not advertisers.","I connect a site's ad space to many buyers at once.","My name means supply-side platform."],"wrong":["DSP","DMP","Ad verification tool"],"level":1,"why":"An SSP helps publishers sell their ad space to many buyers."}]}`,
   'crossword': `Each item is a crossword theme with 8 to 10 words. Answers use letters A to Z only (no spaces or hyphens), 4 to 12 letters. Choose words that share letters so they can cross. The app builds the grid, so do not draw one.
 Example:
 {"items":[{"title":"Programmatic","words":[{"answer":"BIDDER","clue":"Party that submits a price in an auction"},{"answer":"REQUEST","clue":"Call asking the server for an ad"}]}]}`
