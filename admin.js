@@ -1,6 +1,6 @@
 import { GAMES, LEVELS, GAME_LEVELS, BADGES, PETS, CURRENCY, SHOP_SOON } from './data.js';
 import { h, ic, fill, toast, modal } from './ui.js';
-import { validatePack, parseJson, buildPrompt, normalizeItem } from './validate.js';
+import { validatePack, parseJson, buildPrompt, normalizeItem, DIFFICULTY, difficultyOf } from './validate.js';
 import { dateKey, weekKey } from './util.js';
 import { resetProfile, qkey } from './store.js';
 import { CONFIG } from './config.js';
@@ -213,6 +213,7 @@ function addTab(S) {
   const file = h('input', { type: 'file', accept: '.json,.txt,application/json', 'aria-label': 'Choose a JSON file', onchange: async () => { if (file.files[0]) paste.value = await file.files[0].text(); } });
   const modeAdd = h('input', { type: 'radio', name: 'mode', value: 'add', checked: true, id: 'm1' });
   const modeRep = h('input', { type: 'radio', name: 'mode', value: 'replace', id: 'm2' });
+  const allowSim = h('input', { type: 'checkbox', id: 'allow-similar', onchange: () => { if (paste.value.trim()) check(); } });
 
   async function refresh() {
     current = await S.store.loadPack(game);
@@ -225,10 +226,11 @@ function addTab(S) {
     fill(results);
     let data;
     try { data = parseJson(paste.value); } catch { results.append(h('p', { class: 'err' }, 'This is not valid JSON. Ask the AI to return only JSON, then paste it again.')); return; }
-    checked = validatePack(game, data, modeRep.checked ? [] : current.items);
+    checked = validatePack(game, data, modeRep.checked ? [] : current.items, { allowSimilar: allowSim.checked });
     const v = checked;
     results.append(h('div', { class: 'card' },
-      h('b', {}, `${v.valid.length} ready`), h('p', { class: 'muted' }, `${v.errors.length} need a fix, ${v.dups.length} duplicates skipped`),
+      h('b', {}, `${v.valid.length} ready`), h('p', { class: 'muted' }, `${v.errors.length} need a fix, ${v.dups.length} exact duplicates skipped, ${v.similar.length} look like an existing question and are held back`),
+      v.similar.length ? h('details', { class: 'similar', open: true }, h('summary', {}, 'Held back because they look the same as a question you already have'), v.similar.slice(0, 8).map((s) => h('p', { class: 'small' }, h('b', {}, `Item ${s.n}: `), s.text, h('br'), h('span', { class: 'muted' }, `Already have: ${s.other}`))), v.similar.length > 8 ? h('p', { class: 'muted' }, `…and ${v.similar.length - 8} more`) : null) : null,
       v.errors.slice(0, 8).map((e) => h('p', { class: 'err small' }, `Item ${e.n}: ${e.msg}`)),
       v.errors.length > 8 ? h('p', { class: 'muted' }, `…and ${v.errors.length - 8} more`) : null,
       v.warnings.map((w) => h('p', { class: 'muted small' }, w)),
@@ -251,6 +253,7 @@ function addTab(S) {
       h('button', { class: 'btn ghost', onclick: async () => { await copyText(buildPrompt(game, { count: Math.max(1, Math.min(60, Number(count.value) || 20)), topic: topic.value })); toast('Prompt copied.'); } }, ic('copy'), 'Copy prompt')),
     h('div', { class: 'card' }, h('b', {}, 'Step 2: upload the result'), file, paste,
       h('div', { class: 'row gap wrap' }, h('label', { for: 'm1', class: 'inl' }, modeAdd, 'Add to existing'), h('label', { for: 'm2', class: 'inl' }, modeRep, 'Replace all')),
+      h('label', { for: 'allow-similar', class: 'inl' }, allowSim, 'Also add the ones that look similar'),
       h('button', { class: 'btn', onclick: check }, 'Check content')),
     results, h('div', { class: 'card' }, versionsEl));
   refresh();
@@ -267,15 +270,17 @@ function editItemForm(S, game, item, pack, done, onSaved) {
     const q = h('textarea', { rows: 3 }); q.value = item.q || '';
     const why = h('textarea', { rows: 3 }); why.value = item.why || '';
     const hint = h('input', { value: item.hint || '' });
+    const lvl = h('select', { id: 'item-level' }, h('option', { value: '' }, 'Medium (default)'), Object.entries(DIFFICULTY).map(([k, t]) => h('option', { value: k }, t)));
+    lvl.value = item.level ? String(item.level) : '';
     const ans = h('select', {}, h('option', { value: 'myth' }, 'Myth'), h('option', { value: 'fact' }, 'Fact'));
     if (tf) ans.value = item.answer ? 'fact' : 'myth';
     const opts = (item.options || []).map((o) => h('input', { value: o }));
     const radios = opts.map((_, k) => h('input', { type: 'radio', name: `correct-${item.id}`, value: k, 'aria-label': `Option ${k + 1} is correct`, checked: item.answer === k }));
     kids.push(field(tf ? 'Statement' : 'Question', q),
       tf ? field('Correct answer', ans) : h('div', {}, h('label', {}, 'Options (select the correct one)'), opts.map((o, k) => h('div', { class: 'row gap' }, radios[k], o))),
-      field('Explanation', why), field('Hint (optional): a nudge that does not give the answer away', hint));
-    getRaw = () => (tf ? { id: item.id, q: q.value, answer: ans.value, why: why.value, hint: hint.value }
-      : { id: item.id, q: q.value, options: opts.map((o) => o.value), answer: radios.findIndex((r) => r.checked), why: why.value, hint: hint.value });
+      field('Explanation', why), field('Hint (optional): a nudge that does not give the answer away', hint), field('Difficulty: players see Easy first, then Medium, then Hard', lvl));
+    getRaw = () => (tf ? { id: item.id, q: q.value, answer: ans.value, why: why.value, hint: hint.value, level: lvl.value }
+      : { id: item.id, q: q.value, options: opts.map((o) => o.value), answer: radios.findIndex((r) => r.checked), why: why.value, hint: hint.value, level: lvl.value });
   } else {
     const { id, disabled, ...rest } = item; // eslint-disable-line no-unused-vars
     const ta = h('textarea', { rows: 14, 'aria-label': 'Puzzle JSON' }); ta.value = JSON.stringify(rest, null, 2);
@@ -324,7 +329,7 @@ function browseTab(S) {
           const sw = h('button', { class: `tg ${it.disabled ? '' : 'on'}`, role: 'switch', 'aria-checked': String(!it.disabled), 'aria-label': `${it.disabled ? 'Switch on' : 'Switch off'}: ${it.q || it.title}`, onclick: async () => {
             try { await publish(pack.items.map((x) => (x.id === it.id ? (it.disabled ? (({ disabled, ...r }) => r)(x) : { ...x, disabled: true }) : x)), it.disabled ? 'Switched an item on' : 'Switched an item off'); draw(); } catch { toast('Could not save. Check your admin access.'); }
           } });
-          row.append(h('td', {}, h('b', {}, it.q || it.title)), quiz ? h('td', {}, it.hint ? 'Yes' : 'No') : null, h('td', {}, openReports[it.id] || 0), h('td', {}, rate(it)), h('td', {}, sw),
+          row.append(h('td', {}, h('b', {}, it.q || it.title), it.level ? h('span', { class: 'muted small' }, ` · ${DIFFICULTY[difficultyOf(it)]}`) : null), quiz ? h('td', {}, it.hint ? 'Yes' : 'No') : null, h('td', {}, openReports[it.id] || 0), h('td', {}, rate(it)), h('td', {}, sw),
             h('td', { class: 'acts' }, h('button', { class: 'linkbtn', onclick: () => { cell.hidden = !cell.hidden; if (!cell.hidden) fill(cell, editItemForm(S, game, it, pack, () => { cell.hidden = true; load(); }, async () => {})); } }, ic('pencil'), 'Edit'),
               h('button', { class: 'linkbtn danger', onclick: async () => { if (!confirm('Delete this item from the pack?')) return; try { await publish(pack.items.filter((x) => x.id !== it.id), 'Deleted an item'); toast('Deleted.'); draw(); } catch { toast('Could not save. Check your admin access.'); } } }, ic('trash'), 'Delete')));
           return [row, tr2];

@@ -6,6 +6,7 @@ import { h, ic, fill, toast, petFigure, preloadPets, PET_MOODS, petById, wordmar
 import { showHintAd } from './ads.js';
 import { makeTimer, runQuiz, runFlow, runMatch, runSort, runCross, hooks } from './engines.js';
 import { adminView } from './admin.js';
+import { difficultyOf } from './validate.js';
 
 const $app = document.getElementById('app');
 const S = { store: null, user: null, profile: null, admin: false, reportCount: 0, feedbackCount: 0, loginMsg: '', timer: null, clock: null, host: {}, tourI: 0, pick: null, floor: null, remote: {}, announce: { banner: {}, entries: [], minor: '' }, prevHash: '' };
@@ -614,7 +615,7 @@ async function play(id) {
     if (g.kind === 'mission') items = await missionItems();
     else {
       pool = await loadUsable(id);
-      items = pickFresh(pool, g.size || 1, seenOf(id)).map((it) => ({ ...it, kind: g.kind, game: id }));
+      items = pickFresh(pool, g.size || 1, seenOf(id)).sort((a, b) => difficultyOf(a) - difficultyOf(b)).map((it) => ({ ...it, kind: g.kind, game: id }));
     }
     if (!box.isConnected) return;
     if (!items.length) { fill(box, h('p', {}, 'No puzzles are available for this game right now.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); return; }

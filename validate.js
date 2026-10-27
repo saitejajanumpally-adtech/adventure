@@ -22,6 +22,31 @@ export function itemKey(game, it) {
   return norm(it.q);
 }
 
+const STOP = new Set('the a an of to in on for and or is are was be it its this that what which who how does do did with as by at from not'.split(' '));
+const words = (s) => new Set(norm(s).split(' ').filter((w) => w.length > 1 && !STOP.has(w)));
+
+/* How alike two items read, 0 to 1 (shared meaningful words). 0.75 and up is treated as the same question reworded. */
+export function similarity(game, a, b) {
+  const x = words(itemKey(game, a)), y = words(itemKey(game, b));
+  if (!x.size || !y.size) return 0;
+  let both = 0; x.forEach((w) => { if (y.has(w)) both++; });
+  return both / (x.size + y.size - both);
+}
+export const SIMILAR_AT = 0.75;
+export function findSimilar(game, it, list) {
+  let best = null, score = 0;
+  for (const o of list) { const s = similarity(game, it, o); if (s > score) { score = s; best = o; } }
+  return score >= SIMILAR_AT ? best : null;
+}
+
+/* level: 1 easy, 2 medium, 3 hard. Optional; items without one count as medium. */
+export const DIFFICULTY = { 1: 'Easy', 2: 'Medium', 3: 'Hard' };
+export const difficultyOf = (it) => (it && DIFFICULTY[it.level] ? it.level : 2);
+function levelIn(raw) {
+  const v = typeof raw.level === 'string' ? { easy: 1, medium: 2, hard: 3 }[raw.level.trim().toLowerCase()] ?? Number(raw.level) : Number(raw.level);
+  return DIFFICULTY[v] ? v : undefined;
+}
+
 export function normalizeItem(game, raw) {
   need(raw && typeof raw === 'object', 'not an object');
   let it;
@@ -87,6 +112,7 @@ export function normalizeItem(game, raw) {
   } else {
     throw new Error('unknown game');
   }
+  const lv = levelIn(raw); if (lv) it.level = lv;
   const key = itemKey(game, it);
   it.id = str(raw.id).replace(/[^\w-]/g, '').slice(0, 40) || `${game.slice(0, 3)}-${hash(key)}`;
   return it;
@@ -98,8 +124,8 @@ export function parseJson(text) {
   return JSON.parse(t);
 }
 
-export function validatePack(game, data, existing = []) {
-  const out = { valid: [], errors: [], dups: [], warnings: [] };
+export function validatePack(game, data, existing = [], { allowSimilar = false } = {}) {
+  const out = { valid: [], errors: [], dups: [], similar: [], warnings: [] };
   const list = Array.isArray(data) ? data : data && data.items;
   if (!Array.isArray(list) || !list.length) {
     out.errors.push({ n: 0, msg: 'Expected a JSON object with an "items" list.' });
@@ -110,7 +136,9 @@ export function validatePack(game, data, existing = []) {
     try {
       const it = normalizeItem(game, raw);
       const key = itemKey(game, it);
+      const near = !seen.has(key) && !allowSimilar ? findSimilar(game, it, [...existing, ...out.valid]) : null;
       if (seen.has(key)) out.dups.push({ n: i + 1, msg: 'looks like a duplicate of an existing item' });
+      else if (near) out.similar.push({ n: i + 1, text: it.q || it.title, other: near.q || near.title });
       else { seen.add(key); out.valid.push(it); }
     } catch (e) {
       out.errors.push({ n: i + 1, msg: e.message });
@@ -138,7 +166,8 @@ Content rules:
 - Use evergreen concepts. Avoid anything that changes quickly (prices, version numbers, news, rankings).
 - Be factually accurate. If you are not sure about a fact, leave it out.
 - Plain English, short sentences, no vendor opinions.
-- Mix difficulty from beginner to expert.
+- Mix difficulty from beginner to expert. Give every item a "level": 1 (easy, basic idea), 2 (medium) or 3 (hard, expert detail). Players see easy items first.
+- Do not repeat or reword the same question twice.
 - Every item needs a "why" of one or two sentences that teaches the idea.
 `;
 
