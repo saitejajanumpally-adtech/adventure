@@ -4,7 +4,7 @@ import { shuffle, mulberry32, seedFrom, dateKey, yesterdayKey, weekKey, weekdayI
 import { createStore } from './store.js';
 import { h, ic, fill, toast, petFigure, preloadPets, PET_MOODS, petById, wordmark, modal, fmtTime, initialsOf, confetti } from './ui.js';
 import { showHintAd } from './ads.js';
-import { makeTimer, runQuiz, runFlow, runMatch, runSort, runCross, hooks } from './engines.js';
+import { makeTimer, runQuiz, runRapid, runFlow, runMatch, runSort, runCross, hooks } from './engines.js';
 import { adminView } from './admin.js';
 import { difficultyOf } from './validate.js';
 
@@ -224,7 +224,7 @@ function renderHome() {
   mascot.addEventListener('click', () => setMascot(pick(['hello', 'celebrate', 'happy', 'explain', 'proud']), pick(TIPS)));
   setMascot(baseMood, baseMsg);
 
-  const live = LIVE.filter((g) => g.kind !== 'mission' && !isHidden(g));
+  const live = LIVE.filter((g) => g.kind !== 'mission' && g.kind !== 'rapid' && !isHidden(g));
   const featured = live.find((g) => g.id === eff().featured);
   let rec = featured || live.find((g) => g.id !== p.lastGame) || live[0];
   const recBox = h('section', { class: 'rec', 'aria-label': 'Recommended game' });
@@ -398,6 +398,16 @@ function renderGymResult(res, r) {
       r.left ? h('a', { class: 'btn', href: '#/play/brain-gym', onclick: () => { if (location.hash === '#/play/brain-gym') setTimeout(route, 0); } }, 'Practise again') : null,
       h('a', { class: `btn ${r.left ? 'ghost' : ''}`.trim(), href: '#/home' }, 'Back to home')))));
 }
+// Ten questions from the three quiz games, ones the player has not seen first, easy to hard.
+async function rapidItems(n) {
+  const all = [];
+  for (const [gid, kind] of GYM_GAMES) {
+    const seen = new Set(seenOf(gid));
+    (await loadUsable(gid)).forEach((x) => all.push({ ...x, kind, game: gid, _seen: seen.has(x.id) }));
+  }
+  const fresh = shuffle(all.filter((x) => !x._seen)), old = shuffle(all.filter((x) => x._seen));
+  return fresh.concat(old).slice(0, n).sort((a, b) => difficultyOf(a) - difficultyOf(b));
+}
 async function missionItems() {
   const out = [];
   for (const [gid, kind] of [['myth-or-fact', 'tf'], ['acronym-decoder', 'mcq'], ['odd-one-out', 'mcq']]) {
@@ -443,6 +453,7 @@ async function renderIntro(id) {
   if (!S.profile.howSeen[id]) { S.profile.howSeen[id] = true; save(); showHow(id); }
   try {
     if (g.kind === 'mission') { pool.textContent = 'Your three puzzles are picked from questions you have not seen yet.'; return; }
+    if (g.kind === 'rapid') { pool.textContent = 'Ten questions from the quiz games, picked from ones you have not seen yet.'; return; }
     const items = await loadUsable(id), seen = new Set(seenOf(id));
     const left = items.filter((x) => !seen.has(x.id)).length;
     const unit = g.kind === 'tf' || g.kind === 'mcq' ? 'question' : 'puzzle';
@@ -515,7 +526,7 @@ function renderResult(g, res, r, ms, left) {
   const petLine = pick(res.perfect ? lines.great : ratio >= 0.7 ? lines.right : lines.keep); // only a truly perfect round gets the "perfect" lines
   const note = r.mode === 'mixed' ? 'Some of these were repeats, so only the new ones earned AdCoins.'
     : r.mode === 'replay' ? (r.gain > 0 ? `Replay bonus: you beat your best replay (${r.best}) and earned ${r.gain} more.` : `Replays earn ${CURRENCY} only when you beat your best replay${r.best ? ` (${r.best})` : ''}.`) : '';
-  const unit = g.kind === 'tf' || g.kind === 'mcq' || g.kind === 'mission' ? 'question' : 'puzzle';
+  const unit = g.kind === 'tf' || g.kind === 'mcq' || g.kind === 'mission' || g.kind === 'rapid' ? 'question' : 'puzzle';
   const pool = left == null ? '' : left === 0 ? `You have seen every ${unit} in this game. Replays earn ${CURRENCY} only when you beat your best.` : `${plural(left, `new ${unit}`)} left before repeats begin.`;
   const total = r.gain + r.bonus + r.weekBonus + r.badgeCoins;
   view(page(h('div', { class: 'stage result' },
@@ -597,7 +608,7 @@ function buildPlayShell(g, hostPet) {
     petBox, bubble, cnote, h('div', { class: 'cactions' }, hintCoach, howCoach));
   const thumb = petFigure(hostPet, 'happy', 'thumb');
   const rail = h('button', { class: 'coachrail', 'aria-label': 'Show coach', onclick: () => setCoach(true) }, thumb, h('span', {}, 'Coach'), ic('chevron-right'));
-  const card = h('section', { class: 'qcard' }, head, strip, box, hnote, h('div', { class: 'hint-under' }, hintCard, howCard), h('p', { class: 'kbtip' }, g.kind === 'tf' ? 'Tip: press M for Myth or F for Fact, and H for a hint.' : g.kind === 'mcq' || g.kind === 'mission' ? 'Tip: press A, B, C or D to answer, and H for a hint.' : ''));
+  const card = h('section', { class: 'qcard' }, head, strip, box, hnote, h('div', { class: 'hint-under' }, hintCard, howCard), h('p', { class: 'kbtip' }, g.kind === 'tf' ? 'Tip: press M for Myth or F for Fact, and H for a hint.' : g.kind === 'mcq' || g.kind === 'mission' ? 'Tip: press A, B, C or D to answer, and H for a hint.' : g.kind === 'rapid' ? 'Tip: press M or F, or A to D, to answer fast.' : ''));
   const grid = h('div', { class: `playgrid ${st.coach === false ? 'nocoach' : ''}` }, panel, rail, card);
   const setCoach = (on) => { st.coach = on; grid.classList.toggle('nocoach', !on); save(); };
 
@@ -671,6 +682,7 @@ async function play(id) {
     let items, pool = null;
     if (g.kind === 'mission') items = await missionItems();
     else if (g.kind === 'practice') items = await gymItems();
+    else if (g.kind === 'rapid') items = await rapidItems(g.size);
     else {
       pool = await loadUsable(id);
       items = pickFresh(pool, g.size || 1, seenOf(id)).sort((a, b) => difficultyOf(a) - difficultyOf(b)).map((it) => ({ ...it, kind: g.kind, game: id }));
@@ -679,8 +691,8 @@ async function play(id) {
     if (!items.length) { fill(box, h('p', {}, g.kind === 'practice' ? 'No weak spots right now. Play a few rounds first, and the questions you miss will show up here.' : 'No puzzles are available for this game right now.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); return; }
     timer.start();
     if (sh.clock) S.clock = setInterval(() => { sh.clock.querySelector('.ct').textContent = fmtTime(timer.ms()); }, 500);
-    const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), skipAd, hostPet, practice: g.kind === 'practice', shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
-    const res = ['mission', 'tf', 'mcq', 'practice'].includes(g.kind) ? await runQuiz(box, items, ctx)
+    const ctx = { gameId: id, timer, isSeen: (game, qid) => seenOf(game).includes(qid), skipAd, hostPet, practice: g.kind === 'practice', seconds: g.seconds, shell: sh, showAd: (pet) => showHintAd(pet, { seconds: eff().adSeconds, skipAfter: eff().adSkip }), report: (it, reason) => reportItem(it.game || id, it, reason) };
+    const res = g.kind === 'rapid' ? await runRapid(box, items, ctx) : ['mission', 'tf', 'mcq', 'practice'].includes(g.kind) ? await runQuiz(box, items, ctx)
       : await ({ flow: runFlow, match: runMatch, sort: runSort, cross: runCross }[g.kind])(box, items[0], ctx);
     timer.stop(); sh.destroy();
     const ms = timer.ms();

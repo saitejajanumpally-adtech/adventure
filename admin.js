@@ -5,7 +5,7 @@ import { dateKey, weekKey } from './util.js';
 import { resetProfile, qkey } from './store.js';
 import { CONFIG } from './config.js';
 
-const PACK_GAMES = GAMES.filter((g) => g.live && g.kind !== 'mission' && !g.practice);
+const PACK_GAMES = GAMES.filter((g) => g.live && g.kind !== 'mission' && g.kind !== 'rapid' && !g.practice);
 const LIVE_GAMES = GAMES.filter((g) => g.live && !g.practice);
 const QUIZ = ['myth-or-fact', 'acronym-decoder', 'odd-one-out'];
 const REASON_LABEL = { wrong: 'Wrong answer', unclear: 'Unclear', outdated: 'Outdated', other: 'Other' };
@@ -585,7 +585,7 @@ function settingsTab(S, H) {
   const [fHp, iHp] = num('s-hp', 'One ad-free hint: price (AdCoins)', e.adHintPrice);
   const [fHm, iHm] = num('s-hm', 'Most ad-free hints a player can keep', e.adHintMax);
   const [fGm, iGm] = num('s-gm', 'Most AdCoins in one R&D Gift', e.giftMax);
-  const feat = h('select', { id: 's-feat' }, h('option', { value: '' }, 'None (recommend automatically)'), LIVE_GAMES.filter((g) => g.kind !== 'mission').map((g) => h('option', { value: g.id }, g.title)));
+  const feat = h('select', { id: 's-feat' }, h('option', { value: '' }, 'None (recommend automatically)'), LIVE_GAMES.filter((g) => g.kind !== 'mission' && g.kind !== 'rapid').map((g) => h('option', { value: g.id }, g.title)));
   feat.value = e.featured;
   const hide = {};
   const toggles = LIVE_GAMES.map((g) => {

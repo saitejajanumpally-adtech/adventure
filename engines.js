@@ -48,6 +48,71 @@ async function adBreak(ctx) {
 }
 const limitOf = (gameId, key, dflt) => (HINTS[gameId] && HINTS[gameId][key]) || dflt;
 
+/* ---------- rapid fire: ten questions against the clock ---------- */
+export function runRapid(box, items, ctx) {
+  const sh = ctx.shell, total = ctx.seconds || 60;
+  return new Promise((resolve) => {
+    sh.setHint(null); sh.coach.reset(); sh.note('');
+    let i = 0, correct = 0, locked = false, over = false, tick = null;
+    const out = [];
+    const time = h('b', { class: 'rf-time' }, String(total)), bar = h('i', {}), track = h('div', { class: 'rf-bar', role: 'presentation' }, bar);
+    const top = h('div', { class: 'rf-top' }, ic('clock'), time, track);
+    const stage = h('div', {});
+    const onKey = (e) => {
+      if (!box.isConnected) { document.removeEventListener('keydown', onKey); return; }
+      if (locked || e.ctrlKey || e.metaKey || e.altKey || document.querySelector('.backdrop')) return;
+      const it = items[i]; if (!it) return;
+      const k = String(e.key).toLowerCase();
+      const idx = it.kind === 'tf' ? ({ m: 0, f: 1 }[k] ?? -1) : Math.max('abcd'.indexOf(k), '1234'.indexOf(k));
+      const b = stage.querySelectorAll('.opt')[idx];
+      if (idx >= 0 && b) { e.preventDefault(); b.click(); }
+    };
+    const end = () => {
+      if (over) return; over = true;
+      clearInterval(tick); document.removeEventListener('keydown', onKey);
+      const done = out.length;
+      resolve({ correct, total: done, perfect: done === items.length && correct === done, hints: 0, items: out });
+    };
+    const left = () => Math.max(0, total * 1000 - ctx.timer.ms());
+    const paint = () => {
+      const l = left();
+      time.textContent = String(Math.ceil(l / 1000));
+      bar.style.width = `${(l / (total * 1000)) * 100}%`;
+      track.classList.toggle('low', l <= 10000);
+      if (l <= 0) end();
+    };
+    const show = () => {
+      const it = items[i];
+      sh.setHeader(`Question ${i + 1} of ${items.length}`, (i / items.length) * 100);
+      const letter = (k) => (it.kind === 'tf' ? (k === 0 ? 'M' : 'F') : 'ABCD'[k]);
+      const pick = (ok, btns, rightBtn, chosen) => {
+        if (locked || over) return;
+        locked = true;
+        btns.forEach((b) => { b.disabled = true; });
+        rightBtn.classList.add('ok'); if (!ok) chosen.classList.add('bad');
+        sh.coach.react(ok ? 'right' : 'wrong');
+        if (ok) correct++;
+        out.push({ id: it.id, game: it.game, coins: ok ? 5 : 0, ok });
+        setTimeout(() => { locked = false; i++; if (i >= items.length || over) end(); else show(); }, ok ? 450 : 900);
+      };
+      let btns;
+      const mk = (k, label, cls, fn) => h('button', { class: `opt ${cls}`.trim(), onclick: fn }, h('span', { class: 'l', 'aria-hidden': 'true' }, letter(k)), h('span', { class: 'ot' }, label));
+      if (it.kind === 'tf') {
+        btns = [['Myth', false], ['Fact', true]].map(([label, val], k) => mk(k, label, 'tf', () => pick(val === it.answer, btns, btns[it.answer ? 1 : 0], btns[val ? 1 : 0])));
+      } else {
+        const order = shuffle(it.options.map((t, idx) => ({ t, idx })));
+        btns = order.map((o, k) => mk(k, o.t, '', () => pick(o.idx === it.answer, btns, btns[order.findIndex((x) => x.idx === it.answer)], btns[k])));
+      }
+      const cue = QUESTION_CUES[it.game];
+      fill(stage, h('div', { class: 'qblock' }, cue ? h('p', { class: 'eyebrow' }, cue[0]) : null, h('h2', { class: 'qtext' }, it.q)), h('div', { class: `opts ${it.kind === 'tf' ? 'two' : ''}`.trim() }, btns));
+    };
+    fill(box, top, stage);
+    document.addEventListener('keydown', onKey);
+    show(); paint();
+    tick = setInterval(() => { if (!box.isConnected) { clearInterval(tick); document.removeEventListener('keydown', onKey); return; } paint(); }, 100);
+  });
+}
+
 /* ---------- quiz (myth or fact, acronym, odd one out, daily quest) ---------- */
 function askOne(box, it, i, n, ctx) {
   const sh = ctx.shell;

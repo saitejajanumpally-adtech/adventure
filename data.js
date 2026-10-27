@@ -2,7 +2,7 @@ export const CATS = [
   { id: 'daily', title: 'Daily habit', tagline: 'Quick brain boosters', about: 'Two minutes a day builds the habit.', bg: '#CECBF6', fg: '#26215C', panel: '#E4E2FA', tagInk: '#4F4A8A' },
   { id: 'concept', title: 'Concept builders', tagline: 'Build your skills', about: 'Go deeper: order, match, sort and solve.', bg: '#B5D4F4', fg: '#042C53', panel: '#DCEAF9', tagInk: '#2B5A8A' },
   { id: 'current', title: 'Staying current', tagline: 'Stay ahead', about: 'What is changing in AdTech. Coming soon.', bg: '#FAEEDA', fg: '#633806', panel: '#FBF3E4', tagInk: '#7A4A12' },
-  { id: 'fun', title: 'Fun and fast', tagline: 'Quick and fun', about: 'Fast, playful rounds. Coming soon.', bg: '#D3D1C7', fg: '#2C2C2A', panel: '#E9E8E2', tagInk: '#4A4A46' }
+  { id: 'fun', title: 'Fun and fast', tagline: 'Quick and fun', about: 'Fast, playful rounds.', bg: '#D3D1C7', fg: '#2C2C2A', panel: '#E9E8E2', tagInk: '#4A4A46' }
 ];
 
 export const CURRENCY = 'AdCoins';
@@ -69,7 +69,10 @@ export const GAMES = [
       example: '"SSP" goes in Sell side, because it helps publishers sell.', scoring: '10 AdCoins for each card in the right layer. 20 more for a perfect stack.' } },
   { id: 'industry-update', cat: 'current', title: 'Industry update', tag: 'What just changed', icon: 'news', live: false },
   { id: 'privacy-quiz', cat: 'current', title: 'Privacy quiz', tag: 'Know the rules', icon: 'shield-lock', live: false },
-  { id: 'rapid-fire', cat: 'fun', title: 'Rapid fire', tag: 'Beat the clock', icon: 'bolt', live: false },
+  { id: 'rapid-fire', cat: 'fun', earn: 'Up to 70 AdCoins a round: 5 per right answer, +20 if you answer all ten right in time.', title: 'Rapid fire', tag: 'Beat the clock', icon: 'bolt', kind: 'rapid', live: true, size: 10, seconds: 60, pet: 'tiger',
+    blurb: 'Ten quick questions, sixty seconds. How many can you get?',
+    how: { steps: ['Ten questions from the quiz games come one after another.', 'Tap your answer. The next question appears straight away.', 'You have sixty seconds. When the clock runs out, the round ends.'],
+      example: 'Myth or fact, then a missing acronym, then an odd one out, all in a row.', scoring: '5 AdCoins for each right answer on a question that is new to you. 20 more if you answer all ten right before the clock ends. There are no hints in Rapid fire.' } },
   { id: 'number-sense', cat: 'fun', title: 'Number sense', tag: 'Guess the number', icon: 'calculator', live: false },
   { id: 'who-am-i', cat: 'fun', title: 'Who am I?', tag: 'Guess from clues', icon: 'help-circle', live: false }
 ];
@@ -94,7 +97,7 @@ export const BADGES = [
   { id: 'flawless', title: 'Flawless', desc: 'A round with every answer right and no hints', icon: 'sparkles', coins: 10 },
   { id: 'fire', title: 'On Fire', desc: 'Play 7 days in a row', icon: 'flame', coins: 30 },
   { id: 'pals', title: 'Pet Pals', desc: 'Meet all 8 pets', icon: 'paw', coins: 20 },
-  { id: 'allround', title: 'All-Rounder', desc: 'Play every one of the 8 games once', icon: 'trophy', coins: 30 },
+  { id: 'allround', title: 'All-Rounder', desc: 'Play every one of the 9 games once', icon: 'trophy', coins: 30 },
   { id: 'yield', title: 'Yield Pro', desc: 'Reach level 5', icon: 'rocket', coins: 0 }
 ];
 

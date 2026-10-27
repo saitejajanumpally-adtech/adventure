@@ -803,3 +803,10 @@ table.rules td:last-child{font-weight:700}
 .gymcard p{margin:2px 0 0}
 @media (max-width:560px){.gymcard{flex-wrap:wrap}.gymcard .btn{width:100%}}
 
+/* ===== Rapid fire: the clock ===== */
+.rf-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;color:var(--soft)}
+.rf-time{font-family:var(--head);font-size:22px;min-width:2.2ch;color:var(--ink)}
+.rf-bar{flex:1;height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.rf-bar i{display:block;height:100%;background:var(--brand);transition:width .12s linear}
+.rf-bar.low i{background:#C0392B}
+
