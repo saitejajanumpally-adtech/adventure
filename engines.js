@@ -365,7 +365,8 @@ export function runCross(box, pz, ctx) {
     const sizeGrid = () => {
       if (!box.isConnected) { window.removeEventListener('resize', sizeGrid); return; }
       const avail = Math.min(box.clientWidth || 340, 640);
-      const cell = Math.max(18, Math.min(40, Math.floor((avail - 8) / g.cols) - 2));
+      const maxCell = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches ? 34 : 40;
+      const cell = Math.max(18, Math.min(maxCell, Math.floor((avail - 8) / g.cols) - 2));
       gridEl.style.cssText = `grid-template-columns:repeat(${g.cols},${cell}px);grid-auto-rows:${cell}px;font-size:${Math.round(cell * 0.55)}px`;
     };
     window.addEventListener('resize', sizeGrid);
@@ -410,7 +411,7 @@ export function runCross(box, pz, ctx) {
     input.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') submit(); });
     panel.append(label, h('div', { class: 'row gap' }, input, h('button', { class: 'btn inline', onclick: submit }, 'Check')), err);
     const giveUp = h('button', { class: 'linkbtn', onclick: () => { g.entries.forEach((e, i) => { if (!solved.has(i)) cellsOf(e).forEach((k) => filled.add(k)); }); selIdx = null; paint(); giveUp.remove(); done(); } }, 'Give up and show answers');
-    fill(box, h('h2', { class: 'qtext' }, pz.title), status, h('div', { class: 'cw-wrap' }, gridEl), panel, cluesEl, giveUp);
+    fill(box, h('h2', { class: 'qtext' }, pz.title), status, h('div', { class: 'cw-layout' }, h('div', { class: 'cw-wrap' }, gridEl), h('div', { class: 'cw-side' }, panel, cluesEl)), giveUp);
     sizeGrid();
     sh.setHint(async () => {
       const idx = selIdx;

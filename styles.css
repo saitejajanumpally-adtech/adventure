@@ -767,3 +767,32 @@ table.rules td:last-child{font-weight:700}
 .pill.c{min-height:44px}
 .pf-row .more{display:inline-flex;align-items:center;min-height:44px;padding:0 8px}
 .earn .amt{white-space:nowrap;min-width:78px}
+
+/* ===== play screen: the coach panel stays in view and never stretches, controls fit the pointer ===== */
+@media (min-width:1000px){
+  .playgrid{align-items:start}
+  .coachpanel{position:sticky;top:88px;align-self:start;min-height:min(560px,calc(100vh - 112px));max-height:calc(100vh - 112px);overflow:auto}
+  .coachpanel .cpet{flex:1;min-height:0}
+  .pet-fig.pcoach{--h:clamp(120px,27vh,250px)}
+  .coachrail{position:sticky;top:88px}
+}
+/* mouse and trackpad: compact controls. Touch screens keep the big 44px ones. */
+@media (hover:hover) and (pointer:fine){
+  .arr{width:36px;height:36px}
+  .sl{min-height:48px;padding:6px 10px}
+  .clue{min-height:38px;padding:7px 12px}
+}
+@media (min-width:560px){.arrows{flex-direction:row;gap:6px}}
+/* phones and tablets: the coach strip and the Hint button stay in view while a long game scrolls */
+@media (max-width:999px){
+  .cstrip{position:sticky;top:66px;z-index:6}
+  .hint-under{position:sticky;bottom:8px;z-index:6;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 14px;padding:6px 8px;border-radius:30px;background:rgba(255,255,255,.94);box-shadow:0 4px 14px rgba(38,33,92,.16)}
+}
+/* crossword on a wide screen: the grid on the left, the answer box and clues beside it (nothing to scroll to) */
+@media (min-width:1100px){
+  .cw-layout{display:grid;grid-template-columns:auto minmax(260px,1fr);gap:18px;align-items:start}
+  .cw-side .cw-panel{margin-top:0}
+  .cw-side .clues{grid-template-columns:1fr;gap:10px}
+  .cw-side .clues>div{gap:4px}
+}
+
