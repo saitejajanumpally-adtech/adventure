@@ -17,6 +17,7 @@ function why(raw) {
 }
 
 export function itemKey(game, it) {
+  if (game === 'number-sense') return norm(it.q);
   if (game === 'who-am-i') return norm(it.answer + ' ' + (it.clues || [])[0]);
   if (game === 'jargon-match') return norm(it.title + ' ' + it.pairs.map((p) => p.term).join(' '));
   if (game === 'ad-flow-builder' || game === 'stack-sorter' || game === 'crossword') return norm(it.title);
@@ -72,6 +73,18 @@ export function normalizeItem(game, raw) {
     need(typeof a === 'boolean', 'answer must be "fact" or "myth"');
     it = { q, answer: a, why: why(raw) };
     const hn2 = hintOf(raw); if (hn2) it.hint = hn2;
+  } else if (game === 'number-sense') {
+    const q = str(raw.q || raw.question);
+    need(q.length >= 12, 'question is missing or too short');
+    const min = Number(raw.min), max = Number(raw.max), answer = Number(raw.answer);
+    need([min, max, answer].every(Number.isFinite), 'min, max and answer must be numbers');
+    need(max > min, 'max must be bigger than min');
+    need(answer >= min && answer <= max, 'the answer must sit between min and max');
+    need(answer !== 0, 'the answer cannot be zero (the closeness check is a percentage of the answer)');
+    let step = raw.step == null || raw.step === '' ? (max - min) / 100 : Number(raw.step);
+    need(Number.isFinite(step) && step > 0 && step <= max - min, 'step must be a number above zero and no bigger than the range');
+    const unit = str(raw.unit); need(unit.length <= 12, 'unit is too long (12 characters max)');
+    it = { q, unit, min, max, step, answer, why: why(raw) };
   } else if (game === 'who-am-i') {
     const answer = str(raw.answer);
     need(answer && answer.length <= 40, 'answer is missing (40 characters max)');
@@ -202,6 +215,9 @@ Example:
   'stack-sorter': `Each item has 2 or 3 layers and 6 to 8 cards. Every card belongs to exactly one layer. "layer" is the index (starting at 0) of the layer in the "layers" list. Every layer needs at least one card.
 Example:
 {"items":[{"title":"Who sits where?","layers":["Sell side","Exchange","Buy side"],"cards":[{"name":"SSP","layer":0},{"name":"Ad exchange","layer":1},{"name":"DSP","layer":2},{"name":"Publisher ad server","layer":0}],"why":"Sell-side tools help publishers, buy-side tools help advertisers."}]}`,
+  'number-sense': `Each item is a short everyday AdTech calculation that can be done in your head. Give the numbers in the question so the answer is worked out, not remembered, and never rely on prices or statistics that change. "answer" is a number, "min" and "max" set the slider range (the answer must sit inside it, and the answer must not be 0), "step" is the slider step, "unit" is optional: "%" or "x" or "times" or "$" (a $ is shown before the number). "why" shows the working.
+Example:
+{"items":[{"q":"A site sends 2,000,000 ad requests and 1,500,000 come back with an ad. What is the fill rate?","unit":"%","min":0,"max":100,"step":1,"answer":75,"level":1,"why":"Fill rate is ads served divided by ad requests: 1,500,000 / 2,000,000 = 75%."}]}`,
   'who-am-i': `Each item is one AdTech term that "speaks" in the first person. "answer" is the term. "clues" is a list of 3 to 5 clues that go from vague (first) to obvious (last), each under 140 characters, and each one must be true of the answer. "wrong" is exactly 3 believable wrong choices of the same kind (not silly ones), none of which also fits the clues.
 Example:
 {"items":[{"answer":"SSP","clues":["I work for publishers, not advertisers.","I connect a site's ad space to many buyers at once.","My name means supply-side platform."],"wrong":["DSP","DMP","Ad verification tool"],"level":1,"why":"An SSP helps publishers sell their ad space to many buyers."}]}`,

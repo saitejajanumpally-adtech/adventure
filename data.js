@@ -73,7 +73,10 @@ export const GAMES = [
     blurb: 'Ten quick questions, sixty seconds. How many can you get?',
     how: { steps: ['Ten questions from the quiz games come one after another.', 'Tap your answer. The next question appears straight away.', 'You have sixty seconds. When the clock runs out, the round ends.'],
       example: 'Myth or fact, then a missing acronym, then an odd one out, all in a row.', scoring: '5 AdCoins for each right answer on a question that is new to you. 20 more if you answer all ten right before the clock ends. There are no hints in Rapid fire.' } },
-  { id: 'number-sense', cat: 'fun', title: 'Number sense', tag: 'Guess the number', icon: 'calculator', live: false },
+  { id: 'number-sense', cat: 'fun', earn: 'Up to 70 AdCoins a round: 10 for a spot-on guess, 6 for a close one, +20 for a perfect round.', title: 'Number sense', tag: 'Guess the number', icon: 'calculator', kind: 'number', live: true, size: 5, pet: 'elephant',
+    blurb: 'Work out a quick AdTech number, then drag the slider to your answer.',
+    how: { steps: ['Read the small problem, such as a fill rate or a CPM.', 'Drag the slider, or type a number, to your answer. Rough mental maths is fine.', 'Lock in your answer. You see the right number and the working.'],
+      example: '"2,000,000 requests, 1,500,000 ads served. What is the fill rate?" Think: three quarters, so 75%.', scoring: '10 AdCoins for a spot-on answer (within 5%), 6 for a close one (within 15%). 20 more for a perfect round: every answer within 15%.' } },
   { id: 'who-am-i', cat: 'fun', earn: 'Up to 70 AdCoins a round: 10 for a first-clue guess, less for each extra clue, +20 for a perfect round.', title: 'Who am I?', tag: 'Guess from clues', icon: 'help-circle', kind: 'who', live: true, size: 5, pet: 'dog',
     blurb: 'An AdTech term gives you clues about itself. Guess it from as few as you can.',
     how: { steps: ['A mystery AdTech term gives you its first clue. It is a vague one.', 'Pick your answer from four choices, or tap Another clue to make it easier.', 'The fewer clues you use, the more AdCoins you earn.'],
@@ -160,6 +163,7 @@ export const GAME_TIPS = {
   'ad-flow-builder': ['Every ad starts with a page load. Follow the request step by step.', 'Ask what has to happen before each step can happen.'],
   'jargon-match': ['Match the easy pairs first. The leftovers get easier.', 'Wrong guesses cost a life, so think before you tap.'],
   'who-am-i': ['Start with the vague clue. Fewer clues means more AdCoins.', 'Rule out the choices that clash with a clue.'],
+  'number-sense': ['Round the numbers first, then work it out in your head.', 'Check if your answer is about the right size before locking it in.'],
   'crossword': ['Tap a clue, then type the answer.', 'Short crossing words help you check the long ones.'],
   'odd-one-out': ['First name what the other three have in common.', 'The odd one is often a tool in a list of metrics, or the reverse.'],
   'stack-sorter': ['Ask who pays and who gets paid. It usually tells you the layer.', 'Think of the stack as a supply chain from publisher to advertiser.']
@@ -649,9 +653,132 @@ const WHO = [
   }
 ];
 
+const NUMBERS = [
+  {
+    "q": "A site sends 2,000,000 ad requests and 1,500,000 of them come back with an ad. What is the fill rate?",
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "answer": 75,
+    "level": 1,
+    "why": "Fill rate is ads served divided by ad requests: 1,500,000 / 2,000,000 = 75%."
+  },
+  {
+    "q": "An ad sells at a $5 CPM. How much revenue do 40,000 impressions bring in?",
+    "unit": "$",
+    "min": 0,
+    "max": 500,
+    "step": 10,
+    "answer": 200,
+    "level": 1,
+    "why": "CPM is the price per thousand. 40,000 impressions is 40 thousands, and 40 x $5 = $200."
+  },
+  {
+    "q": "An ad is shown 1,000 times and clicked 5 times. What is the click-through rate?",
+    "unit": "%",
+    "min": 0,
+    "max": 2,
+    "step": 0.1,
+    "answer": 0.5,
+    "level": 1,
+    "why": "CTR is clicks divided by impressions: 5 / 1,000 = 0.5%."
+  },
+  {
+    "q": "A campaign spends $2,000 and gets 100 conversions. What is the cost per action?",
+    "unit": "$",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "answer": 20,
+    "level": 1,
+    "why": "Cost per action is spend divided by conversions: $2,000 / 100 = $20."
+  },
+  {
+    "q": "A publisher earns $1,800 from 300,000 impressions. What is the eCPM?",
+    "unit": "$",
+    "min": 0,
+    "max": 20,
+    "step": 0.5,
+    "answer": 6,
+    "level": 2,
+    "why": "eCPM is revenue per thousand impressions: $1,800 / 300 = $6."
+  },
+  {
+    "q": "Of 9,000 ads served, 6,300 were viewable. What is the viewability rate?",
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "answer": 70,
+    "level": 1,
+    "why": "Viewability is viewable impressions divided by measured impressions: 6,300 / 9,000 = 70%."
+  },
+  {
+    "q": "A buyer has $500 to spend at a $10 CPM. How many impressions can they buy?",
+    "unit": "",
+    "min": 0,
+    "max": 100000,
+    "step": 1000,
+    "answer": 50000,
+    "level": 2,
+    "why": "$500 buys 50 thousand impressions at $10 per thousand, which is 50,000."
+  },
+  {
+    "q": "A campaign spends $4,000 and earns $10,000 in sales. What is the return on ad spend, as a multiple?",
+    "unit": "x",
+    "min": 0,
+    "max": 6,
+    "step": 0.1,
+    "answer": 2.5,
+    "level": 2,
+    "why": "ROAS is revenue divided by ad spend: $10,000 / $4,000 = 2.5x."
+  },
+  {
+    "q": "A publisher had 1,000,000 impressions available and sold 800,000. What is the sell-through rate?",
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "answer": 80,
+    "level": 2,
+    "why": "Sell-through is sold divided by available: 800,000 / 1,000,000 = 80%."
+  },
+  {
+    "q": "A CPC deal pays $0.50 a click and the CTR is 2%. What is the eCPM?",
+    "unit": "$",
+    "min": 0,
+    "max": 30,
+    "step": 0.5,
+    "answer": 10,
+    "level": 3,
+    "why": "In 1,000 impressions there are 20 clicks at $0.50 each, so $10 per thousand impressions."
+  },
+  {
+    "q": "A video ad started 10,000 times and finished 5,500 times. What is the completion rate?",
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "step": 1,
+    "answer": 55,
+    "level": 1,
+    "why": "Completion rate is completed views divided by starts: 5,500 / 10,000 = 55%."
+  },
+  {
+    "q": "3,000,000 impressions reached 1,000,000 different people. What is the average frequency?",
+    "unit": "times",
+    "min": 0,
+    "max": 10,
+    "step": 0.5,
+    "answer": 3,
+    "level": 2,
+    "why": "Average frequency is impressions divided by reach: 3,000,000 / 1,000,000 = 3."
+  }
+];
+
 export const STARTER = {
   'acronym-decoder': ACRONYMS, 'myth-or-fact': MYTHS, 'odd-one-out': ODD,
-  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW, 'who-am-i': WHO
+  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW, 'who-am-i': WHO, 'number-sense': NUMBERS
 };
 
 /* Admin-edited ads and pet lines (saved with the announcements). Start from the built-in ones, then layer the changes on top. */

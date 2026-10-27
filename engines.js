@@ -113,6 +113,59 @@ export function runRapid(box, items, ctx) {
   });
 }
 
+/* ---------- number sense: drag a slider to a worked-out number ---------- */
+const fmtNum = (n, it) => {
+  const v = Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return it.unit === '$' ? `$${v}` : it.unit ? `${v}${/^[a-z]/i.test(it.unit) && it.unit !== 'x' ? ' ' : ''}${it.unit}` : v;
+};
+export async function runNumber(box, items, ctx) {
+  const sh = ctx.shell;
+  let correct = 0;
+  const out = [];
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const r = await new Promise((resolve) => {
+      let answered = false;
+      sh.setHeader(`Puzzle ${i + 1} of ${items.length}`, (i / items.length) * 100);
+      sh.coach.reset(); sh.note(''); sh.setHint(null);
+      const mid = it.min + Math.round((it.max - it.min) / 2 / it.step) * it.step;
+      const slider = h('input', { type: 'range', class: 'num-slider', min: it.min, max: it.max, step: it.step, 'aria-label': 'Your answer' });
+      const typed = h('input', { type: 'number', class: 'num-typed', min: it.min, max: it.max, step: 'any', inputmode: 'decimal', 'aria-label': 'Type your answer' });
+      slider.value = mid; typed.value = mid;
+      const readout = h('b', { class: 'num-out', 'aria-live': 'polite' }, fmtNum(mid, it));
+      const sync = (v) => { readout.textContent = fmtNum(v, it); };
+      slider.addEventListener('input', () => { typed.value = slider.value; sync(slider.value); });
+      typed.addEventListener('input', () => { if (typed.value !== '') { slider.value = typed.value; sync(typed.value); } });
+      const fb = h('div', {});
+      const lock = h('button', { class: 'btn', onclick: () => finish() }, 'Lock in my answer');
+      const finish = () => {
+        if (answered) return;
+        const guess = Number(typed.value === '' ? slider.value : typed.value);
+        if (!Number.isFinite(guess)) return;
+        answered = true; slider.disabled = true; typed.disabled = true; lock.disabled = true;
+        const off = Math.abs(guess - it.answer) / Math.abs(it.answer);
+        const band = off <= 0.05 ? 'spot' : off <= 0.15 ? 'close' : 'off';
+        const ok = band !== 'off', coins = band === 'spot' ? 10 : band === 'close' ? 6 : 0;
+        sh.coach.react(ok ? 'right' : 'wrong');
+        const label = band === 'spot' ? 'Spot on' : band === 'close' ? 'Close' : 'Not quite';
+        const next = h('button', { class: 'btn', onclick: () => resolve({ ok, coins }) }, i + 1 === items.length ? 'See results' : 'Next');
+        const chip = ok && !ctx.practice ? (ctx.isSeen && ctx.isSeen(it.game, it.id) ? h('span', { class: 'pop quiet' }, 'Seen before') : h('span', { class: 'pop' }, ic('coin'), `+${coins} AdCoins`)) : null;
+        fill(fb, feedbackBox(ok, `You said ${fmtNum(guess, it)}. The answer is ${fmtNum(it.answer, it)}. ${it.why}`, h('div', { class: 'fb-actions' }, next, reportRow(it, ctx)), label, chip));
+        next.focus();
+      };
+      typed.addEventListener('keydown', (e) => { if (e.key === 'Enter') finish(); });
+      fill(box, h('div', { class: 'qblock' }, h('p', { class: 'eyebrow' }, 'Number sense'), h('h2', { class: 'qtext' }, it.q),
+        h('p', { class: 'muted instr' }, 'Work it out, then drag the slider or type your answer.')),
+        h('div', { class: 'num-box' }, readout, slider, h('div', { class: 'num-range' }, h('span', {}, fmtNum(it.min, it)), h('span', {}, fmtNum(it.max, it))),
+          h('div', { class: 'row gap wrap' }, h('label', { class: 'sr-only', for: 'num-typed' }, 'Type your answer'), typed, lock)), fb);
+      typed.id = 'num-typed';
+    });
+    if (r.ok) correct++;
+    out.push({ id: it.id, game: it.game, coins: r.coins, ok: r.ok });
+  }
+  return { correct, total: items.length, perfect: correct === items.length, hints: 0, items: out };
+}
+
 /* ---------- who am I: guess the term from clues ---------- */
 export async function runWho(box, items, ctx) {
   const sh = ctx.shell;
