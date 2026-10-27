@@ -22,6 +22,17 @@ const optionsFor = (game) => OPTIONS[game] || { counts: [5, 8, 10], secs: [15, 2
 const MODE = { '1v1': { title: '1 vs 1', max: 2, def: 8 }, room: { title: 'Room', max: 12, def: 8 } };
 const REVEAL = 2500, LEAD = 3000;
 
+// What a room needs to play one question. Stored in the room, so every player sees exactly the host's questions
+// even if their own copy of the question list is a few minutes old.
+export const snapshotOf = (it, g) => {
+  const base = { id: it.id, g };
+  if (ROOM_KIND[g] === 'who') return { ...base, answer: it.answer, clues: it.clues, wrong: it.wrong };
+  if (ROOM_KIND[g] === 'number') return { ...base, q: it.q, unit: it.unit || '', min: it.min, max: it.max, step: it.step, answer: it.answer };
+  if (QUIZ_KIND[g] === 'tf') return { ...base, q: it.q, answer: it.answer };
+  return { ...base, q: it.q, options: it.options, answer: it.answer };
+};
+const hasContent = (ref) => !!(ref && (ref.q || ref.clues));
+
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 export const pointsFor = (ok, leftMs, secs) => (ok ? 100 + Math.round((Math.max(0, leftMs) / (secs * 1000)) * 50) : 0);
 // Who am I?: fewer clues is worth more, speed adds a little. 60 to 150 points.
@@ -52,7 +63,7 @@ export function newRoomView(env, mode, game) {
       for (const g of sources) (await env.loadUsable(g)).filter((x) => x && x.id).forEach((x) => pool.push({ ...x, _g: g }));
       const n = Math.min(Number(count.value), pool.length);
       if (n < 3) { err.textContent = 'This game does not have enough questions for a room yet.'; go1.disabled = false; return; }
-      const items = shuffle(pool).slice(0, n).sort((a, b) => difficultyOf(a) - difficultyOf(b)).map((x) => ({ g: x._g, id: x.id }));
+      const items = shuffle(pool).slice(0, n).sort((a, b) => difficultyOf(a) - difficultyOf(b)).map((x) => snapshotOf(x, x._g));
       let code = '';
       for (let tries = 0; tries < 5 && !code; tries++) {
         const c = newCode();
@@ -91,6 +102,7 @@ export function joinView(env, prefill = '') {
       if (!room) { err.textContent = 'No room with that code. Check it with the host.'; join.disabled = false; return; }
       const players = await S.store.getPlayers(c);
       const mine = players.find((p) => p.uid === S.user.uid);
+      if (!mine && players.some((p) => p.nick.trim().toLowerCase() === name.toLowerCase())) { err.textContent = 'That nickname is already used in this room. Pick another one.'; join.disabled = false; return; }
       if (!mine) {
         if (room.state !== 'lobby') { err.textContent = 'That game has already started.'; join.disabled = false; return; }
         if (players.length >= (room.max || 12)) { err.textContent = 'That room is full.'; join.disabled = false; return; }
@@ -263,44 +275,57 @@ export async function roomView(env, code) {
     return { correct, answered, left: endAt - Date.now() };
   }
 
-  async function runGame() {
+  const progressKey = () => `rda_room_${code}_${S.user.uid}`;
+  const saved = () => { try { return JSON.parse(sessionStorage.getItem(progressKey())) || { i: -1, score: 0, correct: 0 }; } catch { return { i: -1, score: 0, correct: 0 }; } };
+  const keep = (p) => { try { sessionStorage.setItem(progressKey(), JSON.stringify(p)); } catch { /* private window */ } };
+  async function runGame(t0, resumed) {
     stage = 'playing';
     const kind = ROOM_KIND[room.game];
     const secs = room.secs, per = secs * 1000 + REVEAL;
     // Everyone starts counting when they hear the host start the game, so the clocks agree within a moment.
-    const t0 = Date.now();
     const items = [];
     const packs = {};
     for (const ref of room.items) {
-      packs[ref.g] = packs[ref.g] || await env.loadUsable(ref.g);
-      const it = packs[ref.g].find((x) => x.id === ref.id);
+      let it = hasContent(ref) ? ref : null;
+      if (!it) { // a room made before the questions were stored in it
+        packs[ref.g] = packs[ref.g] || await env.loadUsable(ref.g);
+        it = packs[ref.g].find((x) => x.id === ref.id);
+      }
       if (it) items.push({ ...it, kind: kind === 'rapid' || kind === 'tf' || kind === 'mcq' ? QUIZ_KIND[ref.g] : kind, game: ref.g });
     }
-    let score = 0, correct = 0;
+    if (items.length < room.items.length) toast('Some questions could not be loaded for you.');
+    const back = resumed ? saved() : { i: -1, score: 0, correct: 0 };
+    let score = back.score, correct = back.correct;
     if (kind === 'rapid') {
-      fill(box, h('h1', {}, 'Get ready'), h('p', { class: 'muted' }, `${plural(items.length, 'question')} in ${secs} seconds. Go as fast as you can.`));
+      if (Date.now() < t0 + LEAD) fill(box, h('h1', {}, 'Get ready'), h('p', { class: 'muted' }, `${plural(items.length, 'question')} in ${secs} seconds. Go as fast as you can.`));
       await wait(t0 + LEAD - Date.now());
       if (closed) return;
-      const r = await raceThrough(items, t0 + LEAD + secs * 1000, secs);
-      if (closed) return;
-      correct = r.correct; score = pointsRapid(r.correct, r.answered, items.length, r.left);
+      if (Date.now() < t0 + LEAD + secs * 1000) {
+        const r = await raceThrough(items, t0 + LEAD + secs * 1000, secs);
+        if (closed) return;
+        correct = r.correct; score = pointsRapid(r.correct, r.answered, items.length, r.left);
+      }
     } else {
       const ask = kind === 'who' ? askWho : kind === 'number' ? askNumber : askChoice;
       for (let i = 0; i < items.length && !closed; i++) {
         const qStart = t0 + LEAD + i * per, qEnd = qStart + secs * 1000;
+        if (i <= back.i || Date.now() >= qStart + per) continue; // already played, or over while this player was away
         if (i === 0) fill(box, h('h1', {}, 'Get ready'), h('p', { class: 'muted' }, 'The first one is coming up.'));
         await wait(qStart - Date.now());
         if (closed) return;
         const r = await ask(items[i], i, items.length, qEnd, secs);
         if (r.ok) correct++;
         score += r.gained;
+        keep({ i, score, correct });
         await wait(qStart + per - Date.now());
       }
     }
     if (closed) return;
     finished = true; stage = 'results';
     fill(box, h('h1', {}, 'Nicely done'), h('p', { class: 'muted' }, 'Waiting for everyone to finish\u2026'));
-    await S.store.savePlayer(code, S.user.uid, { score: Math.min(score, 2000), correct, total: items.length, finished: true }).catch(() => {});
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try { await S.store.savePlayer(code, S.user.uid, { score: Math.min(score, 2000), correct, total: items.length, finished: true }); break; } catch (e) { await wait(700 * (attempt + 1)); }
+    }
     if (isHost()) setTimeout(() => S.store.updateRoom(code, { state: 'done' }).catch(() => {}), 1500);
     showResults(items.length);
     // If somebody dropped out, show what we have after a short wait.
@@ -327,6 +352,9 @@ export async function roomView(env, code) {
   const showResults = (total) => { stops.push(S.store.watchPlayers(code, (list) => { players = list; if (stage === 'results') drawResults(total); })); };
 
   /* --- wiring --- */
+  players = await S.store.getPlayers(code).catch(() => []);
+  let sawLobby = room.state === 'lobby';
+  const fail = (e) => { console.error(e); fill(box, h('p', { class: 'err' }, 'Something went wrong in this room.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); };
   stops.push(S.store.watchPlayers(code, (list) => {
     players = list;
     if (stage === 'lobby' && room.state === 'lobby') {
@@ -338,8 +366,22 @@ export async function roomView(env, code) {
     if (closed) return;
     if (!r) { if (stage !== 'results') { leave(); fill(box, h('h1', {}, 'This room was closed'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); } return; }
     room = r;
-    if (r.state === 'lobby' && stage === 'lobby' && mine()) drawLobby();
-    if (r.state === 'playing' && !started && mine()) { started = true; runGame().catch((e) => { console.error(e); fill(box, h('p', { class: 'err' }, 'Something went wrong in this room.'), h('a', { class: 'btn', href: '#/home' }, 'Back to home')); }); }
-    if (r.state === 'playing' && !started && !mine()) fill(box, h('h1', {}, 'This game already started'), h('a', { class: 'btn', href: '#/home' }, 'Back to home'));
+    if (r.state === 'lobby') { sawLobby = true; if (stage === 'lobby' && mine()) drawLobby(); }
+    if (started || !mine()) {
+      if (!mine() && !started && r.state !== 'lobby') fill(box, h('h1', {}, 'This game already started'), h('a', { class: 'btn', href: '#/home' }, 'Back to home'));
+      return;
+    }
+    if (r.state === 'playing') {
+      started = true;
+      // Heard the host press Start: count from now. Opened the room after the game began (a refresh): count from the host's start time.
+      const resumed = !sawLobby;
+      runGame(resumed ? (r.startedAt || Date.now()) : Date.now(), resumed).catch(fail);
+    } else if (r.state === 'done') {
+      // The game is over. Show the scores to someone who comes back to the room.
+      started = true; stage = 'results'; finished = true;
+      fill(box, h('h1', {}, 'Loading the scores\u2026'));
+      showResults(r.items.length);
+      setTimeout(() => { if (!closed) drawResults(r.items.length, true); }, 1500);
+    }
   }));
 }
