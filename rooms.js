@@ -10,31 +10,49 @@ const ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // no 0/O, 1/I/L, so a code 
 export const newCode = () => Array.from({ length: 6 }, () => ALPHABET[Math.floor(Math.random() * ALPHABET.length)]).join('');
 export const cleanCode = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
 export const QUIZ_KIND = { 'myth-or-fact': 'tf', 'acronym-decoder': 'mcq', 'odd-one-out': 'mcq' };
-export const roomGames = () => Object.keys(QUIZ_KIND);
+// How each game is played in a room: one question at a time (tf, mcq, who, number) or a race through all of them (rapid).
+export const ROOM_KIND = { ...QUIZ_KIND, 'who-am-i': 'who', 'number-sense': 'number', 'rapid-fire': 'rapid' };
+export const roomGames = () => Object.keys(ROOM_KIND);
+const OPTIONS = {
+  'who-am-i': { counts: [5, 8, 10], secs: [20, 30, 45], word: 'puzzle', def: [5, 30] },
+  'number-sense': { counts: [5, 8, 10], secs: [20, 30, 45], word: 'puzzle', def: [5, 30] },
+  'rapid-fire': { counts: [8, 10, 12], secs: [45, 60], word: 'question', def: [10, 60], total: true }
+};
+const optionsFor = (game) => OPTIONS[game] || { counts: [5, 8, 10], secs: [15, 20, 30], word: 'question', def: [null, 20] };
 const MODE = { '1v1': { title: '1 vs 1', max: 2, def: 8 }, room: { title: 'Room', max: 12, def: 8 } };
 const REVEAL = 2500, LEAD = 3000;
 
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 export const pointsFor = (ok, leftMs, secs) => (ok ? 100 + Math.round((Math.max(0, leftMs) / (secs * 1000)) * 50) : 0);
+// Who am I?: fewer clues is worth more, speed adds a little. 60 to 150 points.
+export const pointsWho = (ok, shown, total, leftMs, secs) => (ok ? 60 + Math.round((60 * (total - shown)) / Math.max(1, total - 1)) + Math.round((30 * Math.max(0, leftMs)) / (secs * 1000)) : 0);
+// Number sense: spot on (within 5%) is worth full points, close (within 15%) 60% of them.
+export const bandFor = (guess, answer) => { const off = Math.abs(guess - answer) / Math.abs(answer); return off <= 0.05 ? 'spot' : off <= 0.15 ? 'close' : 'off'; };
+export const pointsNumber = (band, leftMs, secs) => (band === 'spot' ? pointsFor(true, leftMs, secs) : band === 'close' ? Math.round(pointsFor(true, leftMs, secs) * 0.6) : 0);
+// Rapid fire: 100 for each right answer, plus 2 for every second left if all of them were answered in time.
+export const pointsRapid = (correct, answered, total, leftMs) => correct * 100 + (answered >= total ? Math.round(Math.max(0, leftMs) / 500) : 0);
 
 /* ---------- create ---------- */
 export function newRoomView(env, mode, game) {
   const { S, view, page, go, gameName } = env;
-  const m = MODE[mode];
-  if (!m || !QUIZ_KIND[game]) return go('/home');
+  const m = MODE[mode], opt = optionsFor(game);
+  if (!m || !ROOM_KIND[game]) return go('/home');
   const nick = h('input', { id: 'nick', class: 'inp', maxlength: 20, value: S.profile.nickname || S.user.name || '', autocomplete: 'off' });
-  const count = h('select', { id: 'qcount' }, [5, 8, 10].map((n) => h('option', { value: n }, `${n} questions`))); count.value = String(m.def);
-  const secs = h('select', { id: 'qsecs' }, [15, 20, 30].map((n) => h('option', { value: n }, `${n} seconds each`))); secs.value = '20';
+  const count = h('select', { id: 'qcount' }, opt.counts.map((n) => h('option', { value: n }, `${n} ${opt.word}s`))); count.value = String(opt.def[0] || m.def);
+  const secs = h('select', { id: 'qsecs' }, opt.secs.map((n) => h('option', { value: n }, opt.total ? `${n} seconds in total` : `${n} seconds each`))); secs.value = String(opt.def[1]);
   const err = h('p', { class: 'err', role: 'alert' });
   const go1 = h('button', { class: 'btn', onclick: async () => {
     const name = nick.value.trim();
     if (!name) { err.textContent = 'Pick a nickname for this room.'; return; }
     go1.disabled = true; err.textContent = '';
     try {
-      const pool = (await env.loadUsable(game)).filter((x) => x && x.id);
+      // Rapid fire mixes the three quiz games, like it does when played alone.
+      const sources = ROOM_KIND[game] === 'rapid' ? Object.keys(QUIZ_KIND) : [game];
+      const pool = [];
+      for (const g of sources) (await env.loadUsable(g)).filter((x) => x && x.id).forEach((x) => pool.push({ ...x, _g: g }));
       const n = Math.min(Number(count.value), pool.length);
       if (n < 3) { err.textContent = 'This game does not have enough questions for a room yet.'; go1.disabled = false; return; }
-      const items = shuffle(pool).slice(0, n).sort((a, b) => difficultyOf(a) - difficultyOf(b)).map((x) => ({ g: game, id: x.id }));
+      const items = shuffle(pool).slice(0, n).sort((a, b) => difficultyOf(a) - difficultyOf(b)).map((x) => ({ g: x._g, id: x.id }));
       let code = '';
       for (let tries = 0; tries < 5 && !code; tries++) {
         const c = newCode();
@@ -49,7 +67,7 @@ export function newRoomView(env, mode, game) {
   view(page(h('div', { class: 'stage room' },
     h('a', { class: 'back', href: `#/game/${game}` }, ic('arrow-left'), gameName(game)),
     h('h1', {}, mode === '1v1' ? '1 vs 1 challenge' : 'Start a room'),
-    h('p', { class: 'muted lede' }, mode === '1v1' ? `One colleague, the same ${plural(Number(count.value), 'question')}, side by side.` : 'Share a code. Everyone answers the same questions at the same time.'),
+    h('p', { class: 'muted lede' }, mode === '1v1' ? `One colleague, the same ${opt.word}s, side by side.` : `Share a code. Everyone plays the same ${opt.word}s at the same time.`),
     h('div', { class: 'card' },
       h('label', { for: 'nick' }, 'Your nickname in this room'), nick,
       h('label', { for: 'qcount' }, 'Questions'), count,
@@ -116,7 +134,7 @@ export async function roomView(env, code) {
       h('div', { class: 'bigcode', 'aria-label': `Room code ${code.split('').join(' ')}` }, code),
       h('div', { class: 'row gap wrap center-row' },
         h('button', { class: 'btn ghost inline', onclick: async () => { try { await navigator.clipboard.writeText(link); toast('Link copied.'); } catch { toast(`Code: ${code}`); } } }, ic('copy'), 'Copy invite link')),
-      h('p', { class: 'muted small' }, `${plural(room.items.length, 'question')}, ${room.secs} seconds each. Scores show at the end.`),
+      h('p', { class: 'muted small' }, ROOM_KIND[room.game] === 'rapid' ? `${plural(room.items.length, 'question')} in ${room.secs} seconds. Scores show at the end.` : `${plural(room.items.length, optionsFor(room.game).word)}, ${room.secs} seconds each. Scores show at the end.`),
       h('h2', { class: 'subhead' }, `In the room (${players.length} of ${max})`),
       h('ul', { class: 'plist' }, players.map((p) => h('li', {}, h('b', {}, p.nick), p.uid === room.host ? h('span', { class: 'muted' }, ' · host') : null, p.uid === S.user.uid ? h('span', { class: 'muted' }, ' · you') : null))),
       isHost()
@@ -129,8 +147,125 @@ export async function roomView(env, code) {
 
   /* --- the game: every player follows the same clock, started when the host starts --- */
   const wait = (ms) => new Promise((res) => setTimeout(res, Math.max(0, ms)));
+  const clockBar = () => { const clock = h('b', { class: 'rf-time' }), bar = h('i', {}); return { clock, bar, top: h('div', { class: 'rf-top' }, ic('clock'), clock, h('div', { class: 'rf-bar', role: 'presentation' }, bar)), tick(until, total) { const l = Math.max(0, until - Date.now()); clock.textContent = String(Math.ceil(l / 1000)); bar.style.width = `${(l / total) * 100}%`; } }; };
+  const every = (fn) => { const iv = setInterval(() => { if (!box.isConnected || closed) { clearInterval(iv); return; } fn(); }, 100); return () => clearInterval(iv); };
+  const optBtn = (k, label, tf, onclick) => h('button', { class: `opt ${tf ? 'tf' : ''}`.trim(), onclick }, h('span', { class: 'l', 'aria-hidden': 'true' }, tf ? (k === 0 ? 'M' : 'F') : 'ABCD'[k]), h('span', { class: 'ot' }, label));
+
+  /* one question with a choice of answers (myth or fact, acronym, odd one out) */
+  async function askChoice(it, i, n, qEnd, secs) {
+    let picked = null, pickedAt = 0;
+    const cue = QUESTION_CUES[it.game];
+    const tf = it.kind === 'tf';
+    const order = tf ? [{ t: 'Myth', v: false }, { t: 'Fact', v: true }] : shuffle(it.options.map((t, idx) => ({ t, v: idx })));
+    const right = (o) => o.v === it.answer;
+    const btns = order.map((o, k) => optBtn(k, o.t, tf, () => {
+      if (picked != null || Date.now() >= qEnd) return;
+      picked = k; pickedAt = Date.now();
+      btns.forEach((b, j) => { b.disabled = true; b.classList.toggle('sel', j === k); });
+    }));
+    const status = h('p', { class: 'muted', role: 'status' }, 'Pick your answer.');
+    const cb = clockBar();
+    fill(box, cb.top, h('p', { class: 'eyebrow' }, `Question ${i + 1} of ${n}${cue ? ` \u00B7 ${cue[0]}` : ''}`), h('h2', { class: 'qtext' }, it.q), h('div', { class: `opts ${tf ? 'two' : ''}`.trim() }, btns), status);
+    const stop = every(() => cb.tick(qEnd, secs * 1000)); cb.tick(qEnd, secs * 1000);
+    await wait(qEnd - Date.now()); stop();
+    if (closed) return { gained: 0, ok: false };
+    const ok = picked != null && right(order[picked]);
+    const gained = pointsFor(ok, qEnd - pickedAt, secs);
+    btns.forEach((b, j) => { b.disabled = true; if (right(order[j])) b.classList.add('ok'); else if (j === picked) b.classList.add('bad'); });
+    status.textContent = picked == null ? 'Time is up. No answer.' : ok ? `Right! +${gained} points` : 'Not this time.';
+    status.classList.add(ok ? 'good' : 'oops');
+    return { gained, ok };
+  }
+
+  /* Who am I?: clues come one at a time, and fewer clues is worth more */
+  async function askWho(it, i, n, qEnd, secs) {
+    let picked = null, pickedAt = 0, shown = 1;
+    const order = shuffle([it.answer, ...it.wrong].map((t, idx) => ({ t, ok: idx === 0 })));
+    const list = h('ol', { class: 'who-clues', 'aria-label': 'Clues' });
+    const more = h('button', { class: 'btn ghost inline' });
+    const drawClues = () => { fill(list, it.clues.slice(0, shown).map((c, k) => h('li', { class: k === shown - 1 ? 'new' : '' }, c))); more.disabled = shown >= it.clues.length || picked != null; more.replaceChildren(ic('bulb'), shown >= it.clues.length ? 'No more clues' : 'Another clue'); };
+    more.addEventListener('click', () => { if (shown < it.clues.length && picked == null) { shown++; drawClues(); } });
+    const btns = order.map((o, k) => optBtn(k, o.t, false, () => {
+      if (picked != null || Date.now() >= qEnd) return;
+      picked = k; pickedAt = Date.now(); more.disabled = true;
+      btns.forEach((b, j) => { b.disabled = true; b.classList.toggle('sel', j === k); });
+    }));
+    const status = h('p', { class: 'muted', role: 'status' }, 'Fewer clues is worth more points.');
+    const cb = clockBar();
+    fill(box, cb.top, h('p', { class: 'eyebrow' }, `Who am I? \u00B7 Puzzle ${i + 1} of ${n}`), list, h('div', { class: 'who-more' }, more), h('div', { class: 'opts' }, btns), status);
+    drawClues();
+    const stop = every(() => cb.tick(qEnd, secs * 1000)); cb.tick(qEnd, secs * 1000);
+    await wait(qEnd - Date.now()); stop();
+    if (closed) return { gained: 0, ok: false };
+    const ok = picked != null && order[picked].ok;
+    const gained = pointsWho(ok, shown, it.clues.length, qEnd - pickedAt, secs);
+    btns.forEach((b, j) => { b.disabled = true; more.disabled = true; if (order[j].ok) b.classList.add('ok'); else if (j === picked) b.classList.add('bad'); });
+    status.textContent = picked == null ? `Time is up. It was ${it.answer}.` : ok ? `Right! It was ${it.answer}. +${gained} points` : `Not this time. It was ${it.answer}.`;
+    status.classList.add(ok ? 'good' : 'oops');
+    return { gained, ok };
+  }
+
+  /* Number sense: whatever the slider shows when you lock in, or when the time ends, is your answer */
+  async function askNumber(it, i, n, qEnd, secs) {
+    let locked = false, lockedAt = 0;
+    const mid = it.min + Math.round((it.max - it.min) / 2 / it.step) * it.step;
+    const slider = h('input', { type: 'range', class: 'num-slider', min: it.min, max: it.max, step: it.step, 'aria-label': 'Your answer' });
+    const typed = h('input', { type: 'number', class: 'num-typed', min: it.min, max: it.max, step: 'any', inputmode: 'decimal', 'aria-label': 'Type your answer', id: 'num-typed' });
+    slider.value = mid; typed.value = mid;
+    const fmt = (v) => (it.unit === '$' ? `$${Number(v).toLocaleString()}` : `${Number(v).toLocaleString(undefined, { maximumFractionDigits: 2 })}${it.unit ? (/^[a-z]{2,}/i.test(it.unit) ? ' ' : '') + it.unit : ''}`);
+    const readout = h('b', { class: 'num-out', 'aria-live': 'polite' }, fmt(mid));
+    slider.addEventListener('input', () => { typed.value = slider.value; readout.textContent = fmt(slider.value); });
+    typed.addEventListener('input', () => { if (typed.value !== '') { slider.value = typed.value; readout.textContent = fmt(typed.value); } });
+    const lock = h('button', { class: 'btn', onclick: () => { if (!locked && Date.now() < qEnd) { locked = true; lockedAt = Date.now(); slider.disabled = true; typed.disabled = true; lock.disabled = true; status.textContent = 'Locked in. Waiting for the others\u2026'; } } }, 'Lock in my answer');
+    const status = h('p', { class: 'muted', role: 'status' }, 'Drag the slider or type a number.');
+    const cb = clockBar();
+    fill(box, cb.top, h('p', { class: 'eyebrow' }, `Number sense \u00B7 Puzzle ${i + 1} of ${n}`), h('h2', { class: 'qtext' }, it.q),
+      h('div', { class: 'num-box' }, readout, slider, h('div', { class: 'num-range' }, h('span', {}, fmt(it.min)), h('span', {}, fmt(it.max))), h('div', { class: 'row gap wrap' }, typed, lock)), status);
+    const stop = every(() => cb.tick(qEnd, secs * 1000)); cb.tick(qEnd, secs * 1000);
+    await wait(qEnd - Date.now()); stop();
+    if (closed) return { gained: 0, ok: false };
+    const guess = Number(typed.value === '' ? slider.value : typed.value);
+    const band = Number.isFinite(guess) ? bandFor(guess, it.answer) : 'off';
+    const gained = pointsNumber(band, locked ? qEnd - lockedAt : 0, secs), ok = band !== 'off';
+    slider.disabled = true; typed.disabled = true; lock.disabled = true;
+    status.textContent = `You said ${fmt(guess)}. The answer is ${fmt(it.answer)}. ${band === 'spot' ? 'Spot on' : band === 'close' ? 'Close' : 'Not quite'}${ok ? `! +${gained} points` : '.'}`;
+    status.classList.add(ok ? 'good' : 'oops');
+    return { gained, ok };
+  }
+
+  /* Rapid fire: one shared clock for the whole round. Race through the questions at your own pace. */
+  async function raceThrough(items, endAt, total) {
+    let correct = 0, answered = 0, i = 0;
+    const cb = clockBar();
+    const stage = h('div', {});
+    fill(box, cb.top, stage);
+    const stop = every(() => cb.tick(endAt, total * 1000)); cb.tick(endAt, total * 1000);
+    const show = () => {
+      const it = items[i];
+      const tf = it.kind === 'tf';
+      const order = tf ? [{ t: 'Myth', v: false }, { t: 'Fact', v: true }] : shuffle(it.options.map((t, idx) => ({ t, v: idx })));
+      let done = false;
+      const btns = order.map((o, k) => optBtn(k, o.t, tf, () => {
+        if (done || Date.now() >= endAt) return;
+        done = true; answered++;
+        const ok = o.v === it.answer; if (ok) correct++;
+        btns.forEach((b, j) => { b.disabled = true; if (order[j].v === it.answer) b.classList.add('ok'); else if (j === k) b.classList.add('bad'); });
+        setTimeout(() => { i++; if (i < items.length && Date.now() < endAt && !closed) show(); }, ok ? 350 : 700);
+      }));
+      const cue = QUESTION_CUES[it.game];
+      fill(stage, h('p', { class: 'eyebrow' }, `Question ${i + 1} of ${items.length}${cue ? ` \u00B7 ${cue[0]}` : ''}`), h('h2', { class: 'qtext' }, it.q), h('div', { class: `opts ${tf ? 'two' : ''}`.trim() }, btns));
+    };
+    show();
+    // finished early, or time ran out
+    while (!closed && Date.now() < endAt && answered < items.length) await wait(150);
+    stop();
+    if (answered >= items.length) await wait(750);
+    return { correct, answered, left: endAt - Date.now() };
+  }
+
   async function runGame() {
     stage = 'playing';
+    const kind = ROOM_KIND[room.game];
     const secs = room.secs, per = secs * 1000 + REVEAL;
     // Everyone starts counting when they hear the host start the game, so the clocks agree within a moment.
     const t0 = Date.now();
@@ -139,53 +274,33 @@ export async function roomView(env, code) {
     for (const ref of room.items) {
       packs[ref.g] = packs[ref.g] || await env.loadUsable(ref.g);
       const it = packs[ref.g].find((x) => x.id === ref.id);
-      if (it) items.push({ ...it, kind: QUIZ_KIND[ref.g], game: ref.g });
+      if (it) items.push({ ...it, kind: kind === 'rapid' || kind === 'tf' || kind === 'mcq' ? QUIZ_KIND[ref.g] : kind, game: ref.g });
     }
     let score = 0, correct = 0;
-    const clock = h('b', { class: 'rf-time' }), bar = h('i', {});
-    const tick = (until, total) => {
-      const l = Math.max(0, until - Date.now());
-      clock.textContent = String(Math.ceil(l / 1000)); bar.style.width = `${(l / total) * 100}%`;
-    };
-    for (let i = 0; i < items.length && !closed; i++) {
-      const it = items[i], qStart = t0 + LEAD + i * per, qEnd = qStart + secs * 1000;
-      if (i === 0) {
-        fill(box, h('h1', {}, 'Get ready'), h('p', { class: 'muted' }, 'The first question is coming up.'));
+    if (kind === 'rapid') {
+      fill(box, h('h1', {}, 'Get ready'), h('p', { class: 'muted' }, `${plural(items.length, 'question')} in ${secs} seconds. Go as fast as you can.`));
+      await wait(t0 + LEAD - Date.now());
+      if (closed) return;
+      const r = await raceThrough(items, t0 + LEAD + secs * 1000, secs);
+      if (closed) return;
+      correct = r.correct; score = pointsRapid(r.correct, r.answered, items.length, r.left);
+    } else {
+      const ask = kind === 'who' ? askWho : kind === 'number' ? askNumber : askChoice;
+      for (let i = 0; i < items.length && !closed; i++) {
+        const qStart = t0 + LEAD + i * per, qEnd = qStart + secs * 1000;
+        if (i === 0) fill(box, h('h1', {}, 'Get ready'), h('p', { class: 'muted' }, 'The first one is coming up.'));
         await wait(qStart - Date.now());
-      } else await wait(qStart - Date.now());
-      if (closed) return;
-      let picked = null, pickedAt = 0;
-      const cue = QUESTION_CUES[it.game];
-      const order = it.kind === 'tf' ? [{ t: 'Myth', v: false }, { t: 'Fact', v: true }] : shuffle(it.options.map((t, idx) => ({ t, v: idx })));
-      const right = (o) => (it.kind === 'tf' ? o.v === it.answer : o.v === it.answer);
-      const btns = order.map((o, k) => h('button', { class: `opt ${it.kind === 'tf' ? 'tf' : ''}`.trim(), onclick: () => {
-        if (picked != null || Date.now() >= qEnd) return;
-        picked = k; pickedAt = Date.now();
-        btns.forEach((b, j) => { b.disabled = true; b.classList.toggle('sel', j === k); });
-      } }, h('span', { class: 'l', 'aria-hidden': 'true' }, it.kind === 'tf' ? (k === 0 ? 'M' : 'F') : 'ABCD'[k]), h('span', { class: 'ot' }, o.t)));
-      const status = h('p', { class: 'muted', role: 'status' }, 'Pick your answer.');
-      fill(box,
-        h('div', { class: 'rf-top' }, ic('clock'), clock, h('div', { class: 'rf-bar', role: 'presentation' }, bar)),
-        h('p', { class: 'eyebrow' }, `Question ${i + 1} of ${items.length}${cue ? ` · ${cue[0]}` : ''}`),
-        h('h2', { class: 'qtext' }, it.q), h('div', { class: `opts ${it.kind === 'tf' ? 'two' : ''}`.trim() }, btns), status);
-      const iv = setInterval(() => { if (!box.isConnected || closed) { clearInterval(iv); return; } tick(qEnd, secs * 1000); }, 100);
-      tick(qEnd, secs * 1000);
-      await wait(qEnd - Date.now());
-      clearInterval(iv);
-      if (closed) return;
-      const ok = picked != null && right(order[picked]);
-      const gained = pointsFor(ok, qEnd - pickedAt, secs);
-      if (ok) { correct++; score += gained; }
-      myAnswers.push(picked == null ? -1 : picked);
-      btns.forEach((b, j) => { b.disabled = true; if (right(order[j])) b.classList.add('ok'); else if (j === picked) b.classList.add('bad'); });
-      status.textContent = picked == null ? 'Time is up. No answer.' : ok ? `Right! +${gained} points` : 'Not this time.';
-      status.classList.add(ok ? 'good' : 'oops');
-      await wait(qStart + per - Date.now());
+        if (closed) return;
+        const r = await ask(items[i], i, items.length, qEnd, secs);
+        if (r.ok) correct++;
+        score += r.gained;
+        await wait(qStart + per - Date.now());
+      }
     }
     if (closed) return;
     finished = true; stage = 'results';
-    fill(box, h('h1', {}, 'Nicely done'), h('p', { class: 'muted' }, 'Waiting for everyone to finish…'));
-    await S.store.savePlayer(code, S.user.uid, { score, correct, total: items.length, finished: true }).catch(() => {});
+    fill(box, h('h1', {}, 'Nicely done'), h('p', { class: 'muted' }, 'Waiting for everyone to finish\u2026'));
+    await S.store.savePlayer(code, S.user.uid, { score: Math.min(score, 2000), correct, total: items.length, finished: true }).catch(() => {});
     if (isHost()) setTimeout(() => S.store.updateRoom(code, { state: 'done' }).catch(() => {}), 1500);
     showResults(items.length);
     // If somebody dropped out, show what we have after a short wait.
