@@ -1,0 +1,85 @@
+{
+  "items": [
+    {
+      "title": "Which screen: web, app or CTV?",
+      "layers": [
+        "Web",
+        "App",
+        "CTV"
+      ],
+      "cards": [
+        {
+          "name": "Browser cookie",
+          "layer": 0
+        },
+        {
+          "name": "ads.txt",
+          "layer": 0
+        },
+        {
+          "name": "Mobile advertising ID",
+          "layer": 1
+        },
+        {
+          "name": "In-app SDK",
+          "layer": 1
+        },
+        {
+          "name": "Ad pod",
+          "layer": 2
+        },
+        {
+          "name": "Remote control",
+          "layer": 2
+        },
+        {
+          "name": "Page layout shift",
+          "layer": 0
+        },
+        {
+          "name": "App store listing",
+          "layer": 1
+        }
+      ],
+      "why": "Each channel has its own tools: pages, apps and the TV screen behave differently.",
+      "level": 1,
+      "id": "sta-hkr98l"
+    },
+    {
+      "title": "Sort the out-of-home examples",
+      "layers": [
+        "Static OOH",
+        "DOOH"
+      ],
+      "cards": [
+        {
+          "name": "Paper poster",
+          "layer": 0
+        },
+        {
+          "name": "Painted wall",
+          "layer": 0
+        },
+        {
+          "name": "LED billboard",
+          "layer": 1
+        },
+        {
+          "name": "Mall video screen",
+          "layer": 1
+        },
+        {
+          "name": "Printed bus stop sign",
+          "layer": 0
+        },
+        {
+          "name": "Taxi top screen",
+          "layer": 1
+        }
+      ],
+      "why": "Static formats are printed or painted. Digital ones can change what they show.",
+      "level": 1,
+      "id": "sta-pinaeb"
+    }
+  ]
+}

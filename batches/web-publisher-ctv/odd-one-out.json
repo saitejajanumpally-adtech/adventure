@@ -1,0 +1,95 @@
+{
+  "items": [
+    {
+      "q": "Which one is not an out-of-home format?",
+      "options": [
+        "Billboard",
+        "Bus shelter",
+        "Pre-roll video",
+        "Airport screen"
+      ],
+      "answer": 2,
+      "why": "Pre-roll plays before online video. The others are seen outside the home.",
+      "level": 1,
+      "id": "odd-6nkr2t"
+    },
+    {
+      "q": "Which one is not a core web performance metric?",
+      "options": [
+        "LCP",
+        "CLS",
+        "INP",
+        "CPM"
+      ],
+      "answer": 3,
+      "why": "CPM is a price. LCP, CLS and INP describe how a page loads and responds.",
+      "level": 2,
+      "id": "odd-apurqd"
+    },
+    {
+      "q": "Which one is not a CTV device or platform?",
+      "options": [
+        "Smart TV",
+        "Streaming stick",
+        "Game console",
+        "Print newspaper"
+      ],
+      "answer": 3,
+      "why": "A newspaper is print. The others can stream video to a TV screen.",
+      "level": 1,
+      "id": "odd-cq4lf9"
+    },
+    {
+      "q": "Which one is not a way to sell app inventory?",
+      "options": [
+        "In-app header bidding",
+        "Mediation waterfall",
+        "Direct deal",
+        "Robots.txt file"
+      ],
+      "answer": 3,
+      "why": "Robots.txt tells search crawlers what to read. The others are ways to sell ad space.",
+      "level": 2,
+      "id": "odd-jhxzh7"
+    },
+    {
+      "q": "Which one is not a CTV measurement idea?",
+      "options": [
+        "Video completion rate",
+        "Household reach",
+        "Frequency",
+        "Page scroll depth"
+      ],
+      "answer": 3,
+      "why": "Scroll depth is a web page measure. CTV is judged by completion, reach and frequency.",
+      "level": 2,
+      "id": "odd-uuempe"
+    },
+    {
+      "q": "Which one is not something digital out-of-home screens can do?",
+      "options": [
+        "Change the creative quickly",
+        "Show different ads by time of day",
+        "Trigger ads by weather",
+        "Reprint a paper poster for each change"
+      ],
+      "answer": 3,
+      "why": "Reprinting is what static posters need. Digital screens can change content instantly.",
+      "level": 2,
+      "id": "odd-5ly3xb"
+    },
+    {
+      "q": "Which one is not usually controlled by a web publisher?",
+      "options": [
+        "Ad slot placement",
+        "Page layout",
+        "Floor price",
+        "Advertiser budget"
+      ],
+      "answer": 3,
+      "why": "Advertisers set their own budgets. Publishers control layout, placements and floors.",
+      "level": 2,
+      "id": "odd-6p5h58"
+    }
+  ]
+}

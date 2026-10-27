@@ -1,0 +1,85 @@
+{
+  "items": [
+    {
+      "title": "Web publisher terms",
+      "pairs": [
+        {
+          "term": "Ad slot",
+          "def": "A space on a page where an ad can show"
+        },
+        {
+          "term": "Lazy loading",
+          "def": "Loading an ad only when it nears the screen"
+        },
+        {
+          "term": "ads.txt",
+          "def": "Public file listing authorised sellers"
+        },
+        {
+          "term": "Viewability",
+          "def": "Share of ads actually seen by visitors"
+        },
+        {
+          "term": "Sticky ad",
+          "def": "An ad that stays on screen while scrolling"
+        }
+      ],
+      "level": 1,
+      "id": "jar-shna8u"
+    },
+    {
+      "title": "CTV and streaming terms",
+      "pairs": [
+        {
+          "term": "Ad pod",
+          "def": "A group of ads in one break"
+        },
+        {
+          "term": "SSAI",
+          "def": "Ads stitched into the video stream"
+        },
+        {
+          "term": "FAST channel",
+          "def": "Free streaming channel paid for by ads"
+        },
+        {
+          "term": "Completion rate",
+          "def": "Share of ads watched to the end"
+        },
+        {
+          "term": "Household targeting",
+          "def": "Showing ads to a home, not a person"
+        }
+      ],
+      "level": 2,
+      "id": "jar-fyzdg1"
+    },
+    {
+      "title": "Out-of-home terms",
+      "pairs": [
+        {
+          "term": "DOOH",
+          "def": "Out-of-home advertising on digital screens"
+        },
+        {
+          "term": "Dwell time",
+          "def": "How long people stay near a screen"
+        },
+        {
+          "term": "Share of voice",
+          "def": "Share of ad time a brand gets on a screen"
+        },
+        {
+          "term": "Static OOH",
+          "def": "Printed posters that do not change"
+        },
+        {
+          "term": "Impression multiplier",
+          "def": "Estimate of people who pass a location"
+        }
+      ],
+      "level": 2,
+      "id": "jar-ycer2l"
+    }
+  ]
+}

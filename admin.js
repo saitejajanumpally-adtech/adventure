@@ -260,6 +260,49 @@ function addTab(S) {
   return el;
 }
 
+/* ---------- Ready-made batches (files in the batches/ folder of the site) ---------- */
+async function fetchJson(url) { const r = await fetch(url, { cache: 'no-store' }); if (!r.ok) throw new Error(`${url}: ${r.status}`); return r.json(); }
+function batchesTab(S) {
+  const list = h('div', {}), allowSim = h('input', { type: 'checkbox', id: 'batch-similar', onchange: () => load() });
+  async function load() {
+    fill(list, h('p', { class: 'muted' }, 'Looking at the batches…'));
+    let index;
+    try { index = await fetchJson('batches/index.json'); } catch { fill(list, h('p', { class: 'err' }, 'Could not read the batches folder.')); return; }
+    const cards = [];
+    for (const b of index.batches || []) {
+      const parts = [];
+      for (const g of PACK_GAMES) {
+        let data; try { data = await fetchJson(`batches/${b.id}/${g.id}.json`); } catch { continue; }
+        const cur = await S.store.loadPack(g.id);
+        parts.push({ game: g.id, data, cur, v: validatePack(g.id, data, cur.items, { allowSimilar: allowSim.checked }) });
+      }
+      const fresh = parts.reduce((n, p) => n + p.v.valid.length, 0);
+      const held = parts.reduce((n, p) => n + p.v.similar.length, 0);
+      const same = parts.reduce((n, p) => n + p.v.dups.length, 0);
+      const bad = parts.reduce((n, p) => n + p.v.errors.length, 0);
+      const publish = async (btn) => {
+        btn.disabled = true;
+        try {
+          for (const p of parts) if (p.v.valid.length) await S.store.publishPack(p.game, [...p.cur.items, ...p.v.valid], `Batch: ${b.title}`, S.user.email);
+          toast(`Published ${fresh} new questions.`);
+        } catch (e) { console.error(e); toast('Publish failed. You may not have admin access.'); }
+        load();
+      };
+      cards.push(h('div', { class: 'card batch' },
+        h('b', {}, b.title), b.note ? h('p', { class: 'muted' }, b.note) : null,
+        h('p', {}, fresh ? `${fresh} new questions across ${parts.filter((p) => p.v.valid.length).length} games` : 'Published ✓ nothing new to add'),
+        h('p', { class: 'muted small' }, `${same} already there, ${held} look like an existing question and are held back${bad ? `, ${bad} need a fix` : ''}`),
+        parts.map((p) => h('div', { class: 'srow' }, h('span', {}, titleOf(p.game)), h('span', { class: 'muted' }, `${p.v.valid.length} new`))),
+        fresh ? h('button', { class: 'btn', onclick: (e) => publish(e.currentTarget) }, `Publish ${fresh} questions`) : null));
+    }
+    fill(list, cards.length ? cards : h('p', { class: 'muted' }, 'No batches yet.'));
+  }
+  load();
+  return h('div', {}, h('h1', { style: 'margin-bottom:10px' }, 'Ready-made batches'),
+    h('p', { class: 'muted' }, 'Question batches added to the site. Publishing adds only the new questions, skips ones you already have and keeps a version you can restore from Add questions.'),
+    h('label', { for: 'batch-similar', class: 'inl' }, allowSim, 'Also add the ones that look similar'), list);
+}
+
 /* ---------- editing one item (used by the Question browser and by Reports) ---------- */
 function editItemForm(S, game, item, pack, done, onSaved) {
   const quiz = QUIZ.includes(game), tf = game === 'myth-or-fact';
@@ -614,7 +657,7 @@ function announceTab(S) {
 /* ---------- the admin page: a menu on the left and the chosen section on the right ---------- */
 const SECTIONS = [
   { group: 'Insights', items: [['insights', 'Insights']] },
-  { group: 'Content', items: [['add', 'Add questions'], ['browse', 'Question browser'], ['reports', 'Reports']] },
+  { group: 'Content', items: [['add', 'Add questions'], ['batches', 'Ready-made batches'], ['browse', 'Question browser'], ['reports', 'Reports']] },
   { group: 'Players', items: [['people', 'People'], ['feedback', 'Feedback']] },
   { group: 'Controls', items: [['settings', 'Game settings'], ['announce', 'Announcements']] }
 ];
@@ -624,7 +667,7 @@ export function adminView(S, H, section = 'insights') {
   const counts = { reports: S.reportCount || 0, feedback: S.feedbackCount || 0 };
   const nav = h('nav', { class: 'adnav', 'aria-label': 'Admin sections' }, SECTIONS.map((g) => h('div', { class: 'adgroup' }, h('div', { class: 'gl' }, g.group),
     g.items.map(([id, t]) => h('a', { class: `ni ${id === section ? 'on' : ''}`, href: `#/admin/${id}`, 'aria-current': id === section ? 'page' : null }, t, counts[id] ? h('span', { class: 'cnt' }, counts[id]) : null)))));
-  const tabs = { insights: insightsTab, add: addTab, browse: browseTab, reports: reportsTab, people: peopleTab, feedback: feedbackTab, settings: settingsTab, announce: announceTab };
+  const tabs = { insights: insightsTab, add: addTab, batches: batchesTab, browse: browseTab, reports: reportsTab, people: peopleTab, feedback: feedbackTab, settings: settingsTab, announce: announceTab };
   const content = h('div', { class: 'adcontent' }, tabs[section](S, H));
   H.view(H.page(h('div', { class: 'adlayout' }, nav, content)));
 }

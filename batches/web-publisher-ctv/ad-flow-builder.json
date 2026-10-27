@@ -1,0 +1,60 @@
+{
+  "items": [
+    {
+      "title": "How an ad loads on a web page with header bidding",
+      "steps": [
+        "A visitor opens the page",
+        "The header bidding script sends bid requests",
+        "Demand partners return their bids",
+        "The best bid is passed to the ad server",
+        "The ad server picks the final winner",
+        "The ad shows in the slot"
+      ],
+      "why": "Bids are collected before the ad server decides, so all demand competes at once.",
+      "level": 2,
+      "id": "ad--ej8kix"
+    },
+    {
+      "title": "How a publisher starts selling a new app",
+      "steps": [
+        "Add the app to the ad platform",
+        "Add the app-ads.txt file to the developer site",
+        "Add the ad SDK to the app",
+        "Create ad units and placements",
+        "Test ads in the app",
+        "Release and watch the reports"
+      ],
+      "why": "Setup moves from approval, to code, to testing, then to live reporting.",
+      "level": 2,
+      "id": "ad--1hqnwd"
+    },
+    {
+      "title": "How a CTV ad is delivered to a viewer",
+      "steps": [
+        "The viewer starts a show in a streaming app",
+        "The app reaches an ad break",
+        "The app sends an ad request to the ad server",
+        "A demand platform bids and wins",
+        "The ad is served into the stream",
+        "Tracking pixels report the view"
+      ],
+      "why": "The ad request happens at the break, then the winning ad is delivered and measured.",
+      "level": 3,
+      "id": "ad--4iz7uc"
+    },
+    {
+      "title": "How a DOOH campaign runs",
+      "steps": [
+        "The advertiser picks screens and times",
+        "The creative is approved for the screens",
+        "The campaign is scheduled on the platform",
+        "Screens play the ad",
+        "Proof of play is recorded",
+        "Reach and results are reported"
+      ],
+      "why": "Proof of play confirms the ad really ran where and when it was booked.",
+      "level": 2,
+      "id": "ad--p4itoa"
+    }
+  ]
+}

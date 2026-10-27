@@ -1,0 +1,110 @@
+{
+  "items": [
+    {
+      "q": "A web publisher can sell the same page view to several different ad slots on the same page.",
+      "answer": true,
+      "why": "A page usually holds several ad slots, and each slot is sold as its own impression.",
+      "level": 1,
+      "id": "myt-uwet1i"
+    },
+    {
+      "q": "An ads.txt file lists the sellers a publisher authorises to sell its inventory.",
+      "answer": true,
+      "why": "Buyers check ads.txt on the publisher domain to confirm a seller is authorised, which helps fight fraud.",
+      "hint": "Think of it as a public list of approved sellers.",
+      "level": 1,
+      "id": "myt-m754f1"
+    },
+    {
+      "q": "Lazy loading ads means every ad on the page loads at the same time as the page.",
+      "answer": false,
+      "why": "Lazy loading waits until a slot is close to the screen, so fewer ads load that are never seen.",
+      "level": 1,
+      "id": "myt-i2a8ju"
+    },
+    {
+      "q": "Page speed has no effect on how many ad impressions a publisher earns.",
+      "answer": false,
+      "why": "Slow pages lose visitors and can delay ad calls, so fewer ads load and fewer are seen.",
+      "level": 1,
+      "id": "myt-avx4xq"
+    },
+    {
+      "q": "Cumulative layout shift is caused only by video ads.",
+      "answer": false,
+      "why": "Any ad or content that loads late and pushes the page around adds to layout shift, so reserving space for slots helps.",
+      "level": 2,
+      "id": "myt-8wfcmb"
+    },
+    {
+      "q": "A sticky ad stays in view as the visitor scrolls, which can raise viewability.",
+      "answer": true,
+      "why": "Because the unit remains on screen longer, more of its impressions count as viewable.",
+      "level": 2,
+      "id": "myt-wb9lgv"
+    },
+    {
+      "q": "Refreshing an ad slot every few seconds is always allowed by buyers and platforms.",
+      "answer": false,
+      "why": "Many platforms limit refresh and require the visitor to be active, because very fast refresh can inflate impressions.",
+      "level": 3,
+      "id": "myt-rkfe4n"
+    },
+    {
+      "q": "Direct deals between a publisher and an advertiser can only be sold through an open auction.",
+      "answer": false,
+      "why": "Direct deals are agreed in advance, often at a fixed price, and bypass the open auction.",
+      "level": 2,
+      "id": "myt-1cu6xt"
+    },
+    {
+      "q": "An app publisher cannot use the same ad formats that a web publisher uses.",
+      "answer": false,
+      "why": "Banner, interstitial and video formats exist on both, though the way they are requested and measured differs.",
+      "level": 3,
+      "id": "myt-d3jfqf"
+    },
+    {
+      "q": "Connected TV ads are usually watched on a TV screen with a remote rather than a mouse, so they cannot be clicked in the usual way.",
+      "answer": true,
+      "why": "Viewers use a remote, so CTV is usually measured on completion and reach rather than clicks.",
+      "level": 1,
+      "id": "myt-9nxkut"
+    },
+    {
+      "q": "CTV and linear TV are the same thing delivered by a different cable.",
+      "answer": false,
+      "why": "Linear TV airs on a fixed schedule, while CTV streams over the internet and can target individual households.",
+      "level": 1,
+      "id": "myt-eabfj"
+    },
+    {
+      "q": "In CTV, video completion rate is a common quality measure because ads are often not skippable.",
+      "answer": true,
+      "why": "Many CTV ads are served as full spots, so completion shows how many viewers watched to the end.",
+      "level": 2,
+      "id": "myt-1s5jqh"
+    },
+    {
+      "q": "CTV impressions are always counted per person, not per household.",
+      "answer": false,
+      "why": "Most CTV reporting is at device or household level, because one screen is often shared.",
+      "level": 3,
+      "id": "myt-kl7toq"
+    },
+    {
+      "q": "A CTV ad pod is a group of ads played together in one commercial break.",
+      "answer": true,
+      "why": "Like a TV break, an ad pod holds several ads in a row, and each position can be sold separately.",
+      "level": 2,
+      "id": "myt-p23ki5"
+    },
+    {
+      "q": "Frequency capping matters less on CTV because viewers never see the same ad twice.",
+      "answer": false,
+      "why": "The same household can see the same ad repeatedly across apps, so capping across publishers is a real challenge.",
+      "level": 2,
+      "id": "myt-37z6o4"
+    }
+  ]
+}

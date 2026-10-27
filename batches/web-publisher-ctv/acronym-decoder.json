@@ -1,0 +1,108 @@
+{
+  "items": [
+    {
+      "q": "What does OTT stand for?",
+      "options": [
+        "Over the top",
+        "Open to traffic",
+        "Online ticketing tool",
+        "Output transfer type"
+      ],
+      "answer": 0,
+      "why": "OTT is video delivered over the internet directly, bypassing cable or broadcast providers.",
+      "level": 1,
+      "id": "acr-xpn51g"
+    },
+    {
+      "q": "What does OOH stand for?",
+      "options": [
+        "Out of home",
+        "On our hardware",
+        "Open ordering hub",
+        "Offer over header"
+      ],
+      "answer": 0,
+      "why": "OOH is advertising seen outside the house, such as billboards and transit.",
+      "level": 1,
+      "id": "acr-ml2v9n"
+    },
+    {
+      "q": "What does SSAI stand for in video advertising?",
+      "options": [
+        "Server-side ad insertion",
+        "Secure site ad index",
+        "Shared supply ad inventory",
+        "Static screen ad impression"
+      ],
+      "answer": 0,
+      "why": "With SSAI the ad is stitched into the video stream on the server, so it plays like the content.",
+      "level": 2,
+      "id": "acr-6cibst"
+    },
+    {
+      "q": "What does CLS measure on a web page?",
+      "options": [
+        "Cumulative layout shift",
+        "Click and load speed",
+        "Creative loading score",
+        "Cached link status"
+      ],
+      "answer": 0,
+      "why": "CLS tells you how much the page jumps around while loading, which ads can make worse.",
+      "level": 2,
+      "id": "acr-v9kss1"
+    },
+    {
+      "q": "What does LCP stand for in page performance?",
+      "options": [
+        "Largest contentful paint",
+        "Last cached page",
+        "Live content pixel",
+        "Lowest cost placement"
+      ],
+      "answer": 0,
+      "why": "LCP is the time until the main content of a page appears.",
+      "level": 2,
+      "id": "acr-odw1ka"
+    },
+    {
+      "q": "What does SDK stand for in an app publisher setting?",
+      "options": [
+        "Software development kit",
+        "Secure data key",
+        "Supply delivery kernel",
+        "Static display kit"
+      ],
+      "answer": 0,
+      "why": "Apps use an ad SDK, a code package from an ad platform, to request and show ads.",
+      "level": 1,
+      "id": "acr-3t9kt6"
+    },
+    {
+      "q": "What does ACR stand for in CTV measurement?",
+      "options": [
+        "Automatic content recognition",
+        "Ad completion rate",
+        "Audience cost report",
+        "App creative review"
+      ],
+      "answer": 0,
+      "why": "ACR identifies what is playing on a smart TV, and it is used to measure viewing and match ad exposure.",
+      "level": 3,
+      "id": "acr-emb8at"
+    },
+    {
+      "q": "What does FAST stand for in streaming?",
+      "options": [
+        "Free ad-supported streaming TV",
+        "Fast ad serving technology",
+        "Fixed audience sales tier",
+        "Full app stream tool"
+      ],
+      "answer": 0,
+      "why": "FAST channels are free to watch and paid for by ads, like linear TV delivered over the internet.",
+      "level": 3,
+      "id": "acr-me074k"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "batches": [
+    { "id": "web-publisher-ctv", "title": "Web Publisher + CTV, OTT, OOH and DOOH", "note": "Pilot batch: page speed, header bidding, ads.txt, streaming ads, ad pods and out-of-home." }
+  ]
+}

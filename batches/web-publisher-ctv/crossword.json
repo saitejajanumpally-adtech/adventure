@@ -1,0 +1,82 @@
+{
+  "items": [
+    {
+      "title": "Web publisher basics",
+      "words": [
+        {
+          "answer": "SLOT",
+          "clue": "Space on a page for an ad"
+        },
+        {
+          "answer": "LAZY",
+          "clue": "Type of loading that waits until needed"
+        },
+        {
+          "answer": "STICKY",
+          "clue": "Ad that follows you as you scroll"
+        },
+        {
+          "answer": "FLOOR",
+          "clue": "Lowest price a publisher accepts"
+        },
+        {
+          "answer": "LAYOUT",
+          "clue": "Page arrangement; shifts hurt it"
+        },
+        {
+          "answer": "SPEED",
+          "clue": "Page ___ affects ad revenue"
+        },
+        {
+          "answer": "HEADER",
+          "clue": "Where header bidding gets its name"
+        },
+        {
+          "answer": "ADSTXT",
+          "clue": "File listing authorised sellers"
+        }
+      ],
+      "level": 1,
+      "id": "cro-kfew1y"
+    },
+    {
+      "title": "Streaming and screens",
+      "words": [
+        {
+          "answer": "STREAM",
+          "clue": "Deliver video over the internet"
+        },
+        {
+          "answer": "POD",
+          "clue": "Group of ads in one break"
+        },
+        {
+          "answer": "REMOTE",
+          "clue": "What a viewer uses instead of a mouse"
+        },
+        {
+          "answer": "REACH",
+          "clue": "Number of different homes or people"
+        },
+        {
+          "answer": "SCREEN",
+          "clue": "Where a CTV ad is shown"
+        },
+        {
+          "answer": "COMPLETION",
+          "clue": "Rate of ads watched to the end"
+        },
+        {
+          "answer": "DWELL",
+          "clue": "Time spent near an OOH screen"
+        },
+        {
+          "answer": "DOOH",
+          "clue": "Digital out of home, short"
+        }
+      ],
+      "level": 2,
+      "id": "cro-8aymz9"
+    }
+  ]
+}
