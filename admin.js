@@ -261,21 +261,32 @@ function addTab(S) {
 }
 
 /* ---------- Ready-made batches (files in the batches/ folder of the site) ---------- */
-async function fetchJson(url) { const r = await fetch(url, { cache: 'no-store' }); if (!r.ok) throw new Error(`${url}: ${r.status}`); return r.json(); }
+async function fetchJson(url) { const r = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(20000) }); if (!r.ok) throw new Error(`${url}: ${r.status}`); return r.json(); }
 function batchesTab(S) {
   const list = h('div', {}), allowSim = h('input', { type: 'checkbox', id: 'batch-similar', onchange: () => load() });
   async function load() {
     fill(list, h('p', { class: 'muted' }, 'Looking at the batches…'));
-    let index;
-    try { index = await fetchJson('batches/index.json'); } catch { fill(list, h('p', { class: 'err' }, 'Could not read the batches folder.')); return; }
-    const cards = [];
-    for (const b of index.batches || []) {
-      const parts = [];
-      for (const g of PACK_GAMES) {
-        let data; try { data = await fetchJson(`batches/${b.id}/${g.id}.json`); } catch { continue; }
-        const cur = await S.store.loadPack(g.id);
-        parts.push({ game: g.id, data, cur, v: validatePack(g.id, data, cur.items, { allowSimilar: allowSim.checked }) });
-      }
+    try {
+      const index = await fetchJson('batches/index.json');
+      const packs = {};
+      const getPack = (g) => (packs[g] = packs[g] || S.store.loadPack(g));
+      // every batch and every game at once, and each game's live pack is read only once
+      const cardsData = await Promise.all((index.batches || []).map(async (b) => {
+        const parts = (await Promise.all(PACK_GAMES.map(async (g) => {
+          let data; try { data = await fetchJson(`batches/${b.id}/${g.id}.json`); } catch { return null; }
+          const cur = await getPack(g.id);
+          return { game: g.id, data, cur, v: validatePack(g.id, data, cur.items, { allowSimilar: allowSim.checked }) };
+        }))).filter(Boolean);
+        return { b, parts };
+      }));
+      const cards = cardsData.map(({ b, parts }) => batchCard(b, parts));
+      fill(list, cards.length ? cards : h('p', { class: 'muted' }, 'No batches yet.'));
+    } catch (e) {
+      console.error(e);
+      fill(list, h('p', { class: 'err', role: 'alert' }, `Could not load the batches (${e.message || 'network problem'}).`), h('button', { class: 'btn ghost', onclick: () => load() }, 'Try again'));
+    }
+  }
+  function batchCard(b, parts) {
       const fresh = parts.reduce((n, p) => n + p.v.valid.length, 0);
       const held = parts.reduce((n, p) => n + p.v.similar.length, 0);
       const same = parts.reduce((n, p) => n + p.v.dups.length, 0);
@@ -288,14 +299,12 @@ function batchesTab(S) {
         } catch (e) { console.error(e); toast('Publish failed. You may not have admin access.'); }
         load();
       };
-      cards.push(h('div', { class: 'card batch' },
+      return h('div', { class: 'card batch' },
         h('b', {}, b.title), b.note ? h('p', { class: 'muted' }, b.note) : null,
         h('p', {}, fresh ? `${fresh} new questions across ${parts.filter((p) => p.v.valid.length).length} games` : 'Published ✓ nothing new to add'),
         h('p', { class: 'muted small' }, `${same} already there, ${held} look like an existing question and are held back${bad ? `, ${bad} need a fix` : ''}`),
         parts.map((p) => h('div', { class: 'srow' }, h('span', {}, titleOf(p.game)), h('span', { class: 'muted' }, `${p.v.valid.length} new`))),
-        fresh ? h('button', { class: 'btn', onclick: (e) => publish(e.currentTarget) }, `Publish ${fresh} questions`) : null));
-    }
-    fill(list, cards.length ? cards : h('p', { class: 'muted' }, 'No batches yet.'));
+        fresh ? h('button', { class: 'btn', onclick: (e) => publish(e.currentTarget) }, `Publish ${fresh} questions`) : null);
   }
   load();
   return h('div', {}, h('h1', { style: 'margin-bottom:10px' }, 'Ready-made batches'),
