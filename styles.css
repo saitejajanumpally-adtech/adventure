@@ -825,3 +825,21 @@ table.rules td:last-child{font-weight:700}
 .num-typed{width:140px;min-height:46px;border:2px solid var(--edge);border-radius:12px;padding:8px 12px;font-size:18px;background:#fff}
 
 .num-box .num-typed{width:160px;flex:none}
+
+/* ===== Rooms and 1 vs 1 ===== */
+.joincard{display:flex;align-items:center;gap:14px;background:#fff;border:2px dashed var(--line);border-radius:18px;padding:10px 16px;margin:14px 0}
+.joincard>i{font-size:26px;color:var(--brand)}
+.joincard>div{flex:1;min-width:0}.joincard p{margin:2px 0 0}
+@media (max-width:560px){.joincard{flex-wrap:wrap}.joincard .btn{width:100%}}
+.bigcode{font-family:var(--head);font-size:clamp(40px,12vw,64px);letter-spacing:.18em;text-align:center;background:var(--bg);border-radius:18px;padding:12px 8px;margin:8px 0;color:var(--brand);user-select:all}
+.roomcode{text-transform:uppercase;letter-spacing:.2em;font-size:22px;text-align:center}
+.plist{list-style:none;margin:6px 0 14px;padding:0;display:flex;flex-direction:column;gap:6px}
+.plist li{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px}
+.board{list-style:none;margin:10px 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.board li{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px}
+.board li.me{border-color:var(--brand);background:var(--bg)}
+.board .rk{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.board b{flex:1;min-width:0;overflow-wrap:anywhere}.board .pts{font-weight:700}
+.opt.sel{border-color:var(--brand);background:var(--line)}
+.roombox .good{color:var(--okink)}.roombox .oops{color:var(--badink)}
+

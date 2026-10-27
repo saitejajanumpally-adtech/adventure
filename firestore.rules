@@ -70,6 +70,39 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Rooms and 1 vs 1. A room is found by its 6-character code (nobody can list rooms). The host creates it and moves it
+    // from lobby to playing to done. Each player writes only their own small player document. No AdCoins are involved.
+    match /rooms/{code} {
+      allow get: if inDomain();
+      allow list: if false;
+      allow create: if inDomain()
+        && request.resource.data.host == request.auth.uid
+        && request.resource.data.state == 'lobby'
+        && request.resource.data.mode in ['1v1', 'room']
+        && request.resource.data.items is list && request.resource.data.items.size() >= 3 && request.resource.data.items.size() <= 12
+        && request.resource.data.secs >= 10 && request.resource.data.secs <= 60
+        && request.resource.data.max >= 2 && request.resource.data.max <= 12;
+      allow update: if inDomain() && resource.data.host == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['state', 'startedAt'])
+        && request.resource.data.state in ['lobby', 'playing', 'done'];
+      allow delete: if inDomain() && (resource.data.host == request.auth.uid || isAdmin());
+
+      match /players/{uid} {
+        allow get, list: if inDomain();
+        allow create: if inDomain() && request.auth.uid == uid
+          && get(/databases/$(database)/documents/rooms/$(code)).data.state == 'lobby'
+          && request.resource.data.keys().hasOnly(['uid', 'nick', 'joinedAt'])
+          && request.resource.data.uid == uid
+          && request.resource.data.nick is string && request.resource.data.nick.size() >= 1 && request.resource.data.nick.size() <= 20;
+        allow update: if inDomain() && request.auth.uid == uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['score', 'correct', 'total', 'finished'])
+          && request.resource.data.score >= 0 && request.resource.data.score <= 2000
+          && request.resource.data.correct >= 0 && request.resource.data.correct <= 12;
+        allow delete: if inDomain() && (request.auth.uid == uid
+          || get(/databases/$(database)/documents/rooms/$(code)).data.host == request.auth.uid || isAdmin());
+      }
+    }
+
     // R&D Gifts. One document per player with a running total and the list of gifts. Only admins write it;
     // the player (and admins) can read it. The log of who gave what is for admins only.
     match /gifts/{uid} {

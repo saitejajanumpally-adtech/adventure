@@ -7,6 +7,7 @@ import { showHintAd } from './ads.js';
 import { makeTimer, runQuiz, runRapid, runWho, runNumber, runFlow, runMatch, runSort, runCross, hooks } from './engines.js';
 import { adminView } from './admin.js';
 import { difficultyOf } from './validate.js';
+import { newRoomView, joinView, roomView, roomGames } from './rooms.js';
 
 const $app = document.getElementById('app');
 const S = { store: null, user: null, profile: null, admin: false, reportCount: 0, feedbackCount: 0, loginMsg: '', timer: null, clock: null, host: {}, tourI: 0, pick: null, floor: null, remote: {}, announce: { banner: {}, entries: [], minor: '' }, prevHash: '' };
@@ -202,6 +203,9 @@ function gameCard(g) {
     h('div', {}, h('b', {}, g.title), h('span', {}, g.tag), h('small', { class: 'gmeta', 'data-game': g.id }, played ? `Level ${gameLevel(played.correct)}` : 'Not played yet')));
 }
 
+function joinCard() {
+  return h('section', { class: 'joincard', 'aria-label': 'Join a room' }, ic('door-enter'), h('div', {}, h('b', {}, 'Playing with colleagues?'), h('p', { class: 'muted' }, 'Join a room with a code, or start one from any quiz game.')), h('a', { class: 'btn inline ghost', href: '#/join' }, 'Join a room'));
+}
 function gymCard() {
   const n = missedCount();
   if (!n) return null;
@@ -326,6 +330,7 @@ function renderHome() {
     welcome,
     h('div', { class: 'hero2' }, hero, progress),
     gymCard(),
+    joinCard(),
     recBox,
     sectionHead('Find your kind of play', 'Small puzzles. Big “oh, that makes sense” moments.', h('span', { class: 'chip-count' }, `${liveCount} games to explore`)),
     sections, journey, extras,
@@ -446,9 +451,9 @@ async function renderIntro(id) {
       h('div', { class: 'rwd' }, ic('coins'), h('span', {}, g.earn || g.how.scoring)),
       h('div', { class: 'row gap wrap' }, h('button', { class: 'btn light inline', onclick: () => showHow(id) }, ic('question-mark'), 'How to play'), pool)),
     h('h2', { class: 'subhead' }, 'How do you want to play?'),
-    h('p', { class: 'muted small' }, 'Solo is open today. More ways to play are on the way.'),
-    h('div', { class: 'grid modes' }, MODES.map((m) => m.live
-      ? h('a', { class: 'mode', href: `#/play/${id}` }, ic(m.icon, 'big'), h('div', {}, h('p', {}, m.title), h('span', {}, m.sub)))
+    h('p', { class: 'muted small' }, roomGames().includes(id) ? 'Play on your own, or with colleagues using a room code.' : 'Solo is open today. More ways to play are on the way.'),
+    h('div', { class: 'grid modes' }, MODES.map((m) => m.live && (!m.rooms || roomGames().includes(id))
+      ? h('a', { class: 'mode', href: m.rooms ? `#/room/new/${m.id}/${id}` : `#/play/${id}` }, ic(m.icon, 'big'), h('div', {}, h('p', {}, m.title), h('span', {}, m.sub)))
       : h('div', { class: 'mode soon', 'aria-label': `${m.title}, coming soon` }, ic(m.icon, 'big'), h('div', {}, h('p', {}, m.title), h('span', {}, 'Coming soon')))))), { narrow: true }));
   if (!S.profile.howSeen[id]) { S.profile.howSeen[id] = true; save(); showHow(id); }
   try {
@@ -1013,7 +1018,9 @@ function renderProfile() {
 const coinGoal = () => (adFreeActive() ? 'Your ad-free pass is on.' : balanceOf(S.profile) >= eff().adFreePrice ? `You can buy the ad-free pass (${eff().adFreePrice}).` : `${eff().adFreePrice - balanceOf(S.profile)} to go for the ad-free pass.`);
 
 /* ---------- routing and auth ---------- */
+const roomEnv = () => ({ S, view, page, go, loadUsable, gameName: (id) => (gameById(id) || { title: id }).title });
 function route() {
+  if (S.roomCleanup) { S.roomCleanup(); S.roomCleanup = null; }
   const hash = location.hash.replace(/^#/, '') || '/home';
   document.querySelectorAll('.backdrop').forEach((b) => b.remove());
   if (!S.user || !S.profile) return renderLogin();
@@ -1023,6 +1030,8 @@ function route() {
   if (a === 'tour') return renderTour();
   if (a === 'game') return renderIntro(b);
   if (a === 'play') return play(b);
+  if (a === 'join') return joinView(roomEnv(), b);
+  if (a === 'room') return b === 'new' ? newRoomView(roomEnv(), hash.split('/')[3], hash.split('/')[4]) : roomView(roomEnv(), b);
   if (a === 'card') return renderCard();
   if (a === 'pets') return renderPets();
   if (a === 'settings') return renderSettings();

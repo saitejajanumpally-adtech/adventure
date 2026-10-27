@@ -85,8 +85,8 @@ export const GAMES = [
 
 export const MODES = [
   { id: 'solo', title: 'Solo', sub: 'Play at your own pace', icon: 'user', live: true },
-  { id: '1v1', title: '1 vs 1', sub: 'Challenge one colleague', icon: 'swords', live: false },
-  { id: 'room', title: 'Room', sub: 'Invite people with a code', icon: 'door-enter', live: false },
+  { id: '1v1', title: '1 vs 1', sub: 'Challenge one colleague', icon: 'swords', live: true, rooms: true },
+  { id: 'room', title: 'Room', sub: 'Invite people with a code', icon: 'door-enter', live: true, rooms: true },
   { id: 'floor', title: 'Floor challenge', sub: 'Open to everyone, all week', icon: 'building-skyscraper', live: false },
   { id: 'team', title: 'Team vs team', sub: 'Your team against another', icon: 'users-group', live: false },
   { id: 'tournament', title: 'Tournament', sub: 'Quarter-finals to the final', icon: 'trophy', live: false }
