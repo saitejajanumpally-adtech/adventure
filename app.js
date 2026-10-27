@@ -1,5 +1,5 @@
 import { CONFIG } from './config.js';
-import { CATS, GAMES, MODES, LEVELS, TIPS, GAME_TIPS, PETS, TOUR, CURRENCY, BADGES, LINES, GAME_LEVELS, TEXT_SIZES, WHATS_NEW, WHATS_NEW_MINOR, HINTS, SHOP_SOON, SHOP_DEFAULTS } from './data.js';
+import { applyContent, CATS, GAMES, MODES, LEVELS, TIPS, GAME_TIPS, PETS, TOUR, CURRENCY, BADGES, LINES, GAME_LEVELS, TEXT_SIZES, WHATS_NEW, WHATS_NEW_MINOR, HINTS, SHOP_SOON, SHOP_DEFAULTS } from './data.js';
 import { shuffle, mulberry32, seedFrom, dateKey, yesterdayKey, weekKey, weekdayIndex, parseDevice } from './util.js';
 import { createStore } from './store.js';
 import { h, ic, fill, toast, petFigure, preloadPets, PET_MOODS, petById, wordmark, modal, fmtTime, initialsOf, confetti } from './ui.js';
@@ -1034,6 +1034,7 @@ async function onUser(u, msg) {
     S.admin = await S.store.isAdmin(u);
     S.remote = await S.store.getSettings().catch(() => ({}));
     S.announce = await S.store.getAnnounce().catch(() => ({ banner: {}, entries: [], minor: '' }));
+    applyContent(S.announce);
     if (S.admin) {
       S.reportCount = await S.store.countReports().catch(() => 0);
       S.feedbackCount = await S.store.countOpenFeedback().catch(() => 0);

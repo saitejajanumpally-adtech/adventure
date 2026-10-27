@@ -439,3 +439,20 @@ export const STARTER = {
   'acronym-decoder': ACRONYMS, 'myth-or-fact': MYTHS, 'odd-one-out': ODD,
   'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW
 };
+
+/* Admin-edited ads and pet lines (saved with the announcements). Start from the built-in ones, then layer the changes on top. */
+const clone = (x) => JSON.parse(JSON.stringify(x));
+const PRISTINE = { ads: clone(ADS), lines: clone(LINES) };
+export const DEFAULT_ADS = () => clone(PRISTINE.ads);
+export const DEFAULT_LINES = () => clone(PRISTINE.lines);
+export function applyContent(c) {
+  c = c || {};
+  ADS.splice(0, ADS.length, ...clone(PRISTINE.ads));
+  Object.keys(PRISTINE.lines).forEach((k) => { LINES[k] = clone(PRISTINE.lines[k]); });
+  if (Array.isArray(c.ads) && c.ads.length) ADS.splice(0, ADS.length, ...clone(c.ads));
+  Object.entries(c.lines || {}).forEach(([pet, sit]) => {
+    if (!LINES[pet] || !sit) return;
+    Object.entries(sit).forEach(([k, arr]) => { if (LINES[pet][k] && Array.isArray(arr) && arr.length) LINES[pet][k] = arr.map(String).slice(0, 8); });
+  });
+}
+

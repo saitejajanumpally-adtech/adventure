@@ -1,4 +1,4 @@
-import { GAMES, LEVELS, GAME_LEVELS, BADGES, PETS, CURRENCY, SHOP_SOON } from './data.js';
+import { GAMES, LEVELS, GAME_LEVELS, BADGES, PETS, CURRENCY, SHOP_SOON, ADS, LINES, DEFAULT_ADS, DEFAULT_LINES, applyContent } from './data.js';
 import { h, ic, fill, toast, modal } from './ui.js';
 import { validatePack, parseJson, buildPrompt, normalizeItem, DIFFICULTY, difficultyOf } from './validate.js';
 import { dateKey, weekKey } from './util.js';
@@ -616,6 +616,98 @@ function settingsTab(S, H) {
 }
 
 /* ---------- Announcements ---------- */
+/* ---------- Ads and pet lines ---------- */
+const SITUATIONS = [['right', 'After a right answer'], ['wrong', 'After a wrong answer'], ['hint', 'When a hint starts'], ['great', 'After a perfect round'], ['keep', 'After a round with misses']];
+const AD_FORMATS = [['video', 'Video ad'], ['countdown', 'Countdown offer'], ['prize', 'Prize banner'], ['install', 'Install prompt (two buttons)'], ['cookie', 'Cookie wall (two buttons)']];
+function contentTab(S) {
+  const saved = () => ({ ads: (S.announce && S.announce.ads) || [], lines: (S.announce && S.announce.lines) || {} });
+  const persist = async (patch, msg) => {
+    const obj = { ...(S.announce || { banner: {}, entries: [], minor: '' }), ...patch };
+    try { await S.store.saveAnnounce(obj); S.announce = obj; applyContent(obj); toast(msg); return true; } catch (e) { console.error(e); toast('Could not save. Check your admin access.'); return false; }
+  };
+
+  /* pet lines */
+  let pet = PETS[0].id;
+  const petSel = h('select', { id: 'lines-pet', onchange: () => { pet = petSel.value; drawLines(); } }, PETS.map((p) => h('option', { value: p.id }, `${p.name} the ${p.species}`)));
+  const linesBox = h('div', {}), lineErr = h('p', { class: 'err', role: 'alert' });
+  let areas = {};
+  function drawLines() {
+    areas = {};
+    fill(linesBox, SITUATIONS.map(([k, label]) => {
+      const ta = h('textarea', { rows: 3, id: `line-${k}`, 'aria-label': label }); ta.value = (LINES[pet][k] || []).join('\n');
+      areas[k] = ta;
+      return field(label, ta);
+    }));
+    lineErr.textContent = '';
+  }
+  const saveLines = async () => {
+    const out = {};
+    for (const [k, label] of SITUATIONS) {
+      const arr = areas[k].value.split('\n').map((x) => x.trim()).filter(Boolean);
+      if (!arr.length) { lineErr.textContent = `${label}: write at least one line.`; return; }
+      if (arr.length > 6) { lineErr.textContent = `${label}: six lines at most.`; return; }
+      if (arr.some((x) => x.length > 120)) { lineErr.textContent = `${label}: keep each line under 120 characters.`; return; }
+      out[k] = arr;
+    }
+    lineErr.textContent = '';
+    if (await persist({ lines: { ...saved().lines, [pet]: out } }, 'Pet lines saved.')) drawLines();
+  };
+  const resetLines = async () => {
+    if (!confirm('Put this pet\'s original lines back?')) return;
+    const rest = { ...saved().lines }; delete rest[pet];
+    if (await persist({ lines: rest }, 'Original lines restored.')) drawLines();
+  };
+
+  /* ads */
+  const adList = h('div', {}), adForm = h('div', {});
+  const adLabel = (a) => `${(PETS.find((p) => p.id === a.pet) || { name: a.pet }).name}: ${a.brand}`;
+  const drawAds = () => fill(adList, ADS.map((a, i) => h('div', { class: 'srow' },
+    h('span', {}, adLabel(a)), h('span', { class: 'muted' }, (AD_FORMATS.find((f) => f[0] === a.fmt) || [0, a.fmt])[1]),
+    h('button', { class: 'linkbtn', onclick: () => editAd(i) }, 'Edit'),
+    h('button', { class: 'linkbtn danger', onclick: async () => {
+      if (ADS.length <= 1) { toast('Keep at least one ad.'); return; }
+      if (!confirm(`Remove "${a.brand}"?`)) return;
+      await persist({ ads: ADS.filter((_, k) => k !== i) }, 'Ad removed.'); drawAds();
+    } }, 'Remove'))));
+  function editAd(i) {
+    const a = i == null ? { pet: pet, mood: 'explain', fmt: 'video', brand: '', head: '', small: '', cta: '', joke: '' } : ADS[i];
+    const petPick = h('select', { id: 'ad-pet' }, PETS.map((p) => h('option', { value: p.id }, p.name))); petPick.value = a.pet;
+    const fmtPick = h('select', { id: 'ad-fmt' }, AD_FORMATS.map(([v, t]) => h('option', { value: v }, t))); fmtPick.value = a.fmt;
+    const mk = (id, v, max, rows) => { const el = rows ? h('textarea', { id, rows, maxlength: max }) : h('input', { id, maxlength: max }); el.value = v || ''; return el; };
+    const brand = mk('ad-brand', a.brand, 40), head = mk('ad-head', a.head, 120, 2), small = mk('ad-small', a.small, 200, 2), cta = mk('ad-cta', a.cta, 24), joke = mk('ad-joke', a.joke, 100), body = mk('ad-body', a.body, 200, 2), alt = mk('ad-alt', a.alt, 24);
+    const err = h('p', { class: 'err', role: 'alert' });
+    const two = h('div', {}, field('Second button, for example "Maybe later" or "Reject all"', alt), field('Extra text under the headline (cookie wall)', body));
+    const sync = () => { two.hidden = !['install', 'cookie'].includes(fmtPick.value); };
+    fmtPick.addEventListener('change', sync); sync();
+    const save = async () => {
+      const next = { pet: petPick.value, mood: a.mood || 'explain', fmt: fmtPick.value, brand: brand.value.trim(), head: head.value.trim(), small: small.value.trim(), cta: cta.value.trim(), joke: joke.value.trim() };
+      if (['install', 'cookie'].includes(next.fmt)) { next.alt = alt.value.trim(); if (body.value.trim()) next.body = body.value.trim(); }
+      const missing = [['brand', 'Brand name'], ['head', 'Headline'], ['small', 'The real idea in plain words'], ['cta', 'Button text'], ['joke', 'Closing joke']].find(([k]) => !next[k]);
+      if (missing) { err.textContent = `${missing[1]} is required.`; return; }
+      if (['install', 'cookie'].includes(next.fmt) && !next.alt) { err.textContent = 'This format needs a second button.'; return; }
+      const list = ADS.map((x) => ({ ...x }));
+      if (i == null) { if (list.length >= 40) { err.textContent = 'That is the most ads allowed (40).'; return; } list.push(next); } else list[i] = next;
+      if (await persist({ ads: list }, 'Ad saved.')) { fill(adForm); drawAds(); }
+    };
+    fill(adForm, h('div', { class: 'editbox' }, h('b', {}, i == null ? 'New ad' : `Edit ${a.brand}`),
+      h('p', { class: 'muted small' }, 'All brands should be made up. The ad is a joke shown before a hint, and the "real idea" is the lesson under it.'),
+      field('Pet that shows it', petPick), field('Format', fmtPick), field('Brand name', brand), field('Headline (countdown ads end with "Offer ends in")', head),
+      field('The real idea, in plain words (shown small, with an asterisk if you like)', small), field('Button text', cta), two, field('Closing joke (shown after the ad)', joke), err,
+      h('div', { class: 'row gap wrap' }, h('button', { class: 'btn', onclick: save }, 'Save ad'), h('button', { class: 'btn ghost', onclick: () => fill(adForm) }, 'Cancel'))));
+    adForm.scrollIntoView && adForm.scrollIntoView({ block: 'nearest' });
+  }
+  const resetAds = async () => { if (!confirm('Put all the original ads back? Your own ads will be removed.')) return; await persist({ ads: [] }, 'Original ads restored.'); drawAds(); };
+
+  drawLines(); drawAds();
+  return h('div', {}, h('h1', { style: 'margin-bottom:10px' }, 'Ads and pet lines'),
+    h('div', { class: 'card' }, h('b', {}, 'What the pets say'),
+      h('p', { class: 'muted' }, 'Write one line per row. The pet picks one at random each time. Changes show for players within about 10 minutes.'),
+      h('label', { for: 'lines-pet' }, 'Pet'), petSel, linesBox, lineErr,
+      h('div', { class: 'row gap wrap' }, h('button', { class: 'btn', onclick: saveLines }, 'Save pet lines'), h('button', { class: 'btn ghost', onclick: resetLines }, 'Restore original lines'))),
+    h('div', { class: 'card' }, h('b', {}, 'Joke ads before a hint'), h('p', { class: 'muted' }, 'Each pet shows its own ads. If a pet has none, it borrows from the others.'),
+      adList, h('div', { class: 'row gap wrap' }, h('button', { class: 'btn', onclick: () => editAd(null) }, 'Add an ad'), h('button', { class: 'btn ghost', onclick: resetAds }, 'Restore original ads')), adForm));
+}
+
 function announceTab(S) {
   const a = S.announce || { banner: {}, entries: [], minor: '' };
   const banner = { ...(a.banner || {}) }, entries = [...(a.entries || [])];
@@ -631,7 +723,7 @@ function announceTab(S) {
   const list = h('div', {});
   const err = h('p', { class: 'err', role: 'alert' });
   const persist = async (msg) => {
-    const obj = { banner: { text: text.value.trim(), until: until.value, on: on.classList.contains('on') }, entries, minor: minor.value.trim() };
+    const obj = { ...a, banner: { text: text.value.trim(), until: until.value, on: on.classList.contains('on') }, entries, minor: minor.value.trim() };
     try { await S.store.saveAnnounce(obj); S.announce = obj; toast(msg); } catch { toast('Could not save. Check your admin access.'); }
   };
   const drawList = () => fill(list, entries.length ? entries.map((e) => h('div', { class: 'wn' }, h('span', { class: `tag ${e.type === 'pack' ? 'b' : ''}` }, e.type === 'pack' ? 'Packs' : 'New'), h('div', { class: 'grow' }, h('b', {}, e.title), h('small', {}, e.text)),
@@ -659,7 +751,7 @@ const SECTIONS = [
   { group: 'Insights', items: [['insights', 'Insights']] },
   { group: 'Content', items: [['add', 'Add questions'], ['batches', 'Ready-made batches'], ['browse', 'Question browser'], ['reports', 'Reports']] },
   { group: 'Players', items: [['people', 'People'], ['feedback', 'Feedback']] },
-  { group: 'Controls', items: [['settings', 'Game settings'], ['announce', 'Announcements']] }
+  { group: 'Controls', items: [['settings', 'Game settings'], ['content', 'Ads and pet lines'], ['announce', 'Announcements']] }
 ];
 export function adminView(S, H, section = 'insights') {
   if (!S.admin) return H.go('/home');
@@ -667,7 +759,7 @@ export function adminView(S, H, section = 'insights') {
   const counts = { reports: S.reportCount || 0, feedback: S.feedbackCount || 0 };
   const nav = h('nav', { class: 'adnav', 'aria-label': 'Admin sections' }, SECTIONS.map((g) => h('div', { class: 'adgroup' }, h('div', { class: 'gl' }, g.group),
     g.items.map(([id, t]) => h('a', { class: `ni ${id === section ? 'on' : ''}`, href: `#/admin/${id}`, 'aria-current': id === section ? 'page' : null }, t, counts[id] ? h('span', { class: 'cnt' }, counts[id]) : null)))));
-  const tabs = { insights: insightsTab, add: addTab, batches: batchesTab, browse: browseTab, reports: reportsTab, people: peopleTab, feedback: feedbackTab, settings: settingsTab, announce: announceTab };
+  const tabs = { insights: insightsTab, add: addTab, batches: batchesTab, browse: browseTab, reports: reportsTab, people: peopleTab, feedback: feedbackTab, settings: settingsTab, announce: announceTab, content: contentTab };
   const content = h('div', { class: 'adcontent' }, tabs[section](S, H));
   H.view(H.page(h('div', { class: 'adlayout' }, nav, content)));
 }
