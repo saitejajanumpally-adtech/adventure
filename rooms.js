@@ -11,13 +11,17 @@ export const newCode = () => Array.from({ length: 6 }, () => ALPHABET[Math.floor
 export const cleanCode = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
 export const QUIZ_KIND = { 'myth-or-fact': 'tf', 'acronym-decoder': 'mcq', 'odd-one-out': 'mcq', 'privacy-quiz': 'mcq' };
 // How each game is played in a room: one question at a time (tf, mcq, who, number) or a race through all of them (rapid).
-export const ROOM_KIND = { ...QUIZ_KIND, 'who-am-i': 'who', 'number-sense': 'number', 'rapid-fire': 'rapid' };
+export const ROOM_KIND = { ...QUIZ_KIND, 'who-am-i': 'who', 'number-sense': 'number', 'rapid-fire': 'rapid', 'stack-sorter': 'sort', 'jargon-match': 'match', 'ad-flow-builder': 'flow' };
 export const roomGames = () => Object.keys(ROOM_KIND);
 const OPTIONS = {
   'who-am-i': { counts: [5, 8, 10], secs: [20, 30, 45], word: 'puzzle', def: [5, 30] },
   'number-sense': { counts: [5, 8, 10], secs: [20, 30, 45], word: 'puzzle', def: [5, 30] },
-  'rapid-fire': { counts: [8, 10, 12], secs: [45, 60], word: 'question', def: [10, 60], total: true }
+  'rapid-fire': { counts: [8, 10, 12], secs: [45, 60], word: 'question', def: [10, 60], total: true },
+  'stack-sorter': { counts: [3, 4, 5], secs: [45, 60], word: 'puzzle', def: [3, 45] },
+  'jargon-match': { counts: [3, 4, 5], secs: [45, 60], word: 'puzzle', def: [3, 45] },
+  'ad-flow-builder': { counts: [3, 4, 5], secs: [45, 60], word: 'puzzle', def: [3, 60] }
 };
+const PUZZLE_KIND = ['sort', 'match', 'flow'];
 const optionsFor = (game) => OPTIONS[game] || { counts: [5, 8, 10], secs: [15, 20, 30], word: 'question', def: [null, 20] };
 const MODE = { '1v1': { title: '1 vs 1', max: 2, def: 8 }, room: { title: 'Room', max: 12, def: 8 } };
 const REVEAL = 2500, LEAD = 3000;
@@ -28,10 +32,13 @@ export const snapshotOf = (it, g) => {
   const base = { id: it.id, g };
   if (ROOM_KIND[g] === 'who') return { ...base, answer: it.answer, clues: it.clues, wrong: it.wrong };
   if (ROOM_KIND[g] === 'number') return { ...base, q: it.q, unit: it.unit || '', min: it.min, max: it.max, step: it.step, answer: it.answer };
+  if (ROOM_KIND[g] === 'sort') return { ...base, title: it.title, layers: it.layers, cards: it.cards };
+  if (ROOM_KIND[g] === 'match') return { ...base, title: it.title, pairs: it.pairs };
+  if (ROOM_KIND[g] === 'flow') return { ...base, title: it.title, steps: it.steps };
   if (QUIZ_KIND[g] === 'tf') return { ...base, q: it.q, answer: it.answer };
   return { ...base, q: it.q, options: it.options, answer: it.answer };
 };
-const hasContent = (ref) => !!(ref && (ref.q || ref.clues));
+const hasContent = (ref) => !!(ref && (ref.q || ref.clues || ref.layers || ref.pairs || ref.steps));
 
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 export const pointsFor = (ok, leftMs, secs) => (ok ? 100 + Math.round((Math.max(0, leftMs) / (secs * 1000)) * 50) : 0);
@@ -41,6 +48,8 @@ export const pointsWho = (ok, shown, total, leftMs, secs) => (ok ? 60 + Math.rou
 export const bandFor = (guess, answer) => { const off = Math.abs(guess - answer) / Math.abs(answer); return off <= 0.05 ? 'spot' : off <= 0.15 ? 'close' : 'off'; };
 export const pointsNumber = (band, leftMs, secs) => (band === 'spot' ? pointsFor(true, leftMs, secs) : band === 'close' ? Math.round(pointsFor(true, leftMs, secs) * 0.6) : 0);
 // Rapid fire: 100 for each right answer, plus 2 for every second left if all of them were answered in time.
+// Puzzles (stack sorter, jargon match, ad-flow builder): up to 120 for how much is right, 30 more for solving it all, faster is better.
+export const pointsPuzzle = (right, total, solved, leftMs, secs, penalty = 0) => Math.max(0, Math.round((120 * right) / Math.max(1, total)) - penalty) + (solved ? Math.round((30 * Math.max(0, leftMs)) / (secs * 1000)) : 0);
 export const pointsRapid = (correct, answered, total, leftMs) => correct * 100 + (answered >= total ? Math.round(Math.max(0, leftMs) / 500) : 0);
 
 /* ---------- create ---------- */
@@ -245,6 +254,98 @@ export async function roomView(env, code) {
     return { gained, ok };
   }
 
+  /* Stack sorter: put each card in its layer, one after another */
+  async function askSort(it, i, n, qEnd, secs) {
+    const cards = shuffle(it.cards.map((c) => ({ ...c })));
+    let idx = 0, right = 0, doneAt = 0;
+    const cb = clockBar(), stage = h('div', {}), status = h('p', { class: 'muted', role: 'status' }, 'Which layer does each card belong to?');
+    const draw = () => {
+      if (idx >= cards.length) return fill(stage, h('p', { class: 'muted' }, 'All sorted. Waiting for the clock\u2026'));
+      const c = cards[idx];
+      fill(stage, h('p', { class: 'eyebrow' }, `Card ${idx + 1} of ${cards.length}`), h('div', { class: 'bigcard' }, c.name),
+        h('div', { class: 'opts' }, it.layers.map((l, k) => h('button', { class: 'opt', onclick: () => {
+          if (Date.now() >= qEnd || idx >= cards.length) return;
+          if (k === c.layer) right++;
+          idx++; if (idx >= cards.length) doneAt = Date.now();
+          draw();
+        } }, h('span', { class: 'l', 'aria-hidden': 'true' }, 'ABCD'[k]), h('span', { class: 'ot' }, l)))));
+    };
+    fill(box, cb.top, h('p', { class: 'eyebrow' }, `Stack sorter \u00B7 Puzzle ${i + 1} of ${n}`), h('h2', { class: 'qtext' }, it.title || 'Sort the cards'), stage, status);
+    draw();
+    const stop = every(() => cb.tick(qEnd, secs * 1000)); cb.tick(qEnd, secs * 1000);
+    await wait(qEnd - Date.now()); stop();
+    if (closed) return { gained: 0, ok: false };
+    const total = cards.length, ok = right === total, gained = pointsPuzzle(right, total, ok, doneAt ? qEnd - doneAt : 0, secs);
+    fill(stage, h('div', { class: 'layers' }, it.layers.map((l, k) => h('div', { class: 'layer' }, h('b', {}, l), h('ul', {}, it.cards.filter((c) => c.layer === k).map((c) => h('li', { class: 'ok' }, c.name)))))));
+    status.textContent = `${right} of ${total} cards in the right layer. +${gained} points`;
+    status.classList.add(ok ? 'good' : 'oops');
+    return { gained, ok };
+  }
+
+  /* Jargon match: tap a term, then its meaning */
+  async function askMatch(it, i, n, qEnd, secs) {
+    const pairs = it.pairs, defs = shuffle(pairs.map((p, idx) => ({ d: p.def, idx })));
+    let sel = null, mistakes = 0, doneAt = 0;
+    const matched = new Set();
+    const status = h('p', { class: 'muted', role: 'status' });
+    const termBtns = pairs.map((p, idx) => h('button', { class: 'mbtn', onclick: () => { if (matched.has(idx) || Date.now() >= qEnd) return; sel = idx; paint(); } }, p.term));
+    const defBtns = defs.map((d) => h('button', { class: 'mbtn def', onclick: () => {
+      if (sel == null || matched.has(d.idx) || Date.now() >= qEnd) return;
+      if (d.idx === sel) { matched.add(sel); if (matched.size === pairs.length) doneAt = Date.now(); } else mistakes++;
+      sel = null; paint();
+    } }, d.d));
+    const paint = () => {
+      termBtns.forEach((b, k) => { b.classList.toggle('sel', sel === k); b.classList.toggle('ok', matched.has(k)); b.disabled = matched.has(k); });
+      defBtns.forEach((b, k) => { b.classList.toggle('ok', matched.has(defs[k].idx)); b.disabled = matched.has(defs[k].idx); });
+      status.textContent = `${matched.size} of ${pairs.length} matched${mistakes ? `, ${plural(mistakes, 'slip')}` : ''}. Tap a term, then its meaning.`;
+    };
+    const cb = clockBar();
+    fill(box, cb.top, h('p', { class: 'eyebrow' }, `Jargon match \u00B7 Puzzle ${i + 1} of ${n}`), h('h2', { class: 'qtext' }, it.title || 'Match each term'), h('div', { class: 'mcols' }, h('div', {}, termBtns), h('div', {}, defBtns)), status);
+    paint();
+    const stop = every(() => cb.tick(qEnd, secs * 1000)); cb.tick(qEnd, secs * 1000);
+    await wait(qEnd - Date.now()); stop();
+    if (closed) return { gained: 0, ok: false };
+    const total = pairs.length, ok = matched.size === total, gained = pointsPuzzle(matched.size, total, ok, doneAt ? qEnd - doneAt : 0, secs, 8 * mistakes);
+    termBtns.forEach((b) => { b.disabled = true; }); defBtns.forEach((b) => { b.disabled = true; });
+    status.textContent = `${matched.size} of ${total} matched${mistakes ? `, ${plural(mistakes, 'slip')}` : ''}. +${gained} points`;
+    status.classList.add(ok ? 'good' : 'oops');
+    return { gained, ok };
+  }
+
+  /* Ad-flow builder: put the steps in order, then lock it in (or the clock locks it for you) */
+  async function askFlow(it, i, n, qEnd, secs) {
+    let order = shuffle(it.steps.map((t, idx) => ({ t, idx })));
+    if (order.every((x, k) => x.idx === k)) order.push(order.shift());
+    let locked = false, lockedAt = 0;
+    const list = h('ol', { class: 'sortlist' });
+    const status = h('p', { class: 'muted', role: 'status' }, 'Move each step up or down, then lock in your order.');
+    const draw = (reveal) => fill(list, order.map((x, k) => h('li', { class: `sl ${reveal ? (x.idx === k ? 'ok' : 'bad') : ''}`.trim(), 'data-idx': x.idx },
+      h('span', { class: 'num' }, k + 1), h('span', { class: 'sl-text' }, x.t),
+      locked ? null : h('span', { class: 'arrows' },
+        h('button', { class: 'arr', 'aria-label': `Move up: ${x.t}`, disabled: k === 0, onclick: () => move(k, -1) }, ic('chevron-up')),
+        h('button', { class: 'arr', 'aria-label': `Move down: ${x.t}`, disabled: k === order.length - 1, onclick: () => move(k, 1) }, ic('chevron-down'))))));
+    const move = (k, d) => {
+      if (locked || Date.now() >= qEnd) return;
+      [order[k], order[k + d]] = [order[k + d], order[k]]; draw();
+      const li = [...list.children].find((e) => e.dataset.idx === String(order[k + d].idx));
+      const btn = li && li.querySelectorAll('.arr')[d < 0 ? 0 : 1]; if (btn && !btn.disabled) btn.focus(); else if (li) li.querySelector('.arr:not(:disabled)')?.focus();
+    };
+    const lock = h('button', { class: 'btn', onclick: () => { if (!locked && Date.now() < qEnd) { locked = true; lockedAt = Date.now(); lock.disabled = true; draw(); status.textContent = 'Locked in. Waiting for the clock\u2026'; } } }, 'Lock in my order');
+    const cb = clockBar();
+    fill(box, cb.top, h('p', { class: 'eyebrow' }, `Ad-flow builder \u00B7 Puzzle ${i + 1} of ${n}`), h('h2', { class: 'qtext' }, it.title || 'Put the steps in order'), list, h('div', { class: 'row gap wrap' }, lock), status);
+    draw();
+    const stop = every(() => cb.tick(qEnd, secs * 1000)); cb.tick(qEnd, secs * 1000);
+    await wait(qEnd - Date.now()); stop();
+    if (closed) return { gained: 0, ok: false };
+    locked = true; lock.disabled = true;
+    const total = order.length, right = order.filter((x, k) => x.idx === k).length, ok = right === total;
+    const gained = pointsPuzzle(right, total, ok, lockedAt ? qEnd - lockedAt : 0, secs);
+    draw(true);
+    status.textContent = `${right} of ${total} steps in the right place. +${gained} points`;
+    status.classList.add(ok ? 'good' : 'oops');
+    return { gained, ok };
+  }
+
   /* Rapid fire: one shared clock for the whole round. Race through the questions at your own pace. */
   async function raceThrough(items, endAt, total) {
     let correct = 0, answered = 0, i = 0;
@@ -281,7 +382,7 @@ export async function roomView(env, code) {
   async function runGame(t0, resumed) {
     stage = 'playing';
     const kind = ROOM_KIND[room.game];
-    const secs = room.secs, per = secs * 1000 + REVEAL;
+    const secs = room.secs, per = secs * 1000 + (PUZZLE_KIND.includes(kind) ? 4500 : REVEAL);
     // Everyone starts counting when they hear the host start the game, so the clocks agree within a moment.
     const items = [];
     const packs = {};
@@ -306,7 +407,7 @@ export async function roomView(env, code) {
         correct = r.correct; score = pointsRapid(r.correct, r.answered, items.length, r.left);
       }
     } else {
-      const ask = kind === 'who' ? askWho : kind === 'number' ? askNumber : askChoice;
+      const ask = { who: askWho, number: askNumber, sort: askSort, match: askMatch, flow: askFlow }[kind] || askChoice;
       for (let i = 0; i < items.length && !closed; i++) {
         const qStart = t0 + LEAD + i * per, qEnd = qStart + secs * 1000;
         if (i <= back.i || Date.now() >= qStart + per) continue; // already played, or over while this player was away

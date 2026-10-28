@@ -47,6 +47,15 @@ const giftId = () => `g${Date.now().toString(36)}${Math.random().toString(36).sl
 
 /* ---------------- Demo store: no Firebase, data stays in this browser ---------------- */
 function demoStore() {
+  // Two browser tabs share one storage entry for rooms. Re-read and re-check after writing, so a write at the same
+  // moment as another tab's is retried instead of lost. (The real database keeps each player in their own document.)
+  const roomWrite = async (change, landed) => {
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const all = LS.get('rda_demo_rooms', {}); change(all); LS.set('rda_demo_rooms', all);
+      await new Promise((r) => setTimeout(r, 15 + Math.floor(Math.random() * 25)));
+      if (landed(LS.get('rda_demo_rooms', {}))) return;
+    }
+  };
   const user = { uid: (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('rda_demo_uid')) || 'demo', email: `demo@${CONFIG.ALLOWED_DOMAIN}`, name: 'Teja', fullName: 'Saiteja Janumpally' };
   const reports = () => LS.get('rda_demo_reports', {});
   return {
@@ -61,11 +70,11 @@ function demoStore() {
     async isAdmin() { return true; },
     async getRoom(code) { const r = LS.get('rda_demo_rooms', {})[code]; return r ? r.room : null; },
     async createRoom(room) { const all = LS.get('rda_demo_rooms', {}); all[room.code] = { room, players: {} }; LS.set('rda_demo_rooms', all); },
-    async updateRoom(code, patch) { const all = LS.get('rda_demo_rooms', {}); if (all[code]) { all[code].room = { ...all[code].room, ...patch }; LS.set('rda_demo_rooms', all); } },
-    async joinRoom(code, player) { const all = LS.get('rda_demo_rooms', {}); if (all[code]) { all[code].players[player.uid] = player; LS.set('rda_demo_rooms', all); } },
-    async savePlayer(code, uid, patch) { const all = LS.get('rda_demo_rooms', {}); if (all[code] && all[code].players[uid]) { all[code].players[uid] = { ...all[code].players[uid], ...patch }; LS.set('rda_demo_rooms', all); } },
-    async leaveRoom(code, uid) { const all = LS.get('rda_demo_rooms', {}); if (all[code]) { delete all[code].players[uid]; LS.set('rda_demo_rooms', all); } },
-    async closeRoom(code) { const all = LS.get('rda_demo_rooms', {}); delete all[code]; LS.set('rda_demo_rooms', all); },
+    async updateRoom(code, patch) { await roomWrite((all) => { if (all[code]) all[code].room = { ...all[code].room, ...patch }; }, (all) => !all[code] || Object.entries(patch).every(([k, v]) => all[code].room[k] === v)); },
+    async joinRoom(code, player) { await roomWrite((all) => { if (all[code]) all[code].players[player.uid] = player; }, (all) => !all[code] || !!all[code].players[player.uid]); },
+    async savePlayer(code, uid, patch) { await roomWrite((all) => { if (all[code] && all[code].players[uid]) all[code].players[uid] = { ...all[code].players[uid], ...patch }; }, (all) => !all[code] || !all[code].players[uid] || Object.entries(patch).every(([k, v]) => all[code].players[uid][k] === v)); },
+    async leaveRoom(code, uid) { await roomWrite((all) => { if (all[code]) delete all[code].players[uid]; }, (all) => !all[code] || !all[code].players[uid]); },
+    async closeRoom(code) { await roomWrite((all) => { delete all[code]; }, (all) => !all[code]); },
     async getPlayers(code) { const r = LS.get('rda_demo_rooms', {})[code]; return r ? Object.values(r.players).sort((a, b) => a.joinedAt - b.joinedAt) : []; },
     watchRoom(code, cb) { let last; const t = setInterval(() => { const r = LS.get('rda_demo_rooms', {})[code]; const s = JSON.stringify(r ? r.room : null); if (s !== last) { last = s; cb(r ? r.room : null); } }, 250); return () => clearInterval(t); },
     watchPlayers(code, cb) { let last; const t = setInterval(() => { const r = LS.get('rda_demo_rooms', {})[code]; const list = r ? Object.values(r.players).sort((a, b) => a.joinedAt - b.joinedAt) : []; const s = JSON.stringify(list); if (s !== last) { last = s; cb(list); } }, 250); return () => clearInterval(t); },
