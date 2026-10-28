@@ -272,7 +272,7 @@ function batchesTab(S) {
       const getPack = (g) => (packs[g] = packs[g] || S.store.loadPack(g));
       // every batch and every game at once, and each game's live pack is read only once
       const cardsData = await Promise.all((index.batches || []).map(async (b) => {
-        const parts = (await Promise.all(PACK_GAMES.map(async (g) => {
+        const parts = (await Promise.all(PACK_GAMES.filter((g) => !b.games || b.games.includes(g.id)).map(async (g) => {
           let data; try { data = await fetchJson(`batches/${b.id}/${g.id}.json`); } catch { return null; }
           const cur = await getPack(g.id);
           return { game: g.id, data, cur, v: validatePack(g.id, data, cur.items, { allowSimilar: allowSim.checked }) };

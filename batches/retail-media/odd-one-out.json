@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not a retail media placement?",
+      "options": [
+        "Sponsored product",
+        "Homepage banner",
+        "In-store screen",
+        "Satellite weather map"
+      ],
+      "answer": 3,
+      "why": "A weather map is not an ad placement in a retailer.",
+      "level": 1,
+      "id": "odd-b486si"
+    },
+    {
+      "q": "Which one is not usually measured in retail media?",
+      "options": [
+        "Sales",
+        "Add to basket",
+        "Return on ad spend",
+        "The weather in the shopper’s city"
+      ],
+      "answer": 3,
+      "why": "Weather is not a campaign result.",
+      "level": 2,
+      "id": "odd-yphly4"
+    }
+  ]
+}

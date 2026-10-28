@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Programmatic terms",
+      "pairs": [
+        {
+          "term": "Bid request",
+          "def": "Message offering an impression to buyers"
+        },
+        {
+          "term": "Bid response",
+          "def": "A buyer’s offer for it"
+        },
+        {
+          "term": "First-price",
+          "def": "Winner pays what they bid"
+        },
+        {
+          "term": "Deal ID",
+          "def": "Code that links an agreed deal"
+        },
+        {
+          "term": "Open auction",
+          "def": "Any approved buyer can bid"
+        }
+      ],
+      "level": 1,
+      "id": "jar-bufv3j"
+    }
+  ]
+}

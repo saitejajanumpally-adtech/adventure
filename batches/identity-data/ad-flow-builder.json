@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a cookie is set and read",
+      "steps": [
+        "A visitor opens a site",
+        "The site sends a small file to the browser",
+        "The browser stores the cookie",
+        "The visitor returns later",
+        "The browser sends the cookie back",
+        "The site recognises the visitor"
+      ],
+      "why": "The cookie is stored once, then sent back every time the visitor returns.",
+      "level": 1,
+      "id": "ad--7tmnqz"
+    },
+    {
+      "title": "How a clean room match works",
+      "steps": [
+        "Each company loads its data",
+        "Records are hashed before matching",
+        "The clean room matches them privately",
+        "Rules limit what can be seen",
+        "Only combined, aggregate results come out",
+        "Each company uses the insights"
+      ],
+      "why": "The matching happens inside the clean room, and only safe results leave it.",
+      "level": 3,
+      "id": "ad--xsjtvb"
+    }
+  ]
+}

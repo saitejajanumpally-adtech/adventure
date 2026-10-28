@@ -1,0 +1,47 @@
+{
+  "items": [
+    {
+      "title": "Streaming ads",
+      "words": [
+        {
+          "answer": "STREAMING",
+          "clue": "Video delivered over the internet"
+        },
+        {
+          "answer": "AVOD",
+          "clue": "Free viewing paid for by ads"
+        },
+        {
+          "answer": "SVOD",
+          "clue": "Paid for by subscription"
+        },
+        {
+          "answer": "STITCH",
+          "clue": "What SSAI does with ads and video"
+        },
+        {
+          "answer": "POD",
+          "clue": "Group of ads in a break"
+        },
+        {
+          "answer": "SERVER",
+          "clue": "Where SSAI does its work"
+        },
+        {
+          "answer": "HOUSEHOLD",
+          "clue": "Level at which CTV is often targeted"
+        },
+        {
+          "answer": "FAST",
+          "clue": "Free ad-supported streaming TV"
+        },
+        {
+          "answer": "DEVICE",
+          "clue": "A smart TV or a stick, for example"
+        }
+      ],
+      "level": 2,
+      "id": "cro-tx41h5"
+    }
+  ]
+}

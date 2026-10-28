@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "CMP",
+      "answer": "CMP",
+      "clues": [
+        "I am a pop-up for a good reason.",
+        "I ask visitors about their privacy choices.",
+        "I store those choices and share them with partners.",
+        "My name means consent management platform."
+      ],
+      "wrong": [
+        "SSP",
+        "DMP",
+        "CDN"
+      ],
+      "why": "A CMP is the tool that collects and passes on consent.",
+      "level": 2,
+      "id": "who-cwceom"
+    },
+    {
+      "title": "Layout shift",
+      "answer": "Layout shift",
+      "clues": [
+        "I am about movement.",
+        "I happen when things appear late and push the page around.",
+        "Reserving space for ads can reduce me.",
+        "My short name is CLS."
+      ],
+      "wrong": [
+        "Latency",
+        "Fill rate",
+        "Viewability"
+      ],
+      "why": "Layout shift is unexpected movement of page content while it loads.",
+      "level": 2,
+      "id": "who-vqukzm"
+    },
+    {
+      "title": "Header bidding timeout",
+      "answer": "Header bidding timeout",
+      "clues": [
+        "I am a deadline.",
+        "Bidders must answer before I end.",
+        "Set me too long and the page slows down.",
+        "Set me too short and bidders miss the auction."
+      ],
+      "wrong": [
+        "Floor price",
+        "Frequency cap",
+        "Lookback window"
+      ],
+      "why": "The timeout balances page speed against getting enough bids.",
+      "level": 3,
+      "id": "who-fv2p1o"
+    }
+  ]
+}

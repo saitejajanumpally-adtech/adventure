@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not a way to speed up a page with ads?",
+      "options": [
+        "Lazy loading",
+        "Compressing creatives",
+        "Reserving ad space",
+        "Adding more ad slots at the top"
+      ],
+      "answer": 3,
+      "why": "More slots at the top add weight and delay the content.",
+      "level": 2,
+      "id": "odd-u9esuc"
+    },
+    {
+      "q": "Which one is not part of a consent flow?",
+      "options": [
+        "Consent banner",
+        "Stored privacy choices",
+        "Vendor list",
+        "Floor price"
+      ],
+      "answer": 3,
+      "why": "A floor price is about selling ads, not about consent.",
+      "level": 2,
+      "id": "odd-3czeka"
+    }
+  ]
+}

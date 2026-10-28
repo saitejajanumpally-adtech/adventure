@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not an example of personal data?",
+      "options": [
+        "Email address",
+        "IP address",
+        "Device ID",
+        "Weather forecast for a city"
+      ],
+      "answer": 3,
+      "why": "A forecast says nothing about any person.",
+      "level": 1,
+      "id": "odd-8x7lm3"
+    },
+    {
+      "q": "Which one is not a good consent practice?",
+      "options": [
+        "Clear wording",
+        "Easy to refuse",
+        "Choices remembered",
+        "Pre-ticked boxes"
+      ],
+      "answer": 3,
+      "why": "A pre-ticked box does not show a clear choice.",
+      "level": 2,
+      "id": "odd-hbfxm"
+    }
+  ]
+}

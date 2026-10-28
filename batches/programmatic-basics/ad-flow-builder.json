@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a real-time auction works",
+      "steps": [
+        "A page loads with an ad slot",
+        "The seller sends a bid request",
+        "Buyers decide and send bids",
+        "The auction picks a winner",
+        "The winning ad is returned",
+        "The ad shows and is counted"
+      ],
+      "why": "The request goes out, bids come back, and the winner is shown.",
+      "level": 1,
+      "id": "ad--b9x4gg"
+    },
+    {
+      "title": "How a programmatic guaranteed deal runs",
+      "steps": [
+        "The buyer and seller agree volume and price",
+        "The deal is set up with a deal ID",
+        "The seller reserves the inventory",
+        "The buyer’s ads are delivered automatically",
+        "Delivery is tracked against the agreement",
+        "The deal is reconciled and billed"
+      ],
+      "why": "The terms are agreed first, then delivery is automated and checked.",
+      "level": 3,
+      "id": "ad--3cjkqg"
+    }
+  ]
+}

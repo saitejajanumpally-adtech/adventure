@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not a programmatic buying method?",
+      "options": [
+        "Open auction",
+        "Private marketplace",
+        "Programmatic guaranteed",
+        "Hand-signed print order"
+      ],
+      "answer": 3,
+      "why": "A hand-signed order is not automated.",
+      "level": 1,
+      "id": "odd-pwt18d"
+    },
+    {
+      "q": "Which one is not usually part of a bid request?",
+      "options": [
+        "Ad size",
+        "Page address",
+        "Device type",
+        "The advertiser’s bank password"
+      ],
+      "answer": 3,
+      "why": "Bid requests describe the impression, never secrets like passwords.",
+      "level": 1,
+      "id": "odd-97dkij"
+    }
+  ]
+}

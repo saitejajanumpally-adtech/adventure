@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Line item",
+      "answer": "Line item",
+      "clues": [
+        "I am a set of instructions.",
+        "I say what to deliver, when and to whom.",
+        "I sit inside an order.",
+        "Priority, dates and targeting are settings on me."
+      ],
+      "wrong": [
+        "Creative",
+        "Ad tag",
+        "Cookie"
+      ],
+      "why": "A line item holds the delivery rules for part of a campaign.",
+      "level": 2,
+      "id": "who-yuk2s6"
+    },
+    {
+      "title": "Ad tag",
+      "answer": "Ad tag",
+      "clues": [
+        "I am a small piece of code.",
+        "I sit on the page where an ad should show.",
+        "I call an ad server.",
+        "The ad comes back because of me."
+      ],
+      "wrong": [
+        "Cookie",
+        "Bid request",
+        "Sitemap"
+      ],
+      "why": "The ad tag asks the ad server for an ad.",
+      "level": 1,
+      "id": "who-g4sc4t"
+    },
+    {
+      "title": "Creative",
+      "answer": "Creative",
+      "clues": [
+        "I am what the viewer sees.",
+        "I can be an image, a video or code.",
+        "I belong to a line item.",
+        "Different sizes of me may be needed for different slots."
+      ],
+      "wrong": [
+        "Order",
+        "Floor price",
+        "Impression"
+      ],
+      "why": "The creative is the ad itself.",
+      "level": 1,
+      "id": "who-b7p0h2"
+    }
+  ]
+}

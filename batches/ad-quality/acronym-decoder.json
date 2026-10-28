@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "q": "What does MRC stand for?",
+      "options": [
+        "Media Rating Council",
+        "Mobile Reach Committee",
+        "Measured Revenue Counter",
+        "Marketing Review Centre"
+      ],
+      "answer": 0,
+      "why": "The MRC sets and checks standards for measuring media.",
+      "level": 3,
+      "id": "acr-no1w7t"
+    },
+    {
+      "q": "What does SIVT stand for?",
+      "options": [
+        "Sophisticated invalid traffic",
+        "Secure internet video traffic",
+        "Standard impression verification test",
+        "Single-user view tracking"
+      ],
+      "answer": 0,
+      "why": "SIVT is invalid traffic that is harder to detect than simple bots.",
+      "level": 3,
+      "id": "acr-2ifid1"
+    },
+    {
+      "q": "What does MFA stand for in programmatic?",
+      "options": [
+        "Made for advertising",
+        "Mobile first audience",
+        "Managed fill agreement",
+        "Multi-format ads"
+      ],
+      "answer": 0,
+      "why": "MFA sites exist mainly to carry ads, often with little real content.",
+      "level": 3,
+      "id": "acr-gwbfm2"
+    }
+  ]
+}

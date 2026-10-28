@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "title": "Does it help page speed or hurt it?",
+      "layers": [
+        "Helps speed",
+        "Hurts speed"
+      ],
+      "cards": [
+        {
+          "name": "Lazy loading",
+          "layer": 0
+        },
+        {
+          "name": "Compressed images",
+          "layer": 0
+        },
+        {
+          "name": "Reserved ad space",
+          "layer": 0
+        },
+        {
+          "name": "CDN",
+          "layer": 0
+        },
+        {
+          "name": "Many heavy scripts",
+          "layer": 1
+        },
+        {
+          "name": "Unoptimised video",
+          "layer": 1
+        },
+        {
+          "name": "Ads that push content down late",
+          "layer": 1
+        },
+        {
+          "name": "Too many ad slots at the top",
+          "layer": 1
+        }
+      ],
+      "why": "Some choices lighten the page. Others make it heavier or less stable.",
+      "level": 1,
+      "id": "sta-ozvtxh"
+    }
+  ]
+}

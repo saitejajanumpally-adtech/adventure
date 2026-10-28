@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which of these is not a CTV device?",
+      "options": [
+        "Smart TV",
+        "Streaming stick",
+        "Game console",
+        "Desktop browser"
+      ],
+      "answer": 3,
+      "why": "A desktop browser is a computer screen, not a connected TV.",
+      "level": 1,
+      "id": "odd-5s12vj"
+    },
+    {
+      "q": "Which one is not a way a streaming service earns money?",
+      "options": [
+        "Subscriptions",
+        "Advertising",
+        "Pay-per-view rentals",
+        "Printing posters"
+      ],
+      "answer": 3,
+      "why": "Streaming services earn from subscribers, advertisers and rentals.",
+      "level": 1,
+      "id": "odd-uipy8m"
+    }
+  ]
+}

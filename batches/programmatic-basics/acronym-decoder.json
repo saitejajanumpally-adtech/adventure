@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does AdTech stand for?",
+      "options": [
+        "Advertising technology",
+        "Audience tracking",
+        "Automated tag technology",
+        "Ad testing"
+      ],
+      "answer": 0,
+      "why": "AdTech is the software and tools used to buy, sell and measure ads.",
+      "level": 1,
+      "id": "acr-r6wvxu"
+    },
+    {
+      "q": "What does API stand for?",
+      "options": [
+        "Application programming interface",
+        "Automated page index",
+        "Ad placement instruction",
+        "Audience profile integration"
+      ],
+      "answer": 0,
+      "why": "An API lets one piece of software talk to another.",
+      "level": 1,
+      "id": "acr-m1y8wx"
+    },
+    {
+      "q": "What does JSON stand for?",
+      "options": [
+        "JavaScript Object Notation",
+        "Java Server Object Network",
+        "Joint Source Online Node",
+        "JavaScript Order Number"
+      ],
+      "answer": 0,
+      "why": "JSON is a simple text format that bid requests and responses often use.",
+      "level": 2,
+      "id": "acr-y8vb0h"
+    },
+    {
+      "q": "What does VPAID stand for?",
+      "options": [
+        "Video Player Ad-Serving Interface Definition",
+        "Verified Pixel Audience Identifier",
+        "Video Placement And Impression Data",
+        "Variable Price Ad Index Domain"
+      ],
+      "answer": 0,
+      "why": "VPAID was a standard that let interactive video ads run inside players.",
+      "level": 3,
+      "id": "acr-ae4zq1"
+    }
+  ]
+}

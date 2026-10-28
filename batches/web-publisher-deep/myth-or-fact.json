@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "Reserving space for ads in the page layout helps reduce layout shift.",
+      "answer": true,
+      "why": "When the space is already set aside, the page does not jump when the ad arrives.",
+      "level": 1,
+      "id": "myt-tuer20"
+    },
+    {
+      "q": "Loading every ad script before anything else always makes a page faster.",
+      "answer": false,
+      "why": "Heavy scripts delay the content. Loading important content first usually feels faster.",
+      "level": 2,
+      "id": "myt-70yucr"
+    },
+    {
+      "q": "A consent management platform records a visitor’s privacy choices and passes them on.",
+      "answer": true,
+      "why": "It shows the choices to the visitor and shares the result with ad partners.",
+      "level": 2,
+      "id": "myt-r34u1t"
+    },
+    {
+      "q": "An ads.txt file can be placed on any page of a website.",
+      "answer": false,
+      "why": "It must sit at the root of the domain so buyers know where to look.",
+      "level": 2,
+      "id": "myt-6lc16h"
+    },
+    {
+      "q": "Ads placed where people spend time reading can have better viewability.",
+      "answer": true,
+      "why": "More time in view means more ads count as viewable.",
+      "level": 1,
+      "id": "myt-il513m"
+    },
+    {
+      "q": "Infinite scroll can create more ad slots as the visitor keeps scrolling.",
+      "answer": true,
+      "why": "Each new batch of content can carry new ad slots.",
+      "level": 2,
+      "id": "myt-sfs70n"
+    },
+    {
+      "q": "A header bidding timeout is the longest the page waits for bidders before moving on.",
+      "answer": true,
+      "why": "After the timeout, late bids are ignored.",
+      "level": 2,
+      "id": "myt-x31bze"
+    },
+    {
+      "q": "A longer header bidding timeout always earns more.",
+      "answer": false,
+      "why": "Waiting longer slows the page and gives smaller extra gains, so the best setting is a balance.",
+      "level": 3,
+      "id": "myt-bv4pgr"
+    },
+    {
+      "q": "Server-side header bidding moves some of the auction work from the browser to a server.",
+      "answer": true,
+      "why": "That can lighten the page but can make matching users harder.",
+      "level": 3,
+      "id": "myt-ajiyvb"
+    },
+    {
+      "q": "Only above-the-fold ads can ever be viewable.",
+      "answer": false,
+      "why": "An ad further down the page is viewable when the visitor scrolls to it.",
+      "level": 1,
+      "id": "myt-djbv8s"
+    }
+  ]
+}

@@ -3,37 +3,248 @@
     {
       "id": "web-publisher-ctv",
       "title": "Web Publisher + CTV, OTT, OOH and DOOH",
-      "note": "Pilot batch: page speed, header bidding, ads.txt, streaming ads, ad pods and out-of-home."
+      "note": "Pilot batch: page speed, header bidding, ads.txt, streaming ads, ad pods and out-of-home.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter"
+      ]
     },
     {
       "id": "app-publisher",
       "title": "App Publisher",
-      "note": "Mobile app ads: identifiers, SDKs, mediation, rewarded video, app-ads.txt and install attribution."
+      "note": "Mobile app ads: identifiers, SDKs, mediation, rewarded video, app-ads.txt and install attribution.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
     },
     {
       "id": "ad-networks",
       "title": "Ad Networks",
-      "note": "How networks bundle inventory, margins, blind and vertical networks, and common results-based pricing."
+      "note": "How networks bundle inventory, margins, blind and vertical networks, and common results-based pricing.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
     },
     {
       "id": "ssp",
       "title": "SSP and the Sell Side",
-      "note": "How supply-side platforms auction publisher inventory: floors, private deals, supply paths and transparency files."
+      "note": "How supply-side platforms auction publisher inventory: floors, private deals, supply paths and transparency files.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
     },
     {
       "id": "dsp",
       "title": "DSP and the Buy Side",
-      "note": "How advertisers buy: audiences, budgets, pacing, caps, bid shading and creative optimisation."
+      "note": "How advertisers buy: audiences, budgets, pacing, caps, bid shading and creative optimisation.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
     },
     {
       "id": "attribution-measurement",
       "title": "Attribution and Measurement",
-      "note": "Attribution models, reach and frequency, lookback windows, invalid traffic and incrementality."
+      "note": "Attribution models, reach and frequency, lookback windows, invalid traffic and incrementality.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
     },
     {
       "id": "yield-operations",
       "title": "Yield and Operations",
-      "note": "Maximising revenue per impression, trafficking, floors, discrepancies and daily ad operations."
+      "note": "Maximising revenue per impression, trafficking, floors, discrepancies and daily ad operations.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "ctv-ott-deep",
+      "title": "CTV and OTT in depth",
+      "note": "Streaming ads: OTT vs CTV, SSAI, ad pods, FAST channels, business models and household targeting.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "dooh-ooh-deep",
+      "title": "DOOH and OOH in depth",
+      "note": "Screens and billboards: proof of play, dwell time, dayparts, share of voice and programmatic DOOH.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "web-publisher-deep",
+      "title": "Web Publisher in depth",
+      "note": "Page speed, layout shift, consent, ads.txt, header bidding timeouts and infinite scroll.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "programmatic-basics",
+      "title": "Programmatic basics",
+      "note": "Auctions, bid requests, deal types, OpenRTB and how programmatic fits together.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "privacy-consent",
+      "title": "Privacy and consent",
+      "note": "Consent, personal data, GDPR and CCPA basics, contextual targeting and handling data requests.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "ad-quality",
+      "title": "Ad quality and verification",
+      "note": "Brand safety, invalid traffic, fraud types, blocklists and how verification works.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "identity-data",
+      "title": "Identity and data",
+      "note": "Cookies, first-party data, identity graphs, hashing and data clean rooms.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "ad-servers",
+      "title": "Ad servers",
+      "note": "Orders, line items, creatives, tags, priority and pacing in an ad server.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "retail-media",
+      "title": "Retail media",
+      "note": "Sponsored products, onsite and offsite, closed-loop measurement and retailer data.",
+      "games": [
+        "acronym-decoder",
+        "ad-flow-builder",
+        "crossword",
+        "jargon-match",
+        "myth-or-fact",
+        "odd-one-out",
+        "stack-sorter",
+        "who-am-i"
+      ]
+    },
+    {
+      "id": "number-sense-more",
+      "title": "Number sense: 26 more puzzles",
+      "note": "Quick calculations on impressions, revenue, CTR, CPA, ROAS, reach, speed, DOOH, CTV and retail media.",
+      "games": [
+        "number-sense"
+      ]
     }
   ]
 }

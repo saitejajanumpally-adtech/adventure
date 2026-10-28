@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Who collected the data?",
+      "layers": [
+        "First-party",
+        "Third-party"
+      ],
+      "cards": [
+        {
+          "name": "Newsletter sign-up",
+          "layer": 0
+        },
+        {
+          "name": "Purchases on your own site",
+          "layer": 0
+        },
+        {
+          "name": "App login",
+          "layer": 0
+        },
+        {
+          "name": "Data bought from a broker",
+          "layer": 1
+        },
+        {
+          "name": "An audience segment from another company",
+          "layer": 1
+        },
+        {
+          "name": "A cookie set by an ad partner",
+          "layer": 1
+        }
+      ],
+      "why": "First-party data comes from your own audience. Third-party data comes from someone else.",
+      "level": 1,
+      "id": "sta-euf1r1"
+    }
+  ]
+}

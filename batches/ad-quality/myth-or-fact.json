@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "Brand safety is about keeping ads away from content that could harm a brand.",
+      "answer": true,
+      "why": "Advertisers do not want their ads next to content that conflicts with their values.",
+      "level": 1,
+      "id": "myt-erfn8d"
+    },
+    {
+      "q": "Invalid traffic includes bots and other visits that are not real viewing.",
+      "answer": true,
+      "why": "Buyers should not pay for impressions no real person could see.",
+      "level": 1,
+      "id": "myt-q6f23s"
+    },
+    {
+      "q": "One tool can remove ad fraud completely.",
+      "answer": false,
+      "why": "Fraud keeps changing, so protection needs several layers and regular checks.",
+      "level": 2,
+      "id": "myt-7ylbnq"
+    },
+    {
+      "q": "Verification vendors can check where an ad ran and whether it was viewable.",
+      "answer": true,
+      "why": "Independent checks give buyers confidence in what they paid for.",
+      "level": 2,
+      "id": "myt-8qsm16"
+    },
+    {
+      "q": "Malvertising is an ad that tries to deliver something harmful.",
+      "answer": true,
+      "why": "Examples include ads that redirect people or try to install unwanted software.",
+      "level": 2,
+      "id": "myt-vry9il"
+    },
+    {
+      "q": "Brand suitability is exactly the same as brand safety for every brand.",
+      "answer": false,
+      "why": "Safety is a common minimum. Suitability depends on what is right for each brand.",
+      "level": 3,
+      "id": "myt-oommn0"
+    },
+    {
+      "q": "A blocklist is a list of sites or categories where ads must not appear.",
+      "answer": true,
+      "why": "An allowlist is the opposite: the only places ads may appear.",
+      "level": 1,
+      "id": "myt-ultgcw"
+    },
+    {
+      "q": "Pre-bid blocking stops a bad impression before a bid, while post-bid reports show it after the ad ran.",
+      "answer": true,
+      "why": "Pre-bid prevents the spend. Post-bid helps you learn and block next time.",
+      "level": 3,
+      "id": "myt-kcyklh"
+    },
+    {
+      "q": "Domain spoofing is when a low-quality site pretends to be a more valuable one.",
+      "answer": true,
+      "why": "Buyers pay premium prices for what is really cheap inventory.",
+      "level": 2,
+      "id": "myt-ghdbki"
+    },
+    {
+      "q": "Ads that slow a page down can count as poor ad quality.",
+      "answer": true,
+      "why": "Heavy ads hurt the visitor’s experience even if they are not fraudulent.",
+      "level": 2,
+      "id": "myt-3ipoqi"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "OTT describes how video is delivered over the internet, while CTV describes the TV screen it is watched on.",
+      "answer": true,
+      "why": "OTT is the delivery method. CTV is the connected device. A streaming show on a phone is OTT but not CTV.",
+      "level": 2,
+      "id": "myt-29vlxi"
+    },
+    {
+      "q": "Most CTV ads can be skipped after five seconds, just like many online video ads.",
+      "answer": false,
+      "why": "Many CTV ads play as full, non-skippable spots, which is one reason completion rates are high.",
+      "level": 1,
+      "id": "myt-axwkyd"
+    },
+    {
+      "q": "SSAI makes ads harder for ad blockers to stop, because the ad is stitched into the video stream.",
+      "answer": true,
+      "why": "The ad arrives from the same server as the show, so the player cannot easily tell them apart.",
+      "level": 2,
+      "id": "myt-96b4jy"
+    },
+    {
+      "q": "Server-side ad insertion always gives the buyer the same device detail as client-side insertion.",
+      "answer": false,
+      "why": "With SSAI some device signals can be lost, so extra steps are often needed to pass them on for measurement.",
+      "level": 3,
+      "id": "myt-94tfmd"
+    },
+    {
+      "q": "A FAST channel is free for the viewer and paid for by advertising.",
+      "answer": true,
+      "why": "FAST means free ad-supported streaming TV. It looks like a linear channel but arrives over the internet.",
+      "level": 1,
+      "id": "myt-ibj09k"
+    },
+    {
+      "q": "AVOD, SVOD and TVOD describe how a streaming service earns its money.",
+      "answer": true,
+      "why": "Ad-supported, subscription and pay-per-title are three different business models.",
+      "level": 2,
+      "id": "myt-tczyk7"
+    },
+    {
+      "q": "Household targeting means an ad is chosen for one named person on the sofa.",
+      "answer": false,
+      "why": "It targets a home, so whoever is watching, including several people, sees the same ad.",
+      "level": 2,
+      "id": "myt-dp1kkl"
+    },
+    {
+      "q": "On a shared TV, more than one person may watch the same ad, which is called co-viewing.",
+      "answer": true,
+      "why": "It makes counting people more difficult than counting devices or households.",
+      "level": 2,
+      "id": "myt-np78e4"
+    },
+    {
+      "q": "Competitive separation tries to keep rival brands out of the same ad pod.",
+      "answer": true,
+      "why": "A car brand usually does not want its competitor in the very next ad slot.",
+      "level": 3,
+      "id": "myt-tpewpz"
+    },
+    {
+      "q": "Because CTV ads are shown on big screens, they work the same way as banner ads on a phone.",
+      "answer": false,
+      "why": "The screen, the viewing situation and the way viewers respond are different, so the measures are too.",
+      "level": 1,
+      "id": "myt-ud9uti"
+    }
+  ]
+}

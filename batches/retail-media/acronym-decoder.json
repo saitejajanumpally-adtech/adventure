@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does SKU stand for?",
+      "options": [
+        "Stock keeping unit",
+        "Store keyword update",
+        "Sales key unit",
+        "Shopper knowledge utility"
+      ],
+      "answer": 0,
+      "why": "A SKU is the code for one specific product.",
+      "level": 1,
+      "id": "acr-uuug6g"
+    },
+    {
+      "q": "What does CPG stand for in retail?",
+      "options": [
+        "Consumer packaged goods",
+        "Customer purchase group",
+        "Cost per gross",
+        "Central product guide"
+      ],
+      "answer": 0,
+      "why": "CPG brands make everyday goods such as food and household items.",
+      "level": 2,
+      "id": "acr-jsu787"
+    },
+    {
+      "q": "What does DTC stand for in marketing?",
+      "options": [
+        "Direct to consumer",
+        "Digital traffic control",
+        "Data to customer",
+        "Display tag code"
+      ],
+      "answer": 0,
+      "why": "DTC brands sell straight to shoppers rather than through other retailers.",
+      "level": 2,
+      "id": "acr-fca76h"
+    },
+    {
+      "q": "What does POS stand for in a shop?",
+      "options": [
+        "Point of sale",
+        "Place of storage",
+        "Product on shelf",
+        "Price of stock"
+      ],
+      "answer": 0,
+      "why": "The point of sale is where the purchase happens.",
+      "level": 1,
+      "id": "acr-qs0xyv"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a programmatic DOOH ad plays",
+      "steps": [
+        "A screen is ready for its next spot",
+        "The SSP sends the ad opportunity to buyers",
+        "A DSP bids for the spot",
+        "The winning ad is sent to the screen",
+        "The ad plays on the screen",
+        "Proof of play is recorded"
+      ],
+      "why": "The screen asks for an ad, the auction picks one, and proof of play closes the loop.",
+      "level": 3,
+      "id": "ad--1yu2jy"
+    },
+    {
+      "title": "How a DOOH campaign is booked",
+      "steps": [
+        "Choose locations and dayparts",
+        "Check the audience estimates",
+        "Agree the price and spots",
+        "Send the creative for approval",
+        "The screens schedule the ads",
+        "Review proof of play and results"
+      ],
+      "why": "Plan the where and when first, then buy, approve, run and review.",
+      "level": 1,
+      "id": "ad--pt4vci"
+    }
+  ]
+}

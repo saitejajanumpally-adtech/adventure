@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Consent",
+      "answer": "Consent",
+      "clues": [
+        "I am a choice.",
+        "I must be freely given.",
+        "I must be informed and specific.",
+        "A person can take me back."
+      ],
+      "wrong": [
+        "Cookie",
+        "Impression",
+        "Licence"
+      ],
+      "why": "Consent is a person’s free, informed and specific agreement.",
+      "level": 1,
+      "id": "who-mf6cle"
+    },
+    {
+      "title": "Contextual targeting",
+      "answer": "Contextual targeting",
+      "clues": [
+        "I look at the page, not the person.",
+        "I match ads to the content around them.",
+        "I do not need a user ID.",
+        "An ad for running shoes on a marathon article is me."
+      ],
+      "wrong": [
+        "Retargeting",
+        "Lookalike audience",
+        "Frequency capping"
+      ],
+      "why": "Contextual targeting uses the page content instead of a person’s profile.",
+      "level": 2,
+      "id": "who-c1kkt1"
+    },
+    {
+      "title": "PII",
+      "answer": "PII",
+      "clues": [
+        "I am information.",
+        "I can point to a real person.",
+        "A name or an email can be me.",
+        "Privacy rules are about protecting me."
+      ],
+      "wrong": [
+        "CPM",
+        "Impression",
+        "Sitemap"
+      ],
+      "why": "PII is any information that can identify a person.",
+      "level": 1,
+      "id": "who-8iuhto"
+    }
+  ]
+}

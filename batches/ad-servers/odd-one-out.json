@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not part of an ad server setup?",
+      "options": [
+        "Order",
+        "Line item",
+        "Creative",
+        "Sitemap"
+      ],
+      "answer": 3,
+      "why": "A sitemap is for search engines, not ad serving.",
+      "level": 1,
+      "id": "odd-6wsbjl"
+    },
+    {
+      "q": "Which one is not something an ad server counts?",
+      "options": [
+        "Impressions",
+        "Clicks",
+        "Completed video views",
+        "Headline length"
+      ],
+      "answer": 3,
+      "why": "Headline length is not a delivery measure.",
+      "level": 1,
+      "id": "odd-4r6g4k"
+    }
+  ]
+}

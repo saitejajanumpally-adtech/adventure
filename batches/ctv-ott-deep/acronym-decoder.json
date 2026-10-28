@@ -1,0 +1,69 @@
+{
+  "items": [
+    {
+      "q": "What does AVOD stand for?",
+      "options": [
+        "Advertising-based video on demand",
+        "Automatic video on device",
+        "Audience-verified video ordering",
+        "Ad-supported viewing of domains"
+      ],
+      "answer": 0,
+      "why": "AVOD services are free to watch and earn money from ads.",
+      "level": 2,
+      "id": "acr-b1mspb"
+    },
+    {
+      "q": "What does SVOD stand for?",
+      "options": [
+        "Subscription video on demand",
+        "Secure video on device",
+        "Streaming video over domains",
+        "Sponsored video on demand"
+      ],
+      "answer": 0,
+      "why": "SVOD viewers pay a regular fee, often with no ads.",
+      "level": 2,
+      "id": "acr-mub8dd"
+    },
+    {
+      "q": "What does VOD stand for?",
+      "options": [
+        "Video on demand",
+        "Video over domain",
+        "Visual output device",
+        "Verified online delivery"
+      ],
+      "answer": 0,
+      "why": "VOD lets viewers pick what to watch and when, instead of following a schedule.",
+      "level": 1,
+      "id": "acr-sqbwwe"
+    },
+    {
+      "q": "What does vMVPD stand for?",
+      "options": [
+        "Virtual multichannel video programming distributor",
+        "Variable media video playback device",
+        "Verified mobile video publisher domain",
+        "Video marketing viewer panel data"
+      ],
+      "answer": 0,
+      "why": "A vMVPD streams a bundle of live TV channels over the internet.",
+      "level": 3,
+      "id": "acr-leo3zm"
+    },
+    {
+      "q": "What does DAI stand for in streaming?",
+      "options": [
+        "Dynamic ad insertion",
+        "Direct audience index",
+        "Digital audio interface",
+        "Device ad identifier"
+      ],
+      "answer": 0,
+      "why": "DAI swaps in ads chosen at the moment the viewer watches.",
+      "level": 2,
+      "id": "acr-zdwfcc"
+    }
+  ]
+}

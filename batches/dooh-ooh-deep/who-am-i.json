@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Proof of play",
+      "answer": "Proof of play",
+      "clues": [
+        "I am a record.",
+        "I show that an ad appeared on a screen.",
+        "I include the screen and the time.",
+        "Advertisers want me before they pay."
+      ],
+      "wrong": [
+        "Click log",
+        "Bid request",
+        "Sitemap"
+      ],
+      "why": "Proof of play confirms an ad ran where and when it was booked.",
+      "level": 2,
+      "id": "who-6l5lir"
+    },
+    {
+      "title": "Dwell time",
+      "answer": "Dwell time",
+      "clues": [
+        "I am measured in seconds or minutes.",
+        "I tell how long people stay near something.",
+        "Longer me allows longer ads.",
+        "A queue at a station gives me a lot."
+      ],
+      "wrong": [
+        "Frequency",
+        "Latency",
+        "Reach"
+      ],
+      "why": "Dwell time is how long people spend near a screen.",
+      "level": 2,
+      "id": "who-qzzc3f"
+    },
+    {
+      "title": "Daypart",
+      "answer": "Daypart",
+      "clues": [
+        "I am a slice of time.",
+        "Screens are scheduled by me.",
+        "Morning commute and evening commute are examples.",
+        "I let a brand pick when to show up."
+      ],
+      "wrong": [
+        "Lookback window",
+        "Pacing",
+        "Timeout"
+      ],
+      "why": "Dayparts split the day so ads can match when audiences are around.",
+      "level": 2,
+      "id": "who-b5vgd6"
+    }
+  ]
+}

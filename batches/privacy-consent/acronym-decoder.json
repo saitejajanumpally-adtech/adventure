@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "q": "What does GDPR stand for?",
+      "options": [
+        "General Data Protection Regulation",
+        "Global Data Privacy Rule",
+        "General Digital Permissions Rule",
+        "Government Data Protection Register"
+      ],
+      "answer": 0,
+      "why": "GDPR is the European regulation on personal data.",
+      "level": 1,
+      "id": "acr-vt83n6"
+    },
+    {
+      "q": "What does CCPA stand for?",
+      "options": [
+        "California Consumer Privacy Act",
+        "Central Consent Protection Agreement",
+        "Cookie Control and Privacy Act",
+        "California Cookie Policy Archive"
+      ],
+      "answer": 0,
+      "why": "CCPA gives California residents rights over their personal information.",
+      "level": 2,
+      "id": "acr-pa6fx8"
+    },
+    {
+      "q": "What does DSAR stand for?",
+      "options": [
+        "Data subject access request",
+        "Digital service audit report",
+        "Direct sales and revenue",
+        "Data storage and retrieval"
+      ],
+      "answer": 0,
+      "why": "A DSAR is a person asking to see the data a company holds about them.",
+      "level": 3,
+      "id": "acr-wykuj5"
+    }
+  ]
+}

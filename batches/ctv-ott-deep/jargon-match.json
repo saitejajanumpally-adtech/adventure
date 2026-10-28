@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "CTV and OTT terms",
+      "pairs": [
+        {
+          "term": "AVOD",
+          "def": "Free to watch, paid for by ads"
+        },
+        {
+          "term": "SVOD",
+          "def": "Paid for by a regular subscription"
+        },
+        {
+          "term": "SSAI",
+          "def": "Ads stitched into the stream on the server"
+        },
+        {
+          "term": "Ad pod",
+          "def": "Group of ads in one break"
+        },
+        {
+          "term": "vMVPD",
+          "def": "Internet service bundling live TV channels"
+        }
+      ],
+      "level": 2,
+      "id": "jar-x956by"
+    }
+  ]
+}

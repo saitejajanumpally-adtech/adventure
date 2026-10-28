@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "Privacy and consent",
+      "words": [
+        {
+          "answer": "CONSENT",
+          "clue": "Free and informed agreement"
+        },
+        {
+          "answer": "PRIVACY",
+          "clue": "What data rules protect"
+        },
+        {
+          "answer": "COOKIE",
+          "clue": "Small file stored in a browser"
+        },
+        {
+          "answer": "OPTOUT",
+          "clue": "Choice to stop"
+        },
+        {
+          "answer": "PERSONAL",
+          "clue": "Kind of data that identifies someone"
+        },
+        {
+          "answer": "GDPR",
+          "clue": "European data regulation"
+        },
+        {
+          "answer": "CONTEXTUAL",
+          "clue": "Targeting by page content"
+        },
+        {
+          "answer": "MINIMISE",
+          "clue": "What data minimisation asks you to do"
+        }
+      ],
+      "level": 2,
+      "id": "cro-10tp3k"
+    }
+  ]
+}

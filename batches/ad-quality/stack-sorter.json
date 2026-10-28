@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "title": "Brand safety, fraud or viewability?",
+      "layers": [
+        "Brand safety",
+        "Fraud",
+        "Viewability"
+      ],
+      "cards": [
+        {
+          "name": "Hate speech content",
+          "layer": 0
+        },
+        {
+          "name": "Adult content",
+          "layer": 0
+        },
+        {
+          "name": "Bot visits",
+          "layer": 1
+        },
+        {
+          "name": "Domain spoofing",
+          "layer": 1
+        },
+        {
+          "name": "Ad stacking",
+          "layer": 1
+        },
+        {
+          "name": "Half the pixels in view",
+          "layer": 2
+        },
+        {
+          "name": "One second on screen",
+          "layer": 2
+        }
+      ],
+      "why": "Safety is about the content around an ad, fraud is about fake activity, and viewability is about being seen.",
+      "level": 2,
+      "id": "sta-2vr9sc"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "First-price auction",
+      "answer": "First-price auction",
+      "clues": [
+        "I am a way of settling a sale.",
+        "Bidders send one price.",
+        "The highest bidder wins.",
+        "The winner pays exactly their own bid."
+      ],
+      "wrong": [
+        "Second-price auction",
+        "Waterfall",
+        "Direct deal"
+      ],
+      "why": "In a first-price auction the winner pays what they bid.",
+      "level": 2,
+      "id": "who-26vd0f"
+    },
+    {
+      "title": "Bid request",
+      "answer": "Bid request",
+      "clues": [
+        "I am a message.",
+        "I go from a seller to many buyers.",
+        "I describe an impression for sale.",
+        "Buyers answer me with bids."
+      ],
+      "wrong": [
+        "Insertion order",
+        "Sitemap",
+        "Ad tag"
+      ],
+      "why": "The bid request is how a seller offers an impression to buyers.",
+      "level": 1,
+      "id": "who-5l70sa"
+    },
+    {
+      "title": "Deal ID",
+      "answer": "Deal ID",
+      "clues": [
+        "I am a code.",
+        "I link a buyer and a seller’s agreement.",
+        "I travel inside the auction.",
+        "Private marketplace deals use me."
+      ],
+      "wrong": [
+        "Cookie ID",
+        "Order number",
+        "Device ID"
+      ],
+      "why": "A deal ID tells the systems which agreement an impression belongs to.",
+      "level": 3,
+      "id": "who-l2s7zv"
+    }
+  ]
+}

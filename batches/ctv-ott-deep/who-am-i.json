@@ -1,0 +1,76 @@
+{
+  "items": [
+    {
+      "title": "SSAI",
+      "answer": "SSAI",
+      "clues": [
+        "I stitch things together.",
+        "I put the ad into the video before it reaches the viewer.",
+        "I run on the server, not on the device.",
+        "Ad blockers struggle to spot me because ads look like the show."
+      ],
+      "wrong": [
+        "CSAI",
+        "VAST",
+        "Header bidding"
+      ],
+      "why": "Server-side ad insertion stitches ads into the stream on the server.",
+      "level": 2,
+      "id": "who-g902s"
+    },
+    {
+      "title": "Ad pod",
+      "answer": "Ad pod",
+      "clues": [
+        "I am a group.",
+        "Ads play together in me.",
+        "I am one commercial break.",
+        "Each position in me can be sold separately."
+      ],
+      "wrong": [
+        "Ad server",
+        "Playlist",
+        "Banner"
+      ],
+      "why": "An ad pod is the set of ads played in one break.",
+      "level": 1,
+      "id": "who-naxjke"
+    },
+    {
+      "title": "FAST channel",
+      "answer": "FAST channel",
+      "clues": [
+        "I look like traditional TV.",
+        "I am free for the viewer.",
+        "Advertising pays for me.",
+        "My name starts with free ad-supported."
+      ],
+      "wrong": [
+        "SVOD service",
+        "Cable package",
+        "Pay-per-view"
+      ],
+      "why": "FAST channels are free, ad-supported and scheduled like TV.",
+      "level": 2,
+      "id": "who-g3jtis"
+    },
+    {
+      "title": "Competitive separation",
+      "answer": "Competitive separation",
+      "clues": [
+        "I keep some things apart.",
+        "I apply inside an ad break.",
+        "Rival brands should not appear together.",
+        "A car brand and its rival should not share a pod."
+      ],
+      "wrong": [
+        "Frequency cap",
+        "Floor price",
+        "Viewability"
+      ],
+      "why": "Competitive separation keeps rival advertisers away from each other in a break.",
+      "level": 3,
+      "id": "who-agl8h7"
+    }
+  ]
+}

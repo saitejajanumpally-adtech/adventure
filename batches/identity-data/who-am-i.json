@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Data clean room",
+      "answer": "Data clean room",
+      "clues": [
+        "I am a safe meeting place.",
+        "Two companies bring their data to me.",
+        "They can match audiences without sharing raw records.",
+        "Strict rules decide what can leave me."
+      ],
+      "wrong": [
+        "Data lake",
+        "Tag manager",
+        "DMP"
+      ],
+      "why": "A clean room lets companies match data under strict controls.",
+      "level": 3,
+      "id": "who-xr1ktg"
+    },
+    {
+      "title": "First-party data",
+      "answer": "First-party data",
+      "clues": [
+        "I come straight from the source.",
+        "A company collects me from its own customers.",
+        "Sign-ups and purchases are examples.",
+        "Nobody else collected me on its behalf."
+      ],
+      "wrong": [
+        "Third-party data",
+        "Panel data",
+        "Inferred data"
+      ],
+      "why": "First-party data is collected directly by the company that uses it.",
+      "level": 1,
+      "id": "who-syz0ls"
+    },
+    {
+      "title": "Identity graph",
+      "answer": "Identity graph",
+      "clues": [
+        "I am a map of connections.",
+        "I link devices and IDs that belong together.",
+        "One household may have many entries in me.",
+        "Marketers use me to recognise the same person across screens."
+      ],
+      "wrong": [
+        "Data lake",
+        "Sitemap",
+        "Bid stream"
+      ],
+      "why": "An identity graph links identifiers that belong to the same person or household.",
+      "level": 3,
+      "id": "who-9xgdxr"
+    }
+  ]
+}

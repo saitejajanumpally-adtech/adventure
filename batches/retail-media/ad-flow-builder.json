@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a sponsored product ad runs",
+      "steps": [
+        "A brand sets a keyword and a bid",
+        "A shopper searches for it",
+        "The retailer runs an auction for the slot",
+        "The winning product is shown",
+        "The shopper clicks or buys",
+        "The sale is reported to the brand"
+      ],
+      "why": "The search triggers an auction, and the sale is reported back.",
+      "level": 2,
+      "id": "ad--pjx0f3"
+    },
+    {
+      "title": "How closed-loop measurement works",
+      "steps": [
+        "A shopper sees or clicks an ad",
+        "The exposure is logged against their account",
+        "The shopper buys",
+        "The retailer matches the sale to the exposure",
+        "The results are aggregated for privacy",
+        "The brand sees sales and ROAS"
+      ],
+      "why": "Exposure and purchase are matched by the retailer, then reported in aggregate.",
+      "level": 3,
+      "id": "ad--hxlz7h"
+    }
+  ]
+}

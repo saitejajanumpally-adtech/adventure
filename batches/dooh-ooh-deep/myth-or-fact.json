@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "Programmatic DOOH lets advertisers buy screen time through automated platforms.",
+      "answer": true,
+      "why": "Buyers use platforms to bid for plays on digital screens, much as they do for online ads.",
+      "level": 1,
+      "id": "myt-7zugl1"
+    },
+    {
+      "q": "A digital screen can change its ad by time of day or by weather.",
+      "answer": true,
+      "why": "That flexibility is one of the main strengths of digital out of home.",
+      "level": 1,
+      "id": "myt-mkzl2"
+    },
+    {
+      "q": "Proof of play shows that an ad was displayed on a screen at a given time.",
+      "answer": true,
+      "why": "It is the record buyers rely on to confirm their ad really ran.",
+      "level": 2,
+      "id": "myt-ye3owl"
+    },
+    {
+      "q": "An impression multiplier estimates how many people pass a screen for each play.",
+      "answer": true,
+      "why": "Because nobody clicks a billboard, audience is estimated from traffic and footfall.",
+      "level": 3,
+      "id": "myt-m45egv"
+    },
+    {
+      "q": "Dwell time is how long people spend near a screen, and it can affect how long an ad should be.",
+      "answer": true,
+      "why": "In a queue people stay longer, so a longer spot can work. On a busy road, short is better.",
+      "level": 2,
+      "id": "myt-qg12tb"
+    },
+    {
+      "q": "Every DOOH venue plays ads of exactly the same length.",
+      "answer": false,
+      "why": "Spot lengths and loop lengths differ by venue and network.",
+      "level": 2,
+      "id": "myt-6i9bxm"
+    },
+    {
+      "q": "A static poster can be changed instantly from a laptop.",
+      "answer": false,
+      "why": "A static poster has to be printed and put up. Only digital screens change instantly.",
+      "level": 1,
+      "id": "myt-j93x6v"
+    },
+    {
+      "q": "Share of voice on a screen is the share of the ad loop that a brand gets.",
+      "answer": true,
+      "why": "In a loop with five equal spots from different brands, each has a fifth.",
+      "level": 2,
+      "id": "myt-cv2y2a"
+    },
+    {
+      "q": "Out-of-home audiences can only be measured by counting passing traffic.",
+      "answer": false,
+      "why": "Panels, anonymised sensors and location data are also used.",
+      "level": 3,
+      "id": "myt-1m1bxv"
+    },
+    {
+      "q": "Location data can help show whether people who passed a screen later visited a store.",
+      "answer": true,
+      "why": "Advertisers use it to estimate store visits, though results are estimates.",
+      "level": 3,
+      "id": "myt-ghh6v7"
+    }
+  ]
+}

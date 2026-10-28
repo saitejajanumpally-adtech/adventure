@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Brand safety",
+      "answer": "Brand safety",
+      "clues": [
+        "I am a shield.",
+        "I keep ads away from content a brand dislikes.",
+        "Violence and hate speech are what I avoid.",
+        "Advertisers care about me when their name sits next to news."
+      ],
+      "wrong": [
+        "Viewability",
+        "Frequency",
+        "Attribution"
+      ],
+      "why": "Brand safety protects a brand from appearing next to harmful content.",
+      "level": 1,
+      "id": "who-mcgk3b"
+    },
+    {
+      "title": "Domain spoofing",
+      "answer": "Domain spoofing",
+      "clues": [
+        "I am a disguise.",
+        "A low-value site claims to be a premium one.",
+        "Buyers pay premium prices to me by mistake.",
+        "ads.txt helps buyers spot me."
+      ],
+      "wrong": [
+        "Retargeting",
+        "Header bidding",
+        "Latency"
+      ],
+      "why": "Domain spoofing fakes a better site’s name to sell cheap inventory at a premium.",
+      "level": 3,
+      "id": "who-4e8yx5"
+    },
+    {
+      "title": "Invalid traffic",
+      "answer": "Invalid traffic",
+      "clues": [
+        "I am visits that are not real viewers.",
+        "Bots create a lot of me.",
+        "Buyers do not want to pay for me.",
+        "My short name is IVT."
+      ],
+      "wrong": [
+        "Reach",
+        "Fill rate",
+        "Conversion"
+      ],
+      "why": "Invalid traffic is activity that is not a real person genuinely seeing an ad.",
+      "level": 2,
+      "id": "who-j0bog7"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Linear TV or streaming?",
+      "layers": [
+        "Linear TV",
+        "Streaming (CTV and OTT)"
+      ],
+      "cards": [
+        {
+          "name": "Fixed schedule",
+          "layer": 0
+        },
+        {
+          "name": "Broadcast network",
+          "layer": 0
+        },
+        {
+          "name": "Cable box",
+          "layer": 0
+        },
+        {
+          "name": "Household-level targeting",
+          "layer": 1
+        },
+        {
+          "name": "Ads sold programmatically",
+          "layer": 1
+        },
+        {
+          "name": "Watch on demand",
+          "layer": 1
+        }
+      ],
+      "why": "Linear TV follows a schedule. Streaming is on demand and easier to target and measure.",
+      "level": 2,
+      "id": "sta-z8umyz"
+    }
+  ]
+}

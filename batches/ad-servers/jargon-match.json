@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Ad server terms",
+      "pairs": [
+        {
+          "term": "Order",
+          "def": "A buyer’s campaign container"
+        },
+        {
+          "term": "Line item",
+          "def": "Delivery settings inside an order"
+        },
+        {
+          "term": "Creative",
+          "def": "The actual ad"
+        },
+        {
+          "term": "Ad tag",
+          "def": "Code that asks for an ad"
+        },
+        {
+          "term": "Priority",
+          "def": "Which line item wins when several fit"
+        }
+      ],
+      "level": 2,
+      "id": "jar-dx2e0b"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How an ad server picks an ad",
+      "steps": [
+        "A page loads and the ad tag runs",
+        "The tag calls the ad server",
+        "The server finds the line items that match",
+        "Priority and pacing decide the winner",
+        "The creative is returned",
+        "The impression is counted"
+      ],
+      "why": "The server filters the line items, picks one, and counts the result.",
+      "level": 2,
+      "id": "ad--am8hro"
+    },
+    {
+      "title": "How a line item is set up",
+      "steps": [
+        "Create the order",
+        "Add the line item and its dates",
+        "Set the targeting and priority",
+        "Attach the creatives",
+        "Preview and test",
+        "Turn it on and monitor"
+      ],
+      "why": "Build it, test it, then switch it on and keep watching.",
+      "level": 1,
+      "id": "ad--6g76bc"
+    }
+  ]
+}

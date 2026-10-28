@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Onsite or offsite?",
+      "layers": [
+        "Onsite",
+        "Offsite"
+      ],
+      "cards": [
+        {
+          "name": "Search results ad",
+          "layer": 0
+        },
+        {
+          "name": "Product page banner",
+          "layer": 0
+        },
+        {
+          "name": "In-store screen",
+          "layer": 0
+        },
+        {
+          "name": "Ad on a news site",
+          "layer": 1
+        },
+        {
+          "name": "Social ad using retailer audiences",
+          "layer": 1
+        },
+        {
+          "name": "Streaming ad targeted from purchase data",
+          "layer": 1
+        }
+      ],
+      "why": "Onsite ads run on the retailer’s channels. Offsite ads follow the same shoppers elsewhere.",
+      "level": 2,
+      "id": "sta-xs7y14"
+    }
+  ]
+}

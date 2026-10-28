@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "title": "Sponsored product ad",
+      "answer": "Sponsored product ad",
+      "clues": [
+        "I look like part of the shelf.",
+        "I appear in search results or on product pages.",
+        "A brand pays for me to rank higher.",
+        "I am usually marked as an ad."
+      ],
+      "wrong": [
+        "Pop-up",
+        "Interstitial",
+        "Pre-roll"
+      ],
+      "why": "Sponsored product ads promote a listing inside the retailer’s own pages.",
+      "level": 1,
+      "id": "who-1mnsne"
+    },
+    {
+      "title": "Closed-loop measurement",
+      "answer": "Closed-loop measurement",
+      "clues": [
+        "I connect two things.",
+        "I link seeing an ad to buying.",
+        "Retailers can do this because they see the sale.",
+        "I answer: did the ad lead to a purchase?"
+      ],
+      "wrong": [
+        "Viewability",
+        "Frequency",
+        "Header bidding"
+      ],
+      "why": "Closed-loop measurement ties ad exposure to purchases.",
+      "level": 2,
+      "id": "who-aiq43d"
+    },
+    {
+      "title": "Retail media network",
+      "answer": "Retail media network",
+      "clues": [
+        "I am run by a seller of products.",
+        "I sell ad space on that seller’s channels.",
+        "Brands buy me to reach shoppers near the moment of purchase.",
+        "My owner has lots of shopper data."
+      ],
+      "wrong": [
+        "Ad exchange",
+        "SSP",
+        "Affiliate network"
+      ],
+      "why": "A retail media network is a retailer’s advertising business.",
+      "level": 2,
+      "id": "who-dtotgo"
+    }
+  ]
+}

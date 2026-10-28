@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How consent travels with an ad request",
+      "steps": [
+        "The visitor opens the site",
+        "The consent banner asks for choices",
+        "The choices are stored",
+        "The choices are added to ad requests",
+        "Partners check them before using data",
+        "Ads show only as the choices allow"
+      ],
+      "why": "The choice is made once, stored, then passed along with every request.",
+      "level": 2,
+      "id": "ad--lo2rwn"
+    },
+    {
+      "title": "How a data access request is handled",
+      "steps": [
+        "A person asks to see their data",
+        "The company confirms who they are",
+        "It finds the data across its systems",
+        "It prepares a clear copy",
+        "It replies within the legal time",
+        "It records the request"
+      ],
+      "why": "Check identity, find the data, reply on time and keep a record.",
+      "level": 3,
+      "id": "ad--u7ekjv"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Retail media terms",
+      "pairs": [
+        {
+          "term": "Sponsored product",
+          "def": "Paid listing in search or product pages"
+        },
+        {
+          "term": "Onsite",
+          "def": "Ads on the retailer’s own channels"
+        },
+        {
+          "term": "Offsite",
+          "def": "Ads elsewhere using retailer data"
+        },
+        {
+          "term": "Closed loop",
+          "def": "Ad exposure linked to purchases"
+        },
+        {
+          "term": "SKU",
+          "def": "A single product code"
+        }
+      ],
+      "level": 1,
+      "id": "jar-6wlyso"
+    }
+  ]
+}

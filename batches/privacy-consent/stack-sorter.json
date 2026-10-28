@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Consent first, or no personal data needed?",
+      "layers": [
+        "Usually needs consent first",
+        "Can work without personal data"
+      ],
+      "cards": [
+        {
+          "name": "Cross-site tracking",
+          "layer": 0
+        },
+        {
+          "name": "Personalised ads from past behaviour",
+          "layer": 0
+        },
+        {
+          "name": "Combining data to profile a person",
+          "layer": 0
+        },
+        {
+          "name": "Ads matched to the page topic",
+          "layer": 1
+        },
+        {
+          "name": "Counting how many ads were shown",
+          "layer": 1
+        },
+        {
+          "name": "Showing a generic ad",
+          "layer": 1
+        }
+      ],
+      "why": "Anything built on a person’s data usually needs consent. Page-based and generic ads do not.",
+      "level": 2,
+      "id": "sta-qbh6rs"
+    }
+  ]
+}

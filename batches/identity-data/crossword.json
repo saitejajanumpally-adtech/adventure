@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "Identity and data",
+      "words": [
+        {
+          "answer": "COOKIE",
+          "clue": "Small file a browser stores"
+        },
+        {
+          "answer": "IDENTITY",
+          "clue": "Who someone is across devices"
+        },
+        {
+          "answer": "GRAPH",
+          "clue": "Map that links identifiers"
+        },
+        {
+          "answer": "HASHING",
+          "clue": "Scrambling data into a code"
+        },
+        {
+          "answer": "CLEANROOM",
+          "clue": "Safe place to match data"
+        },
+        {
+          "answer": "LOGIN",
+          "clue": "Sign-in that gives certain matches"
+        },
+        {
+          "answer": "PARTY",
+          "clue": "First, second or third, for data"
+        },
+        {
+          "answer": "MATCH",
+          "clue": "Connect two records"
+        }
+      ],
+      "level": 2,
+      "id": "cro-dxipms"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "DOOH terms",
+      "pairs": [
+        {
+          "term": "Proof of play",
+          "def": "Record that an ad was shown"
+        },
+        {
+          "term": "Loop",
+          "def": "Repeating sequence of ads on a screen"
+        },
+        {
+          "term": "Spot",
+          "def": "One ad slot within the loop"
+        },
+        {
+          "term": "Daypart",
+          "def": "A slice of the day for scheduling"
+        },
+        {
+          "term": "Geofence",
+          "def": "Virtual boundary around a place"
+        }
+      ],
+      "level": 2,
+      "id": "jar-qoln38"
+    }
+  ]
+}

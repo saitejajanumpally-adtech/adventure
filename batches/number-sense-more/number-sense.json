@@ -1,0 +1,290 @@
+{
+  "items": [
+    {
+      "q": "A site has 50,000 page views and shows 4 ads on every page. If every ad slot fills, how many ad impressions is that?",
+      "unit": "",
+      "min": 0,
+      "max": 400000,
+      "step": 5000,
+      "answer": 200000,
+      "why": "Page views times ads per page: 50,000 x 4 = 200,000.",
+      "level": 1,
+      "id": "num-eh1485"
+    },
+    {
+      "q": "An ad earns a $4 eCPM across 2,500,000 impressions. How much revenue is that?",
+      "unit": "$",
+      "min": 0,
+      "max": 20000,
+      "step": 500,
+      "answer": 10000,
+      "why": "2,500,000 impressions is 2,500 thousands, and 2,500 x $4 = $10,000.",
+      "level": 1,
+      "id": "num-9f12wc"
+    },
+    {
+      "q": "A campaign has a 0.4% CTR on 500,000 impressions. How many clicks is that?",
+      "unit": "",
+      "min": 0,
+      "max": 5000,
+      "step": 100,
+      "answer": 2000,
+      "why": "0.4% of 500,000 is 2,000.",
+      "level": 1,
+      "id": "num-53vahj"
+    },
+    {
+      "q": "A campaign spends $6,000 and gets 3,000 clicks. What is the cost per click?",
+      "unit": "$",
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "answer": 2,
+      "why": "$6,000 / 3,000 clicks = $2 per click.",
+      "level": 1,
+      "id": "num-dkboxa"
+    },
+    {
+      "q": "A buyer pays an $8 CPM and wins 120,000 impressions. How much do they spend?",
+      "unit": "$",
+      "min": 0,
+      "max": 2000,
+      "step": 20,
+      "answer": 960,
+      "why": "120,000 impressions is 120 thousands, and 120 x $8 = $960.",
+      "level": 1,
+      "id": "num-xo0fie"
+    },
+    {
+      "q": "In a first-price auction the highest bid is $3.50. How much does the winner pay?",
+      "unit": "$",
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "answer": 3.5,
+      "why": "In a first-price auction the winner pays their own bid, so $3.50.",
+      "level": 1,
+      "id": "num-89n94v"
+    },
+    {
+      "q": "In a second-price auction the bids are $5, $3 and $1. About how much does the winner pay?",
+      "unit": "$",
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "answer": 3,
+      "why": "The winner pays about the second-highest bid, so roughly $3.",
+      "level": 2,
+      "id": "num-t5dvln"
+    },
+    {
+      "q": "A page loads in 2.8 seconds. A new ad adds 1.2 seconds. What is the new load time?",
+      "unit": "sec",
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "answer": 4,
+      "why": "2.8 + 1.2 = 4.0 seconds.",
+      "level": 1,
+      "id": "num-86ou1e"
+    },
+    {
+      "q": "Viewability is 65% on 2,000,000 impressions. How many impressions were viewable?",
+      "unit": "",
+      "min": 0,
+      "max": 2000000,
+      "step": 50000,
+      "answer": 1300000,
+      "why": "65% of 2,000,000 is 1,300,000.",
+      "level": 2,
+      "id": "num-sic1i9"
+    },
+    {
+      "q": "A video ad started 25,000 times and 80% of views were completed. How many completed?",
+      "unit": "",
+      "min": 0,
+      "max": 25000,
+      "step": 500,
+      "answer": 20000,
+      "why": "80% of 25,000 is 20,000.",
+      "level": 1,
+      "id": "num-nwbaw0"
+    },
+    {
+      "q": "A landing page gets 10,000 clicks and converts at 2%. How many conversions is that?",
+      "unit": "",
+      "min": 0,
+      "max": 600,
+      "step": 10,
+      "answer": 200,
+      "why": "2% of 10,000 is 200.",
+      "level": 1,
+      "id": "num-6gv0ks"
+    },
+    {
+      "q": "200 conversions are worth $50 each and the campaign spent $2,500. What is the ROAS?",
+      "unit": "x",
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "answer": 4,
+      "why": "Revenue is 200 x $50 = $10,000. $10,000 / $2,500 = 4x.",
+      "level": 2,
+      "id": "num-fi7ghv"
+    },
+    {
+      "q": "A campaign reaches 400,000 people at an average frequency of 3.5. How many impressions is that?",
+      "unit": "",
+      "min": 0,
+      "max": 2000000,
+      "step": 50000,
+      "answer": 1400000,
+      "why": "Reach times frequency: 400,000 x 3.5 = 1,400,000.",
+      "level": 2,
+      "id": "num-b0810k"
+    },
+    {
+      "q": "A publisher had 5,000,000 impressions available and 60% were sold. How many were sold?",
+      "unit": "",
+      "min": 0,
+      "max": 5000000,
+      "step": 100000,
+      "answer": 3000000,
+      "why": "60% of 5,000,000 is 3,000,000.",
+      "level": 1,
+      "id": "num-moljsp"
+    },
+    {
+      "q": "A DOOH screen plays a brand’s ad every 5 minutes for 12 hours. How many plays is that?",
+      "unit": "",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "answer": 144,
+      "why": "12 hours is 720 minutes, and 720 / 5 = 144 plays.",
+      "level": 1,
+      "id": "num-gyqi6m"
+    },
+    {
+      "q": "A 60-second DOOH loop has six equal 10-second spots from six brands. What is one brand’s share of voice?",
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "step": 0.5,
+      "answer": 16.7,
+      "why": "One spot out of six is about 16.7%.",
+      "level": 2,
+      "id": "num-qo7lze"
+    },
+    {
+      "q": "A campaign has a $1,000 budget and a $25 cost per action target. How many actions can it buy?",
+      "unit": "",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "answer": 40,
+      "why": "$1,000 / $25 = 40 actions.",
+      "level": 1,
+      "id": "num-d65ouq"
+    },
+    {
+      "q": "A consent banner is shown to 100,000 visitors and 70% accept. How many accept?",
+      "unit": "",
+      "min": 0,
+      "max": 100000,
+      "step": 1000,
+      "answer": 70000,
+      "why": "70% of 100,000 is 70,000.",
+      "level": 1,
+      "id": "num-mb96hx"
+    },
+    {
+      "q": "A CTV ad pod has four 30-second ads. How long is the ad break in seconds?",
+      "unit": "sec",
+      "min": 0,
+      "max": 300,
+      "step": 5,
+      "answer": 120,
+      "why": "4 x 30 = 120 seconds.",
+      "level": 1,
+      "id": "num-f7k7ed"
+    },
+    {
+      "q": "A channel airs 6 minutes of ads every hour. How many minutes of ads in 8 hours?",
+      "unit": "min",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "answer": 48,
+      "why": "6 x 8 = 48 minutes.",
+      "level": 1,
+      "id": "num-cjeztg"
+    },
+    {
+      "q": "10,000 shoppers see a sponsored product and 3% buy a $20 item. How much in sales?",
+      "unit": "$",
+      "min": 0,
+      "max": 12000,
+      "step": 200,
+      "answer": 6000,
+      "why": "3% of 10,000 is 300 buyers, and 300 x $20 = $6,000.",
+      "level": 2,
+      "id": "num-mcjey0"
+    },
+    {
+      "q": "The publisher counts 1,000,000 impressions and the buyer counts 920,000. What is the discrepancy as a share of the publisher’s number?",
+      "unit": "%",
+      "min": 0,
+      "max": 30,
+      "step": 0.5,
+      "answer": 8,
+      "why": "The gap is 80,000, and 80,000 / 1,000,000 = 8%.",
+      "level": 2,
+      "id": "num-7o88q5"
+    },
+    {
+      "q": "An ad ops team sets up 15 campaigns this week with 4 line items each. How many line items is that?",
+      "unit": "",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "answer": 60,
+      "why": "15 x 4 = 60.",
+      "level": 1,
+      "id": "num-noo6u0"
+    },
+    {
+      "q": "A page loads in 3.2 seconds. Reserving ad space and compressing images saves 0.4 seconds. What is the new load time?",
+      "unit": "sec",
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "answer": 2.8,
+      "why": "3.2 - 0.4 = 2.8 seconds.",
+      "level": 1,
+      "id": "num-oe2om1"
+    },
+    {
+      "q": "A buyer lowers a $6 bid by 15% using bid shading. What is the new bid?",
+      "unit": "$",
+      "min": 0,
+      "max": 8,
+      "step": 0.1,
+      "answer": 5.1,
+      "why": "15% of $6 is $0.90, and $6 - $0.90 = $5.10.",
+      "level": 2,
+      "id": "num-dp2ael"
+    },
+    {
+      "q": "A campaign has $4,500 to spend at a $3 cost per install. How many installs can it buy?",
+      "unit": "",
+      "min": 0,
+      "max": 3000,
+      "step": 50,
+      "answer": 1500,
+      "why": "$4,500 / $3 = 1,500 installs.",
+      "level": 1,
+      "id": "num-y30990"
+    }
+  ]
+}

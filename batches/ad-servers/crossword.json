@@ -1,0 +1,47 @@
+{
+  "items": [
+    {
+      "title": "Ad servers",
+      "words": [
+        {
+          "answer": "ORDER",
+          "clue": "Container for a buyer’s campaign"
+        },
+        {
+          "answer": "LINEITEM",
+          "clue": "Delivery settings inside an order"
+        },
+        {
+          "answer": "CREATIVE",
+          "clue": "The ad itself"
+        },
+        {
+          "answer": "TAG",
+          "clue": "Code that asks for an ad"
+        },
+        {
+          "answer": "PRIORITY",
+          "clue": "Decides who wins when several could serve"
+        },
+        {
+          "answer": "PACING",
+          "clue": "Spreading delivery across dates"
+        },
+        {
+          "answer": "SERVER",
+          "clue": "System that stores and delivers ads"
+        },
+        {
+          "answer": "IMPRESSION",
+          "clue": "One ad shown"
+        },
+        {
+          "answer": "TARGETING",
+          "clue": "Rules on who sees the ad"
+        }
+      ],
+      "level": 2,
+      "id": "cro-lvljsk"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "title": "Open auction or a deal?",
+      "layers": [
+        "Open auction",
+        "Deal"
+      ],
+      "cards": [
+        {
+          "name": "Any approved buyer can bid",
+          "layer": 0
+        },
+        {
+          "name": "Price set by bidding",
+          "layer": 0
+        },
+        {
+          "name": "No promise of volume",
+          "layer": 0
+        },
+        {
+          "name": "Invite-only",
+          "layer": 1
+        },
+        {
+          "name": "Deal ID",
+          "layer": 1
+        },
+        {
+          "name": "Agreed price or floor",
+          "layer": 1
+        }
+      ],
+      "why": "An open auction is open to all and priced by bidding. A deal is agreed with chosen buyers.",
+      "level": 2,
+      "id": "sta-cqy266"
+    }
+  ]
+}

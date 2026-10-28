@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not an ad quality problem?",
+      "options": [
+        "Bot traffic",
+        "Auto-playing audio ads",
+        "Ads on harmful content",
+        "A fast-loading page"
+      ],
+      "answer": 3,
+      "why": "A fast page is a good thing, not a problem.",
+      "level": 1,
+      "id": "odd-7fwhez"
+    },
+    {
+      "q": "Which one is not a way to check where ads ran?",
+      "options": [
+        "A verification report",
+        "Log-level data",
+        "A site list review",
+        "Counting clicks alone"
+      ],
+      "answer": 3,
+      "why": "Clicks do not show where the ad appeared.",
+      "level": 2,
+      "id": "odd-7zvazy"
+    }
+  ]
+}

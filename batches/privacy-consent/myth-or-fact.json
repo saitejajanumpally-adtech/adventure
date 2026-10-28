@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "Consent means a person agrees, clearly and freely, to how their data is used.",
+      "answer": true,
+      "why": "Valid consent is informed, specific and freely given.",
+      "level": 1,
+      "id": "myt-m6e84c"
+    },
+    {
+      "q": "Privacy rules such as GDPR only apply to companies based in Europe.",
+      "answer": false,
+      "why": "They apply based on whose data is being used, not only where the company sits.",
+      "level": 2,
+      "id": "myt-7k0fm6"
+    },
+    {
+      "q": "A consent box that is already ticked is a good example of valid consent.",
+      "answer": false,
+      "why": "Pre-ticked boxes are not a clear sign of agreement.",
+      "level": 2,
+      "id": "myt-w9hxk3"
+    },
+    {
+      "q": "Personal data can include online identifiers such as device IDs and IP addresses.",
+      "answer": true,
+      "why": "Anything that can point to a person, directly or indirectly, can count as personal data.",
+      "level": 2,
+      "id": "myt-40bd0r"
+    },
+    {
+      "q": "Opting out should be as easy as opting in.",
+      "answer": true,
+      "why": "Regulators expect withdrawing consent to be as simple as giving it.",
+      "level": 2,
+      "id": "myt-fy9bay"
+    },
+    {
+      "q": "Hashing an email address always makes it anonymous.",
+      "answer": false,
+      "why": "A hashed email can often still be matched back to the person, so it is usually still personal data.",
+      "level": 3,
+      "id": "myt-j3f2r8"
+    },
+    {
+      "q": "The TCF is a framework for passing privacy choices between publishers and ad partners.",
+      "answer": true,
+      "why": "It gives the industry a common way to record and share consent signals.",
+      "level": 3,
+      "id": "myt-5wjb3c"
+    },
+    {
+      "q": "Contextual targeting needs data about the individual user.",
+      "answer": false,
+      "why": "It uses the content of the page, not a profile of the person.",
+      "level": 1,
+      "id": "myt-gi1use"
+    },
+    {
+      "q": "Data minimisation means collecting only the data you actually need.",
+      "answer": true,
+      "why": "Less data collected means less risk and fewer obligations.",
+      "level": 2,
+      "id": "myt-d7y9wj"
+    },
+    {
+      "q": "Data about children usually gets extra protection.",
+      "answer": true,
+      "why": "Many rules set stricter conditions for children’s data.",
+      "level": 2,
+      "id": "myt-rkmws0"
+    }
+  ]
+}

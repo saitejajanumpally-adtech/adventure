@@ -1,0 +1,60 @@
+{
+  "items": [
+    {
+      "q": "Programmatic advertising means ads are bought and sold by software, often in real time.",
+      "answer": true,
+      "why": "Software handles the buying and selling, instead of people agreeing each deal by hand.",
+      "level": 1,
+      "id": "myt-rzmxgp"
+    },
+    {
+      "q": "In a second-price auction the winner pays just above the second-highest bid.",
+      "answer": true,
+      "why": "The winner pays less than they bid unless there was no close competitor.",
+      "level": 2,
+      "id": "myt-5qekjf"
+    },
+    {
+      "q": "OpenRTB is a standard way for buyers and sellers to describe bids and requests.",
+      "answer": true,
+      "why": "A shared standard lets many different systems talk to each other.",
+      "level": 2,
+      "id": "myt-2ods0v"
+    },
+    {
+      "q": "A bid request describes the impression and sometimes the page and the user.",
+      "answer": true,
+      "why": "Buyers use that information to decide whether and how much to bid.",
+      "level": 1,
+      "id": "myt-8reeba"
+    },
+    {
+      "q": "Programmatic buying always costs less than buying directly.",
+      "answer": false,
+      "why": "Prices depend on demand, fees and the quality of the inventory.",
+      "level": 2,
+      "id": "myt-fkja2i"
+    },
+    {
+      "q": "A private marketplace is open to every buyer.",
+      "answer": false,
+      "why": "It is invite-only, so only chosen buyers can bid.",
+      "level": 1,
+      "id": "myt-hjuosz"
+    },
+    {
+      "q": "A programmatic auction usually finishes in a fraction of a second.",
+      "answer": true,
+      "why": "It happens while the page loads, so the visitor does not wait.",
+      "level": 1,
+      "id": "myt-vf99ev"
+    },
+    {
+      "q": "A deal ID links a buyer and a seller’s agreed terms inside the auction systems.",
+      "answer": true,
+      "why": "It tells both platforms which agreement an impression belongs to.",
+      "level": 3,
+      "id": "myt-eufldn"
+    }
+  ]
+}

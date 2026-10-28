@@ -1,0 +1,47 @@
+{
+  "items": [
+    {
+      "title": "Ad quality",
+      "words": [
+        {
+          "answer": "BRAND",
+          "clue": "What brand safety protects"
+        },
+        {
+          "answer": "SAFETY",
+          "clue": "Keeping ads away from harmful content"
+        },
+        {
+          "answer": "FRAUD",
+          "clue": "Deliberate cheating in advertising"
+        },
+        {
+          "answer": "SPOOFING",
+          "clue": "Faking a site’s identity"
+        },
+        {
+          "answer": "BLOCKLIST",
+          "clue": "Places ads must avoid"
+        },
+        {
+          "answer": "VERIFY",
+          "clue": "Check that an ad ran as promised"
+        },
+        {
+          "answer": "MALWARE",
+          "clue": "Harmful software"
+        },
+        {
+          "answer": "BOT",
+          "clue": "Automated visitor that is not a person"
+        },
+        {
+          "answer": "QUALITY",
+          "clue": "What good ads and good inventory have"
+        }
+      ],
+      "level": 2,
+      "id": "cro-atmj9p"
+    }
+  ]
+}

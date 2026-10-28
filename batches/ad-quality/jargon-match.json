@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Ad quality terms",
+      "pairs": [
+        {
+          "term": "Brand safety",
+          "def": "Avoiding harmful content next to ads"
+        },
+        {
+          "term": "IVT",
+          "def": "Traffic that is not real viewing"
+        },
+        {
+          "term": "Blocklist",
+          "def": "Places where ads must not appear"
+        },
+        {
+          "term": "Domain spoofing",
+          "def": "A site faking another’s name"
+        },
+        {
+          "term": "Malvertising",
+          "def": "Ads used to deliver something harmful"
+        }
+      ],
+      "level": 2,
+      "id": "jar-xxuxsz"
+    }
+  ]
+}

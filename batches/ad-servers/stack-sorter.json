@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "title": "Order, line item or creative?",
+      "layers": [
+        "Order",
+        "Line item",
+        "Creative"
+      ],
+      "cards": [
+        {
+          "name": "Advertiser name",
+          "layer": 0
+        },
+        {
+          "name": "Total campaign budget",
+          "layer": 0
+        },
+        {
+          "name": "Start and end dates",
+          "layer": 1
+        },
+        {
+          "name": "Targeting",
+          "layer": 1
+        },
+        {
+          "name": "Priority",
+          "layer": 1
+        },
+        {
+          "name": "Image file",
+          "layer": 2
+        },
+        {
+          "name": "Video file",
+          "layer": 2
+        },
+        {
+          "name": "Click-through URL",
+          "layer": 2
+        }
+      ],
+      "why": "The order is the container, the line item holds the rules, and the creative is the ad.",
+      "level": 2,
+      "id": "sta-s8ovfw"
+    }
+  ]
+}

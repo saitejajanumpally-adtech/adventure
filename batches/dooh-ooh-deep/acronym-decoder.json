@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does OTS stand for in out-of-home?",
+      "options": [
+        "Opportunity to see",
+        "Overall traffic score",
+        "Out of town spot",
+        "Outdoor tag standard"
+      ],
+      "answer": 0,
+      "why": "OTS counts people who had the chance to see an ad, not those who definitely did.",
+      "level": 3,
+      "id": "acr-nevioo"
+    },
+    {
+      "q": "What does PoP stand for in DOOH reporting?",
+      "options": [
+        "Proof of play",
+        "Pay on publish",
+        "Peak of programming",
+        "Plays per panel"
+      ],
+      "answer": 0,
+      "why": "Proof of play records when and where an ad was shown.",
+      "level": 2,
+      "id": "acr-cu93cf"
+    },
+    {
+      "q": "What does PDOOH stand for?",
+      "options": [
+        "Programmatic digital out of home",
+        "Public display of outdoor halls",
+        "Planned daily out-of-home hours",
+        "Paid direct outdoor hosting"
+      ],
+      "answer": 0,
+      "why": "PDOOH is digital out-of-home inventory bought through automated platforms.",
+      "level": 2,
+      "id": "acr-82vtb3"
+    },
+    {
+      "q": "What does CMS stand for on a screen network?",
+      "options": [
+        "Content management system",
+        "Central media schedule",
+        "Customer measurement survey",
+        "Creative media standard"
+      ],
+      "answer": 0,
+      "why": "The CMS is the software that stores ads and tells each screen what to play.",
+      "level": 2,
+      "id": "acr-nye8q8"
+    }
+  ]
+}

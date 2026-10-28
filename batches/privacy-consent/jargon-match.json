@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Privacy terms",
+      "pairs": [
+        {
+          "term": "Consent",
+          "def": "A person’s free, informed agreement"
+        },
+        {
+          "term": "PII",
+          "def": "Information that can identify a person"
+        },
+        {
+          "term": "Opt-out",
+          "def": "Choice to stop a use of data"
+        },
+        {
+          "term": "Contextual",
+          "def": "Targeting by page content"
+        },
+        {
+          "term": "Data minimisation",
+          "def": "Collect only what you need"
+        }
+      ],
+      "level": 1,
+      "id": "jar-ke74qv"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "Web publisher deep dive",
+      "words": [
+        {
+          "answer": "CONSENT",
+          "clue": "Visitor’s agreement to data use"
+        },
+        {
+          "answer": "TIMEOUT",
+          "clue": "Deadline for bids"
+        },
+        {
+          "answer": "SCROLL",
+          "clue": "What visitors do down the page"
+        },
+        {
+          "answer": "SPEED",
+          "clue": "Page ___ matters for revenue"
+        },
+        {
+          "answer": "BANNER",
+          "clue": "Common display ad shape"
+        },
+        {
+          "answer": "SHIFT",
+          "clue": "Unexpected movement of content"
+        },
+        {
+          "answer": "PUBLISHER",
+          "clue": "Owner of the site"
+        },
+        {
+          "answer": "SLOT",
+          "clue": "Space for an ad"
+        }
+      ],
+      "level": 2,
+      "id": "cro-hrall5"
+    }
+  ]
+}

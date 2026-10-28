@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which of these is not a place you would find a DOOH screen?",
+      "options": [
+        "Airport",
+        "Shopping mall",
+        "Taxi roof",
+        "Podcast episode"
+      ],
+      "answer": 3,
+      "why": "A podcast is audio. DOOH screens sit in public places.",
+      "level": 1,
+      "id": "odd-7t7s5v"
+    },
+    {
+      "q": "Which one is not a trigger a DOOH campaign can use?",
+      "options": [
+        "Weather",
+        "Time of day",
+        "Nearby traffic level",
+        "A viewer’s browsing history"
+      ],
+      "answer": 3,
+      "why": "A public screen does not know any one person’s browsing history.",
+      "level": 2,
+      "id": "odd-b36yu"
+    }
+  ]
+}

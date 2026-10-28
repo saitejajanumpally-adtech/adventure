@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "An ad server stores ads and decides which one to show.",
+      "answer": true,
+      "why": "It holds the creatives and chooses between campaigns each time an ad is requested.",
+      "level": 1,
+      "id": "myt-b7wsf9"
+    },
+    {
+      "q": "A publisher ad server and an advertiser ad server do exactly the same job.",
+      "answer": false,
+      "why": "The publisher side manages inventory. The advertiser side tracks campaigns across many sites.",
+      "level": 2,
+      "id": "myt-gzloeu"
+    },
+    {
+      "q": "A line item holds a campaign’s delivery instructions inside an ad server.",
+      "answer": true,
+      "why": "Dates, targeting, priority and budget are set on the line item.",
+      "level": 2,
+      "id": "myt-my4laj"
+    },
+    {
+      "q": "Ad servers can count impressions and clicks.",
+      "answer": true,
+      "why": "That counting is the basis for delivery and billing reports.",
+      "level": 1,
+      "id": "myt-3vjd"
+    },
+    {
+      "q": "Priority settings help decide which line item wins when several could serve.",
+      "answer": true,
+      "why": "Higher priority line items are considered first.",
+      "level": 2,
+      "id": "myt-e1qppy"
+    },
+    {
+      "q": "A creative is the actual ad file or code that appears on the page.",
+      "answer": true,
+      "why": "It can be an image, a video or interactive code.",
+      "level": 1,
+      "id": "myt-hk1m47"
+    },
+    {
+      "q": "An ad tag is a small piece of code that asks the ad server for an ad.",
+      "answer": true,
+      "why": "The page runs the tag, and the server answers with a creative.",
+      "level": 2,
+      "id": "myt-6uu1w"
+    },
+    {
+      "q": "Frequency capping can only be handled by the browser.",
+      "answer": false,
+      "why": "Ad servers and buying platforms usually enforce it using IDs and counts.",
+      "level": 3,
+      "id": "myt-jlrla4"
+    },
+    {
+      "q": "A third-party tag lets an advertiser’s own ad server deliver the creative through the publisher’s ad server.",
+      "answer": true,
+      "why": "The publisher server hands the call on, so the advertiser can count independently.",
+      "level": 3,
+      "id": "myt-apm77y"
+    },
+    {
+      "q": "Pacing in an ad server can spread a campaign’s impressions across its dates.",
+      "answer": true,
+      "why": "Even pacing avoids using the whole budget on the first day.",
+      "level": 2,
+      "id": "myt-xwm2uy"
+    }
+  ]
+}

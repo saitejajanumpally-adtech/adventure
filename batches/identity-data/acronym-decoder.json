@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does CDP stand for?",
+      "options": [
+        "Customer data platform",
+        "Campaign delivery protocol",
+        "Central display panel",
+        "Cookie data policy"
+      ],
+      "answer": 0,
+      "why": "A CDP gathers a company’s own customer data in one place.",
+      "level": 2,
+      "id": "acr-o168v8"
+    },
+    {
+      "q": "What does CRM stand for?",
+      "options": [
+        "Customer relationship management",
+        "Campaign revenue model",
+        "Central reporting module",
+        "Content rating mark"
+      ],
+      "answer": 0,
+      "why": "A CRM holds records of customers and contacts.",
+      "level": 1,
+      "id": "acr-fx9za1"
+    },
+    {
+      "q": "What does ITP stand for in web browsers?",
+      "options": [
+        "Intelligent Tracking Prevention",
+        "Internet transfer protocol",
+        "Instant tag processing",
+        "Inventory tracking policy"
+      ],
+      "answer": 0,
+      "why": "ITP limits cross-site tracking in some browsers.",
+      "level": 3,
+      "id": "acr-8mn3em"
+    },
+    {
+      "q": "What does UID stand for?",
+      "options": [
+        "Unique identifier",
+        "User impression data",
+        "Universal ad domain",
+        "Unified index of devices"
+      ],
+      "answer": 0,
+      "why": "A unique identifier is a code that tells one user or device from another.",
+      "level": 1,
+      "id": "acr-3r3l2x"
+    }
+  ]
+}

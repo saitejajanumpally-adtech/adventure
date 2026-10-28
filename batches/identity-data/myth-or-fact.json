@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "A third-party cookie is set by a site other than the one the visitor is on.",
+      "answer": true,
+      "why": "A first-party cookie belongs to the site being visited. A third-party cookie belongs to someone else.",
+      "level": 1,
+      "id": "myt-6o97cu"
+    },
+    {
+      "q": "A first-party cookie is set by the site the visitor is actually on.",
+      "answer": true,
+      "why": "It is often used for logins and remembering preferences.",
+      "level": 1,
+      "id": "myt-hh153a"
+    },
+    {
+      "q": "Mobile advertising IDs and cookies work in exactly the same way in every browser and app.",
+      "answer": false,
+      "why": "They are different identifiers with different rules and controls.",
+      "level": 2,
+      "id": "myt-u89683"
+    },
+    {
+      "q": "A data clean room lets two parties match data without handing over raw personal records.",
+      "answer": true,
+      "why": "Only agreed, combined results leave the clean room.",
+      "level": 3,
+      "id": "myt-mjev96"
+    },
+    {
+      "q": "An identity graph links different identifiers that belong to the same person or household.",
+      "answer": true,
+      "why": "It helps recognise someone across devices and channels.",
+      "level": 2,
+      "id": "myt-mugsi5"
+    },
+    {
+      "q": "Deterministic matching uses known information such as a login, while probabilistic matching uses estimates.",
+      "answer": true,
+      "why": "Deterministic matches are more certain. Probabilistic ones are guesses with a confidence level.",
+      "level": 3,
+      "id": "myt-hkstny"
+    },
+    {
+      "q": "First-party data is data a company collects directly from its own audience.",
+      "answer": true,
+      "why": "Sign-ups, purchases and logins are examples.",
+      "level": 1,
+      "id": "myt-qt44d0"
+    },
+    {
+      "q": "Universal IDs work the same way everywhere, whatever consent the person gave.",
+      "answer": false,
+      "why": "Whether an ID can be used still depends on the person’s choices and the local rules.",
+      "level": 3,
+      "id": "myt-7sq8t6"
+    },
+    {
+      "q": "People can delete or block cookies in their browser.",
+      "answer": true,
+      "why": "That is why cookie-based recognition is never perfectly reliable.",
+      "level": 1,
+      "id": "myt-99mta9"
+    },
+    {
+      "q": "Data onboarding connects offline customer records to online identifiers.",
+      "answer": true,
+      "why": "It lets a brand reach people it already knows from, say, a loyalty card.",
+      "level": 3,
+      "id": "myt-ydl38"
+    }
+  ]
+}

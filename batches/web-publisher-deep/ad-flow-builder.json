@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How a page with ads loads for a visitor",
+      "steps": [
+        "The visitor opens the page",
+        "The consent banner collects choices",
+        "The page content starts to show",
+        "The ad slots ask for ads",
+        "Bids come back before the timeout",
+        "The ads show and viewability is measured"
+      ],
+      "why": "Consent comes first, then content, then the auction, then measurement.",
+      "level": 2,
+      "id": "ad--jah94g"
+    },
+    {
+      "title": "How a publisher fixes a slow page",
+      "steps": [
+        "Measure the page speed",
+        "Find the slowest scripts and ads",
+        "Reserve space for the ad slots",
+        "Lazy load ads below the fold",
+        "Compress images and creatives",
+        "Measure again"
+      ],
+      "why": "Measure, fix the biggest causes, and measure again to confirm.",
+      "level": 2,
+      "id": "ad--svgw5g"
+    }
+  ]
+}

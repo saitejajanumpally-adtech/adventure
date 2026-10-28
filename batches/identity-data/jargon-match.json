@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Identity and data terms",
+      "pairs": [
+        {
+          "term": "First-party cookie",
+          "def": "Set by the site you are visiting"
+        },
+        {
+          "term": "Third-party cookie",
+          "def": "Set by a different site"
+        },
+        {
+          "term": "Clean room",
+          "def": "Safe place to match data"
+        },
+        {
+          "term": "Identity graph",
+          "def": "Links IDs for one person or home"
+        },
+        {
+          "term": "Hashing",
+          "def": "Scrambling data into a fixed code"
+        }
+      ],
+      "level": 2,
+      "id": "jar-jaqvr8"
+    }
+  ]
+}

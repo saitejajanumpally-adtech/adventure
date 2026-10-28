@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "title": "DOOH campaign stages",
+      "layers": [
+        "Planning",
+        "Delivery",
+        "Reporting"
+      ],
+      "cards": [
+        {
+          "name": "Audience estimate",
+          "layer": 0
+        },
+        {
+          "name": "Choose dayparts",
+          "layer": 0
+        },
+        {
+          "name": "Screen schedule",
+          "layer": 1
+        },
+        {
+          "name": "Creative approval",
+          "layer": 1
+        },
+        {
+          "name": "Spot plays",
+          "layer": 1
+        },
+        {
+          "name": "Proof of play",
+          "layer": 2
+        },
+        {
+          "name": "Impression report",
+          "layer": 2
+        },
+        {
+          "name": "Campaign recap",
+          "layer": 2
+        }
+      ],
+      "why": "Plan the campaign, deliver it on screens, then report what happened.",
+      "level": 2,
+      "id": "sta-u6kdmy"
+    }
+  ]
+}

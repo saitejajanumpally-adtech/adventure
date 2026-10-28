@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "title": "Web publisher terms, deeper",
+      "pairs": [
+        {
+          "term": "CMP",
+          "def": "Collects and shares privacy choices"
+        },
+        {
+          "term": "Layout shift",
+          "def": "Page content jumping as it loads"
+        },
+        {
+          "term": "Infinite scroll",
+          "def": "Page that keeps loading more content"
+        },
+        {
+          "term": "Timeout",
+          "def": "Longest wait for bids"
+        },
+        {
+          "term": "CDN",
+          "def": "Servers that deliver files from nearby"
+        }
+      ],
+      "level": 2,
+      "id": "jar-tmrm6m"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "items": [
+    {
+      "title": "Retail media",
+      "words": [
+        {
+          "answer": "RETAIL",
+          "clue": "Selling goods to shoppers"
+        },
+        {
+          "answer": "SHOPPER",
+          "clue": "Person browsing and buying"
+        },
+        {
+          "answer": "SPONSORED",
+          "clue": "Paid, as in product listings"
+        },
+        {
+          "answer": "SEARCH",
+          "clue": "Where sponsored products often appear"
+        },
+        {
+          "answer": "BASKET",
+          "clue": "Where products wait before purchase"
+        },
+        {
+          "answer": "LOOP",
+          "clue": "Closed ___ measurement"
+        },
+        {
+          "answer": "SKU",
+          "clue": "Product code"
+        },
+        {
+          "answer": "ONSITE",
+          "clue": "On the retailer’s own channels"
+        },
+        {
+          "answer": "OFFSITE",
+          "clue": "Elsewhere on the web"
+        }
+      ],
+      "level": 2,
+      "id": "cro-uffxmu"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does CMP stand for in publishing?",
+      "options": [
+        "Consent management platform",
+        "Content marketing plan",
+        "Campaign media planner",
+        "Cache memory protocol"
+      ],
+      "answer": 0,
+      "why": "A CMP handles the consent banner and the record of choices.",
+      "level": 2,
+      "id": "acr-fn38a9"
+    },
+    {
+      "q": "What does INP measure on a web page?",
+      "options": [
+        "Interaction to next paint",
+        "Ineffective network packet",
+        "Impression numbering protocol",
+        "Instant new page"
+      ],
+      "answer": 0,
+      "why": "INP measures how quickly the page responds visually after someone interacts with it.",
+      "level": 3,
+      "id": "acr-i6r6q2"
+    },
+    {
+      "q": "What does CDN stand for?",
+      "options": [
+        "Content delivery network",
+        "Central data node",
+        "Creative distribution number",
+        "Cache domain name"
+      ],
+      "answer": 0,
+      "why": "A CDN serves files from servers near the visitor so pages load faster.",
+      "level": 2,
+      "id": "acr-r0amsm"
+    },
+    {
+      "q": "What does SEO stand for?",
+      "options": [
+        "Search engine optimisation",
+        "Server events output",
+        "Site ease of operation",
+        "Sales engagement overview"
+      ],
+      "answer": 0,
+      "why": "SEO is improving a site so it appears higher in search results.",
+      "level": 1,
+      "id": "acr-ksad3g"
+    }
+  ]
+}

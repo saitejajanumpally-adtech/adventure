@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "q": "Which one is not an identifier used in advertising?",
+      "options": [
+        "Cookie ID",
+        "Mobile advertising ID",
+        "Hashed email",
+        "Page headline"
+      ],
+      "answer": 3,
+      "why": "A headline describes content, not a person or device.",
+      "level": 2,
+      "id": "odd-8v12kf"
+    },
+    {
+      "q": "Which one is not first-party data?",
+      "options": [
+        "Newsletter sign-ups",
+        "Purchases on your own site",
+        "App logins",
+        "A list bought from a stranger"
+      ],
+      "answer": 3,
+      "why": "First-party data comes directly from your own audience.",
+      "level": 2,
+      "id": "odd-q66z2f"
+    }
+  ]
+}

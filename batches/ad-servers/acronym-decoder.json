@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "q": "What does URL stand for?",
+      "options": [
+        "Uniform Resource Locator",
+        "Universal Reach Level",
+        "User Request Link",
+        "Unified Resource List"
+      ],
+      "answer": 0,
+      "why": "A URL is a web address, and click-through links use it.",
+      "level": 1,
+      "id": "acr-bo8xzc"
+    },
+    {
+      "q": "What does HTML stand for?",
+      "options": [
+        "Hypertext Markup Language",
+        "High Transfer Media Link",
+        "Hosted Tag Markup Log",
+        "Hyper Targeting Media Layer"
+      ],
+      "answer": 0,
+      "why": "HTML is the language web pages and many ad creatives are written in.",
+      "level": 1,
+      "id": "acr-47ng5i"
+    },
+    {
+      "q": "What does VMAP stand for?",
+      "options": [
+        "Video Multiple Ad Playlist",
+        "Verified Media Audience Profile",
+        "Video Market Access Protocol",
+        "Variable Media Ad Path"
+      ],
+      "answer": 0,
+      "why": "VMAP tells a player when to play ads during a video.",
+      "level": 3,
+      "id": "acr-e7p77r"
+    },
+    {
+      "q": "What does MRAID stand for?",
+      "options": [
+        "Mobile Rich Media Ad Interface Definitions",
+        "Mobile Reach And Impression Data",
+        "Managed Real-time Ad Index Delivery",
+        "Multi-region Ad Insertion Device"
+      ],
+      "answer": 0,
+      "why": "MRAID lets rich ads talk to the app that shows them.",
+      "level": 3,
+      "id": "acr-9b5k8e"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How verification checks an ad",
+      "steps": [
+        "An ad is served on a page",
+        "A verification tag loads with it",
+        "It collects page, viewability and device signals",
+        "It checks them against the buyer’s rules",
+        "A report shows where the ad ran",
+        "The buyer blocks poor places next time"
+      ],
+      "why": "The tag gathers the facts, the rules judge them, and the report guides the next buy.",
+      "level": 2,
+      "id": "ad--2zp08r"
+    },
+    {
+      "title": "How a publisher handles a bad ad",
+      "steps": [
+        "A visitor reports a bad ad",
+        "Ad ops collects the screenshot and details",
+        "They find the buyer and creative it came from",
+        "They block the creative or advertiser",
+        "They tell the partner",
+        "They confirm it no longer appears"
+      ],
+      "why": "Collect proof, trace the source, block it, tell the partner and confirm.",
+      "level": 2,
+      "id": "ad--vavlbi"
+    }
+  ]
+}

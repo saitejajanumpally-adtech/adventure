@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "title": "Digital out of home",
+      "words": [
+        {
+          "answer": "PROOF",
+          "clue": "What proof of play gives an advertiser"
+        },
+        {
+          "answer": "DWELL",
+          "clue": "Time spent near a screen"
+        },
+        {
+          "answer": "DAYPART",
+          "clue": "Slice of the day used for scheduling"
+        },
+        {
+          "answer": "GEOFENCE",
+          "clue": "Virtual boundary around a location"
+        },
+        {
+          "answer": "LOOP",
+          "clue": "Repeating ad sequence on a screen"
+        },
+        {
+          "answer": "SPOT",
+          "clue": "One slot in the loop"
+        },
+        {
+          "answer": "TRANSIT",
+          "clue": "Buses, trains and stations"
+        },
+        {
+          "answer": "BILLBOARD",
+          "clue": "Large outdoor advertising display"
+        }
+      ],
+      "level": 2,
+      "id": "cro-qezk9l"
+    }
+  ]
+}

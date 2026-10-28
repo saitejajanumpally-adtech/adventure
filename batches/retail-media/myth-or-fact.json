@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "q": "Retail media is advertising shown on a retailer’s own sites, apps or stores.",
+      "answer": true,
+      "why": "The retailer sells ad space on the places where its shoppers already are.",
+      "level": 1,
+      "id": "myt-uwzoid"
+    },
+    {
+      "q": "Retail media advertisers can often see sales results linked to their ads.",
+      "answer": true,
+      "why": "Because the retailer sees the purchase, it can link an ad to a sale.",
+      "level": 2,
+      "id": "myt-qk2gbv"
+    },
+    {
+      "q": "Sponsored product ads appear among search results or on product pages.",
+      "answer": true,
+      "why": "They look like products and are usually labelled as ads.",
+      "level": 1,
+      "id": "myt-kn7mzh"
+    },
+    {
+      "q": "Retail media only ever runs on websites, never in physical stores.",
+      "answer": false,
+      "why": "Many retailers also sell in-store screens and other formats.",
+      "level": 2,
+      "id": "myt-xtqcav"
+    },
+    {
+      "q": "Closed-loop measurement links ad exposure to actual purchases.",
+      "answer": true,
+      "why": "It closes the loop between seeing an ad and buying.",
+      "level": 2,
+      "id": "myt-13tdhn"
+    },
+    {
+      "q": "Retailers use first-party data from their own customers to target retail media.",
+      "answer": true,
+      "why": "Purchase history and browsing on the retailer’s own channels are key inputs.",
+      "level": 2,
+      "id": "myt-ewtpi5"
+    },
+    {
+      "q": "Offsite retail media shows ads away from the retailer’s own channels, using the retailer’s audiences.",
+      "answer": true,
+      "why": "A brand can reach the same shoppers on other sites and apps.",
+      "level": 3,
+      "id": "myt-r0nbnb"
+    },
+    {
+      "q": "Retail media ROAS can be compared across retailers without checking how each one defines it.",
+      "answer": false,
+      "why": "Definitions of sales and attribution windows differ, so numbers are not always comparable.",
+      "level": 3,
+      "id": "myt-e3epb3"
+    },
+    {
+      "q": "Brands often bid for keywords on a retailer’s search results.",
+      "answer": true,
+      "why": "The higher the bid and relevance, the better the position.",
+      "level": 2,
+      "id": "myt-imlxi2"
+    },
+    {
+      "q": "Retail media only helps brands that sell in the same store as the ad.",
+      "answer": false,
+      "why": "Offsite formats and measurement can support wider goals, though the retailer’s own sales are what it sees best.",
+      "level": 3,
+      "id": "myt-7quxdw"
+    }
+  ]
+}

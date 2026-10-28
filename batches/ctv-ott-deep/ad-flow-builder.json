@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "title": "How an ad break works with SSAI",
+      "steps": [
+        "The viewer reaches an ad break",
+        "The stream server asks the ad server for ads",
+        "The ad decision picks ads for the pod",
+        "The ads are stitched into the stream",
+        "The viewer sees the ads as part of the show",
+        "Tracking events are reported"
+      ],
+      "why": "The server picks and stitches the ads, so the viewer’s device just plays one stream.",
+      "level": 3,
+      "id": "ad--kc63y"
+    },
+    {
+      "title": "How a CTV campaign is planned and run",
+      "steps": [
+        "Set the goal and budget",
+        "Pick audiences and streaming inventory",
+        "Agree the deal and the creative",
+        "Run the campaign across apps and devices",
+        "Measure reach, frequency and completion",
+        "Adjust and report"
+      ],
+      "why": "Plan, buy, run, then measure and adjust.",
+      "level": 1,
+      "id": "ad--o0fd4p"
+    }
+  ]
+}
