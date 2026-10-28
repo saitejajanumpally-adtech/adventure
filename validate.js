@@ -17,6 +17,7 @@ function why(raw) {
 }
 
 export function itemKey(game, it) {
+  if (game === 'industry-update') return norm(it.headline);
   if (game === 'number-sense') return norm(it.q);
   if (game === 'who-am-i') return norm(it.answer + ' ' + (it.clues || [])[0]);
   if (game === 'jargon-match') return norm(it.title + ' ' + it.pairs.map((p) => p.term).join(' '));
@@ -73,6 +74,29 @@ export function normalizeItem(game, raw) {
     need(typeof a === 'boolean', 'answer must be "fact" or "myth"');
     it = { q, answer: a, why: why(raw) };
     const hn2 = hintOf(raw); if (hn2) it.hint = hn2;
+  } else if (game === 'industry-update') {
+    const headline = str(raw.headline);
+    need(headline.length >= 8 && headline.length <= 90, 'headline is missing or too long (8 to 90 characters)');
+    const summary = str(raw.summary);
+    need(summary.length >= 20 && summary.length <= 300, 'summary is missing or too long (20 to 300 characters)');
+    const isDay = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v));
+    const date = str(raw.date), expires = str(raw.expires);
+    need(!date || isDay(date), 'date must look like 2026-03-31');
+    need(!expires || isDay(expires), 'expires must look like 2026-12-31');
+    need(!date || !expires || expires >= date, 'expires cannot be before the date');
+    const q = str(raw.q || raw.question);
+    need(q.length >= 8, 'question is missing or too short');
+    need(Array.isArray(raw.options) && raw.options.length === 4, 'needs exactly 4 options');
+    const options = raw.options.map(str);
+    need(options.every(Boolean), 'an option is empty');
+    need(new Set(options.map(norm)).size === 4, 'options must be different from each other');
+    let answer = raw.answer;
+    if (typeof answer === 'string' && !/^\d+$/.test(answer.trim())) answer = options.findIndex((o) => norm(o) === norm(answer));
+    answer = Number(answer);
+    need(Number.isInteger(answer) && answer >= 0 && answer <= 3, 'answer must be 0, 1, 2 or 3');
+    it = { headline, summary, q, options, answer, why: why(raw) };
+    if (date) it.date = date;
+    if (expires) it.expires = expires;
   } else if (game === 'number-sense') {
     const q = str(raw.q || raw.question);
     need(q.length >= 12, 'question is missing or too short');
@@ -169,6 +193,10 @@ export function validatePack(game, data, existing = [], { allowSimilar = false }
       out.errors.push({ n: i + 1, msg: e.message });
     }
   });
+  if (game === 'industry-update') {
+    const today = new Date().toISOString().slice(0, 10);
+    out.valid.forEach((it) => { if (it.expires && it.expires < today) out.warnings.push(`"${it.headline}" has already expired, so players would never see it.`); });
+  }
   if (game === 'crossword') {
     out.valid.forEach((p) => {
       const g = generateGrid(p.words, 120);
@@ -203,6 +231,9 @@ Example:
   'acronym-decoder': `Each item asks what an AdTech acronym stands for. Give exactly 4 options. "answer" is the index (0 to 3) of the correct option. Put the correct option in a different position from item to item. "hint" is optional: one short nudge that does not give the answer away. Without it, the Hint button removes two wrong options.
 Example:
 {"items":[{"q":"What does SSP stand for?","options":["Sales stack provider","Supply-side platform","Secure server protocol","Syndicated site package"],"answer":1,"why":"An SSP helps publishers sell inventory to many buyers."}]}`,
+  'industry-update': `Each item is one short industry news card followed by one question about what it means. "headline" is under 90 characters. "summary" is 1 or 2 plain sentences (under 300 characters) saying what changed and who is affected. "date" is when it happened (YYYY-MM-DD). "expires" is when the card stops being useful (YYYY-MM-DD), usually 6 to 12 months after the date; expired cards are hidden automatically. "q" asks what the change means in practice, with exactly 4 options and "answer" as the index (0 to 3) of the best one. Only include changes that are well established and that you are sure of: no rumours, no predictions, no prices or figures that change quickly. Do not name private individuals.
+Example:
+{"items":[{"headline":"Streaming service adds an ad tier","summary":"A large streaming service launched a cheaper plan that includes ads, widening the supply of ad-supported streaming.","date":"2026-01-15","expires":"2027-01-15","q":"Why does this matter for CTV advertisers?","options":["More streaming viewers can be reached with ads","Streaming can no longer carry ads","Ads are only allowed on linear TV","Households can no longer be targeted"],"answer":0,"level":1,"why":"Ad tiers on big services expand ad-supported streaming inventory."}]}`,
   'privacy-quiz': `Each item is a multiple-choice question about privacy, consent and data rules in advertising. Give exactly 4 options. "answer" is the index (0 to 3) of the correct option; put the correct option in a different position from item to item. Keep to general principles that are true in most places (consent, personal data, minimisation, contextual targeting, rights of people). Do not give legal advice and do not rely on rules that differ by country unless you name the region in the question. Add a "level" of 1 (basic), 2 or 3 (specialist).\nExample:\n{"items":[{"q":"Which of these is a good example of valid consent?","options":["A clear choice the visitor makes freely","A box that is already ticked","Scrolling down the page","Closing the banner"],"answer":0,"level":1,"why":"Consent must be a clear, free choice. Silence, scrolling and pre-ticked boxes are not."}]}`,
   'odd-one-out': `Each item names a category in the question and gives 4 options, three that belong and one that does not. "answer" is the index (0 to 3) of the odd one. Put the odd one in a different position from item to item.
 Example:

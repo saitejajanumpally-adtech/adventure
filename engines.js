@@ -267,7 +267,8 @@ function askOne(box, it, i, n, ctx) {
     }
     opts.append(...btns);
     const cue = QUESTION_CUES[it.game];
-    fill(box, h('div', { class: 'qblock' }, cue ? h('p', { class: 'eyebrow' }, cue[0]) : null, h('h2', { class: 'qtext' }, it.q), cue ? h('p', { class: 'muted instr' }, cue[1]) : null), opts, fbHolder);
+    const news = it.headline ? h('div', { class: 'newscard' }, h('b', {}, it.headline), h('p', {}, it.summary), it.date ? h('small', {}, `Update from ${new Date(`${it.date}T12:00:00`).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}`) : null) : null;
+    fill(box, h('div', { class: 'qblock' }, cue ? h('p', { class: 'eyebrow' }, cue[0]) : null, news, h('h2', { class: 'qtext' }, it.q), cue ? h('p', { class: 'muted instr' }, cue[1]) : null), opts, fbHolder);
     document.addEventListener('keydown', onKey);
 
     const canHint = it.kind === 'mcq' || !!it.hint;

@@ -351,7 +351,8 @@ function showHow(id) {
 /* ---------- loading and picking puzzles ---------- */
 async function loadUsable(gameId) {
   const pack = await S.store.loadPack(gameId);
-  return (pack.items || []).filter((it) => it && it.id && !it.disabled);
+  const today = dateKey();
+  return (pack.items || []).filter((it) => it && it.id && !it.disabled && !(it.expires && it.expires < today)); // retired updates stay in the pack but are never shown
 }
 // Unseen first. If fewer than n are unseen, top up with the ones seen longest ago.
 function pickFresh(pool, n, seenArr) {

@@ -843,3 +843,9 @@ table.rules td:last-child{font-weight:700}
 .opt.sel{border-color:var(--brand);background:var(--line)}
 .roombox .good{color:var(--okink)}.roombox .oops{color:var(--badink)}
 
+/* ===== Industry update card ===== */
+.newscard{background:var(--bg);border-left:4px solid var(--brand);border-radius:12px;padding:12px 14px;margin:8px 0 10px}
+.newscard b{display:block;font-family:var(--head);font-size:calc(var(--q) - 2px)}
+.newscard p{margin:6px 0 4px}
+.newscard small{color:var(--soft)}
+

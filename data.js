@@ -67,7 +67,10 @@ export const GAMES = [
     blurb: 'Place each tool in the right layer of the stack.',
     how: { steps: ['A card appears, like "DSP".', 'Tap the layer where it belongs, such as Sell side, Exchange or Buy side.', 'You see straight away if you were right.'],
       example: '"SSP" goes in Sell side, because it helps publishers sell.', scoring: '10 AdCoins for each card in the right layer. 20 more for a perfect stack.' } },
-  { id: 'industry-update', cat: 'current', title: 'Industry update', tag: 'What just changed', icon: 'news', live: false },
+  { id: 'industry-update', cat: 'current', earn: 'Up to 40 AdCoins a round: 10 per right answer, +20 for a perfect round.', title: 'Industry update', tag: 'What just changed', icon: 'news', kind: 'mcq', live: true, size: 4, pet: 'cat',
+    blurb: 'A few short news cards on what changed in AdTech, each with one quick question.',
+    how: { steps: ['Read the short update card.', 'Answer the question about what it means.', 'Read the explanation. New updates are added regularly and old ones retire.'],
+      example: 'A card about a browser change, then: what does this mean for advertisers today?', scoring: SCORE10 } },
   { id: 'privacy-quiz', cat: 'current', earn: 'Up to 80 AdCoins a round: 10 per right answer, +20 for a perfect round.', title: 'Privacy quiz', tag: 'Know the rules', icon: 'shield-lock', kind: 'mcq', live: true, size: 6, pet: 'bear',
     blurb: 'Consent, personal data and the rules every ad person should know.',
     how: { steps: ['Read the question about privacy and consent.', 'Pick the best of four answers.', 'Read the explanation. It is a general guide, not legal advice.'],
@@ -157,7 +160,8 @@ export const QUESTION_CUES = {
   'myth-or-fact': ['Myth or fact?', 'Is this statement a myth or a fact?'],
   'acronym-decoder': ['Decode the acronym', 'Pick the meaning that fits.'],
   'odd-one-out': ['Find the odd one out', 'Pick the one that does not belong.'],
-  'privacy-quiz': ['Privacy and consent', 'Pick the best answer.']
+  'privacy-quiz': ['Privacy and consent', 'Pick the best answer.'],
+  'industry-update': ['Industry update', 'What does this change mean?']
 };
 
 export const GAME_TIPS = {
@@ -169,6 +173,7 @@ export const GAME_TIPS = {
   'who-am-i': ['Start with the vague clue. Fewer clues means more AdCoins.', 'Rule out the choices that clash with a clue.'],
   'number-sense': ['Round the numbers first, then work it out in your head.', 'Check if your answer is about the right size before locking it in.'],
   'privacy-quiz': ['Ask: whose data is it, and did they clearly agree?', 'When unsure, the choice that respects the person is usually right.'],
+  'industry-update': ['Read the card first. Ask: who is affected, and what changes for them?', 'Updates retire after a while, so new ones keep appearing.'],
   'crossword': ['Tap a clue, then type the answer.', 'Short crossing words help you check the long ones.'],
   'odd-one-out': ['First name what the other three have in common.', 'The odd one is often a tool in a list of metrics, or the reverse.'],
   'stack-sorter': ['Ask who pays and who gets paid. It usually tells you the layer.', 'Think of the stack as a supply chain from publisher to advertiser.']
@@ -1024,9 +1029,76 @@ const PRIVACY = [
   }
 ];
 
+const UPDATES = [
+  {
+    "headline": "Chrome keeps third-party cookies",
+    "summary": "In 2025 Google said it would not roll out a new standalone prompt for third-party cookies in Chrome, and later moved to retire most Privacy Sandbox tools. Cookies are still blocked or limited in other browsers.",
+    "date": "2025-10-17",
+    "expires": "2027-03-31",
+    "q": "What does this mean for advertisers today?",
+    "options": [
+      "Cookie-based targeting still works in Chrome, but not everywhere",
+      "Cookies are gone from all browsers",
+      "Every ad now needs a login",
+      "Tracking is banned on every site"
+    ],
+    "answer": 0,
+    "level": 2,
+    "why": "Chrome kept third-party cookies, but other browsers and many users limit them, so advertisers still need other ways to reach and measure people."
+  },
+  {
+    "headline": "Prime Video shows ads by default",
+    "summary": "In January 2024 Amazon started including ads in Prime Video in the US, with an extra fee to remove them. It added a large streaming audience to ad-supported TV.",
+    "date": "2024-01-29",
+    "expires": "2027-03-31",
+    "q": "Why does this matter for CTV advertisers?",
+    "options": [
+      "More premium streaming viewers can be reached with ads",
+      "Streaming can no longer carry ads",
+      "Ads are only allowed on linear TV",
+      "Households can no longer be targeted"
+    ],
+    "answer": 0,
+    "level": 1,
+    "why": "Big streaming services adding ad tiers expands the supply of ad-supported streaming inventory."
+  },
+  {
+    "headline": "More US states pass privacy laws",
+    "summary": "A growing number of US states have passed their own consumer privacy laws, each with slightly different rules on consent, opt-outs and sensitive data.",
+    "date": "2025-06-30",
+    "expires": "2027-03-31",
+    "q": "What is a practical effect for publishers and advertisers?",
+    "options": [
+      "Rules differ by state, so privacy choices must be handled carefully",
+      "One national rule now replaces them all",
+      "Consent is no longer needed anywhere",
+      "Only European visitors have privacy rights"
+    ],
+    "answer": 0,
+    "level": 2,
+    "why": "With several state laws, teams usually build processes that respect the strictest common requirements and honour opt-out signals."
+  },
+  {
+    "headline": "Ad-supported streaming keeps growing",
+    "summary": "More streaming services now offer cheaper plans with ads, and free ad-supported channels (FAST) keep adding viewers. Advertisers shift some TV budget from linear to streaming.",
+    "date": "2025-09-01",
+    "expires": "2027-03-31",
+    "q": "Which budget change does this trend lead to?",
+    "options": [
+      "Some TV budget moves from linear to streaming",
+      "All TV budget moves to billboards",
+      "Streaming ads are banned",
+      "Budgets disappear"
+    ],
+    "answer": 0,
+    "level": 1,
+    "why": "As audiences move to streaming, advertisers follow them and move part of their TV budgets."
+  }
+];
+
 export const STARTER = {
   'acronym-decoder': ACRONYMS, 'myth-or-fact': MYTHS, 'odd-one-out': ODD,
-  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW, 'who-am-i': WHO, 'number-sense': NUMBERS, 'privacy-quiz': PRIVACY
+  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW, 'who-am-i': WHO, 'number-sense': NUMBERS, 'privacy-quiz': PRIVACY, 'industry-update': UPDATES
 };
 
 /* Admin-edited ads and pet lines (saved with the announcements). Start from the built-in ones, then layer the changes on top. */
