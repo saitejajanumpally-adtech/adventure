@@ -7,7 +7,7 @@ import { CONFIG } from './config.js';
 
 const PACK_GAMES = GAMES.filter((g) => g.live && g.kind !== 'mission' && g.kind !== 'rapid' && !g.practice);
 const LIVE_GAMES = GAMES.filter((g) => g.live && !g.practice);
-const QUIZ = ['myth-or-fact', 'acronym-decoder', 'odd-one-out'];
+const QUIZ = ['myth-or-fact', 'acronym-decoder', 'odd-one-out', 'privacy-quiz'];
 const REASON_LABEL = { wrong: 'Wrong answer', unclear: 'Unclear', outdated: 'Outdated', other: 'Other' };
 const TYPE_LABEL = { problem: 'Problem', idea: 'Idea', question: 'Question looks wrong' };
 const titleOf = (id) => (GAMES.find((g) => g.id === id) || { title: id }).title;

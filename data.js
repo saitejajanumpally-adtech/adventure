@@ -1,7 +1,7 @@
 export const CATS = [
   { id: 'daily', title: 'Daily habit', tagline: 'Quick brain boosters', about: 'Two minutes a day builds the habit.', bg: '#CECBF6', fg: '#26215C', panel: '#E4E2FA', tagInk: '#4F4A8A' },
   { id: 'concept', title: 'Concept builders', tagline: 'Build your skills', about: 'Go deeper: order, match, sort and solve.', bg: '#B5D4F4', fg: '#042C53', panel: '#DCEAF9', tagInk: '#2B5A8A' },
-  { id: 'current', title: 'Staying current', tagline: 'Stay ahead', about: 'What is changing in AdTech. Coming soon.', bg: '#FAEEDA', fg: '#633806', panel: '#FBF3E4', tagInk: '#7A4A12' },
+  { id: 'current', title: 'Staying current', tagline: 'Stay ahead', about: 'Know the rules, and what is changing in AdTech.', bg: '#FAEEDA', fg: '#633806', panel: '#FBF3E4', tagInk: '#7A4A12' },
   { id: 'fun', title: 'Fun and fast', tagline: 'Quick and fun', about: 'Fast, playful rounds.', bg: '#D3D1C7', fg: '#2C2C2A', panel: '#E9E8E2', tagInk: '#4A4A46' }
 ];
 
@@ -68,7 +68,10 @@ export const GAMES = [
     how: { steps: ['A card appears, like "DSP".', 'Tap the layer where it belongs, such as Sell side, Exchange or Buy side.', 'You see straight away if you were right.'],
       example: '"SSP" goes in Sell side, because it helps publishers sell.', scoring: '10 AdCoins for each card in the right layer. 20 more for a perfect stack.' } },
   { id: 'industry-update', cat: 'current', title: 'Industry update', tag: 'What just changed', icon: 'news', live: false },
-  { id: 'privacy-quiz', cat: 'current', title: 'Privacy quiz', tag: 'Know the rules', icon: 'shield-lock', live: false },
+  { id: 'privacy-quiz', cat: 'current', earn: 'Up to 80 AdCoins a round: 10 per right answer, +20 for a perfect round.', title: 'Privacy quiz', tag: 'Know the rules', icon: 'shield-lock', kind: 'mcq', live: true, size: 6, pet: 'bear',
+    blurb: 'Consent, personal data and the rules every ad person should know.',
+    how: { steps: ['Read the question about privacy and consent.', 'Pick the best of four answers.', 'Read the explanation. It is a general guide, not legal advice.'],
+      example: 'Which of these is a good example of valid consent?', scoring: SCORE10 } },
   { id: 'rapid-fire', cat: 'fun', earn: 'Up to 70 AdCoins a round: 5 per right answer, +20 if you answer all ten right in time.', title: 'Rapid fire', tag: 'Beat the clock', icon: 'bolt', kind: 'rapid', live: true, size: 10, seconds: 60, pet: 'tiger',
     blurb: 'Ten quick questions, sixty seconds. How many can you get?',
     how: { steps: ['Ten questions from the quiz games come one after another.', 'Tap your answer. The next question appears straight away.', 'You have sixty seconds. When the clock runs out, the round ends.'],
@@ -153,7 +156,8 @@ export const TIPS = [
 export const QUESTION_CUES = {
   'myth-or-fact': ['Myth or fact?', 'Is this statement a myth or a fact?'],
   'acronym-decoder': ['Decode the acronym', 'Pick the meaning that fits.'],
-  'odd-one-out': ['Find the odd one out', 'Pick the one that does not belong.']
+  'odd-one-out': ['Find the odd one out', 'Pick the one that does not belong.'],
+  'privacy-quiz': ['Privacy and consent', 'Pick the best answer.']
 };
 
 export const GAME_TIPS = {
@@ -164,6 +168,7 @@ export const GAME_TIPS = {
   'jargon-match': ['Match the easy pairs first. The leftovers get easier.', 'Wrong guesses cost a life, so think before you tap.'],
   'who-am-i': ['Start with the vague clue. Fewer clues means more AdCoins.', 'Rule out the choices that clash with a clue.'],
   'number-sense': ['Round the numbers first, then work it out in your head.', 'Check if your answer is about the right size before locking it in.'],
+  'privacy-quiz': ['Ask: whose data is it, and did they clearly agree?', 'When unsure, the choice that respects the person is usually right.'],
   'crossword': ['Tap a clue, then type the answer.', 'Short crossing words help you check the long ones.'],
   'odd-one-out': ['First name what the other three have in common.', 'The odd one is often a tool in a list of metrics, or the reverse.'],
   'stack-sorter': ['Ask who pays and who gets paid. It usually tells you the layer.', 'Think of the stack as a supply chain from publisher to advertiser.']
@@ -776,9 +781,252 @@ const NUMBERS = [
   }
 ];
 
+const PRIVACY = [
+  {
+    "q": "Which of these is a good example of valid consent?",
+    "options": [
+      "A clear choice the visitor makes freely",
+      "A box that is already ticked",
+      "Scrolling down the page",
+      "Closing the banner"
+    ],
+    "answer": 0,
+    "level": 1,
+    "why": "Consent must be a clear, free choice. Silence, scrolling and pre-ticked boxes are not."
+  },
+  {
+    "q": "What should happen when a visitor says no to tracking?",
+    "options": [
+      "Their choice is respected and remembered",
+      "The banner shows again on every page",
+      "Tracking carries on anyway",
+      "Their account is closed"
+    ],
+    "answer": 0,
+    "level": 1,
+    "why": "A no should be honoured and remembered, so the visitor is not asked again and again."
+  },
+  {
+    "q": "Which one is personal data?",
+    "options": [
+      "A weather forecast",
+      "The date",
+      "An email address",
+      "A page headline"
+    ],
+    "answer": 2,
+    "level": 1,
+    "why": "An email address can identify a person. The others say nothing about anyone."
+  },
+  {
+    "q": "Who do privacy rules like GDPR protect?",
+    "options": [
+      "Only company owners",
+      "People whose data is being used",
+      "Only advertisers",
+      "Only web developers"
+    ],
+    "answer": 1,
+    "level": 1,
+    "why": "Privacy rules exist to protect the people whose data is collected and used."
+  },
+  {
+    "q": "Contextual targeting uses which of these?",
+    "options": [
+      "A profile of the person",
+      "Their browsing history",
+      "The content of the page",
+      "Their purchase history"
+    ],
+    "answer": 2,
+    "level": 1,
+    "why": "Contextual targeting matches ads to the page, not to a profile of the visitor."
+  },
+  {
+    "q": "What is data minimisation?",
+    "options": [
+      "Collecting as much data as possible",
+      "Collecting only the data you need",
+      "Deleting all data every day",
+      "Hiding data from the person"
+    ],
+    "answer": 1,
+    "level": 2,
+    "why": "Data minimisation means gathering only what is necessary for the purpose."
+  },
+  {
+    "q": "A visitor withdraws their consent. What should a publisher do?",
+    "options": [
+      "Keep using their data until next year",
+      "Ask again straight away",
+      "Stop using their data for that purpose",
+      "Delete the website"
+    ],
+    "answer": 2,
+    "level": 2,
+    "why": "When consent is withdrawn, the data should no longer be used for that purpose."
+  },
+  {
+    "q": "What does a consent string carry?",
+    "options": [
+      "The visitor’s name",
+      "A visitor’s privacy choices in a compact form",
+      "The page’s ad revenue",
+      "The ad’s creative"
+    ],
+    "answer": 1,
+    "level": 3,
+    "why": "A consent string packs the person’s choices so they can be passed to ad partners."
+  },
+  {
+    "q": "Why can an IP address count as personal data?",
+    "options": [
+      "It is always secret",
+      "It is a price",
+      "It shows the weather",
+      "It can help identify a person or a household"
+    ],
+    "answer": 3,
+    "level": 2,
+    "why": "Combined with other information, an IP address can point to a person or household."
+  },
+  {
+    "q": "Which consent practice is generally not allowed?",
+    "options": [
+      "Making “reject” much harder than “accept”",
+      "Using clear wording",
+      "Explaining each purpose",
+      "Remembering the choice"
+    ],
+    "answer": 0,
+    "level": 2,
+    "why": "Choices should be equally easy to make, with no tricks to push people into accepting."
+  },
+  {
+    "q": "What is a data processor?",
+    "options": [
+      "The person the data is about",
+      "A company handling data on behalf of another company",
+      "A government office",
+      "A web browser"
+    ],
+    "answer": 1,
+    "level": 3,
+    "why": "A processor handles data for a controller, following the controller’s instructions."
+  },
+  {
+    "q": "What is a data controller?",
+    "options": [
+      "The company that decides why and how data is used",
+      "The person whose data it is",
+      "A tool that deletes data",
+      "A type of server"
+    ],
+    "answer": 0,
+    "level": 3,
+    "why": "The controller decides the purposes and means of using personal data."
+  },
+  {
+    "q": "What does opt-out mean?",
+    "options": [
+      "The person agrees by default",
+      "A page closes",
+      "The company stops all ads",
+      "The person chooses to stop a use of their data"
+    ],
+    "answer": 3,
+    "level": 1,
+    "why": "Opt-out lets a person say stop to a particular use of their data."
+  },
+  {
+    "q": "Which of these is usually treated as sensitive data that needs extra care?",
+    "options": [
+      "Health information",
+      "Page loading time",
+      "Screen size",
+      "Time of day"
+    ],
+    "answer": 0,
+    "level": 2,
+    "why": "Health, beliefs and similar categories can harm people if misused, so they get extra protection."
+  },
+  {
+    "q": "What does a privacy policy do?",
+    "options": [
+      "Sets ad prices",
+      "Lists every visitor",
+      "Explains what data is collected and why",
+      "Blocks cookies"
+    ],
+    "answer": 2,
+    "level": 1,
+    "why": "A privacy policy tells people what is collected, why, and what rights they have."
+  },
+  {
+    "q": "How can a publisher help ad partners respect a visitor’s choice?",
+    "options": [
+      "Ignore it",
+      "Pass the choice along with the ad requests",
+      "Hide the banner",
+      "Clear all cookies daily"
+    ],
+    "answer": 1,
+    "level": 2,
+    "why": "The choice needs to travel with the request so every partner can check it."
+  },
+  {
+    "q": "What is pseudonymised data?",
+    "options": [
+      "Data that can never be linked to anyone",
+      "Data stored for ten years",
+      "Data with identifiers swapped for codes, which can still be linked back with extra information",
+      "Data only computers can read"
+    ],
+    "answer": 2,
+    "level": 3,
+    "why": "Pseudonymised data hides identifiers behind codes, but it can still be personal data if it can be linked back."
+  },
+  {
+    "q": "Why do many rules treat children’s data more strictly?",
+    "options": [
+      "Children may not understand the risks",
+      "Children browse faster",
+      "Children use older phones",
+      "Children click more"
+    ],
+    "answer": 0,
+    "level": 2,
+    "why": "Children may be less aware of the risks, so rules add extra protection."
+  },
+  {
+    "q": "What should a company do if a person asks it to delete their data?",
+    "options": [
+      "Ignore the request",
+      "Check the request and delete the data where it is required",
+      "Ask them to pay",
+      "Move it to another server"
+    ],
+    "answer": 1,
+    "level": 2,
+    "why": "People often have the right to have their data deleted, and the company must respond properly."
+  },
+  {
+    "q": "What is the main job of a cookie banner?",
+    "options": [
+      "To speed up the page",
+      "To show ads",
+      "To ask for and record the visitor’s choices",
+      "To count visitors"
+    ],
+    "answer": 2,
+    "level": 1,
+    "why": "The banner explains the choices and records what the visitor decided."
+  }
+];
+
 export const STARTER = {
   'acronym-decoder': ACRONYMS, 'myth-or-fact': MYTHS, 'odd-one-out': ODD,
-  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW, 'who-am-i': WHO, 'number-sense': NUMBERS
+  'jargon-match': MATCH, 'ad-flow-builder': FLOW, 'stack-sorter': SORT, 'crossword': CW, 'who-am-i': WHO, 'number-sense': NUMBERS, 'privacy-quiz': PRIVACY
 };
 
 /* Admin-edited ads and pet lines (saved with the announcements). Start from the built-in ones, then layer the changes on top. */

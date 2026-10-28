@@ -52,7 +52,7 @@ function levelIn(raw) {
 export function normalizeItem(game, raw) {
   need(raw && typeof raw === 'object', 'not an object');
   let it;
-  if (game === 'acronym-decoder' || game === 'odd-one-out') {
+  if (game === 'acronym-decoder' || game === 'odd-one-out' || game === 'privacy-quiz') {
     const q = str(raw.q || raw.question);
     need(q.length >= 8, 'question is missing or too short');
     need(Array.isArray(raw.options) && raw.options.length === 4, 'needs exactly 4 options');
@@ -203,6 +203,7 @@ Example:
   'acronym-decoder': `Each item asks what an AdTech acronym stands for. Give exactly 4 options. "answer" is the index (0 to 3) of the correct option. Put the correct option in a different position from item to item. "hint" is optional: one short nudge that does not give the answer away. Without it, the Hint button removes two wrong options.
 Example:
 {"items":[{"q":"What does SSP stand for?","options":["Sales stack provider","Supply-side platform","Secure server protocol","Syndicated site package"],"answer":1,"why":"An SSP helps publishers sell inventory to many buyers."}]}`,
+  'privacy-quiz': `Each item is a multiple-choice question about privacy, consent and data rules in advertising. Give exactly 4 options. "answer" is the index (0 to 3) of the correct option; put the correct option in a different position from item to item. Keep to general principles that are true in most places (consent, personal data, minimisation, contextual targeting, rights of people). Do not give legal advice and do not rely on rules that differ by country unless you name the region in the question. Add a "level" of 1 (basic), 2 or 3 (specialist).\nExample:\n{"items":[{"q":"Which of these is a good example of valid consent?","options":["A clear choice the visitor makes freely","A box that is already ticked","Scrolling down the page","Closing the banner"],"answer":0,"level":1,"why":"Consent must be a clear, free choice. Silence, scrolling and pre-ticked boxes are not."}]}`,
   'odd-one-out': `Each item names a category in the question and gives 4 options, three that belong and one that does not. "answer" is the index (0 to 3) of the odd one. Put the odd one in a different position from item to item.
 Example:
 {"items":[{"q":"Which one is not a pricing model?","options":["CPM","CTR","CPC","CPA"],"answer":1,"why":"CTR is a performance metric. The others are ways of pricing ads."}]}`,

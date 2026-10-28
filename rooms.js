@@ -9,7 +9,7 @@ import { QUESTION_CUES } from './data.js';
 const ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // no 0/O, 1/I/L, so a code is easy to read out loud
 export const newCode = () => Array.from({ length: 6 }, () => ALPHABET[Math.floor(Math.random() * ALPHABET.length)]).join('');
 export const cleanCode = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-export const QUIZ_KIND = { 'myth-or-fact': 'tf', 'acronym-decoder': 'mcq', 'odd-one-out': 'mcq' };
+export const QUIZ_KIND = { 'myth-or-fact': 'tf', 'acronym-decoder': 'mcq', 'odd-one-out': 'mcq', 'privacy-quiz': 'mcq' };
 // How each game is played in a room: one question at a time (tf, mcq, who, number) or a race through all of them (rapid).
 export const ROOM_KIND = { ...QUIZ_KIND, 'who-am-i': 'who', 'number-sense': 'number', 'rapid-fire': 'rapid' };
 export const roomGames = () => Object.keys(ROOM_KIND);

@@ -361,7 +361,7 @@ function pickFresh(pool, n, seenArr) {
   const old = pool.filter((x) => seen.has(x.id)).sort((a, b) => seenArr.indexOf(a.id) - seenArr.indexOf(b.id));
   return fresh.concat(old).slice(0, n);
 }
-const GYM_GAMES = [['myth-or-fact', 'tf'], ['acronym-decoder', 'mcq'], ['odd-one-out', 'mcq']];
+const GYM_GAMES = [['myth-or-fact', 'tf'], ['acronym-decoder', 'mcq'], ['odd-one-out', 'mcq'], ['privacy-quiz', 'mcq']];
 const missedCount = () => Object.values(S.profile.missed || {}).reduce((n, a) => n + a.length, 0);
 // Up to five questions the player missed, easy first. Questions that no longer exist are dropped from the list.
 async function gymItems() {
