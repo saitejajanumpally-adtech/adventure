@@ -1,4 +1,4 @@
-import { shuffle } from './util.js';
+import { shuffle, numberRange } from './util.js';
 import { generateGrid } from './crossword.js';
 import { h, ic, fill, petFigure } from './ui.js';
 import { HINTS, QUESTION_CUES } from './data.js';
@@ -128,18 +128,19 @@ export async function runNumber(box, items, ctx) {
       let answered = false;
       sh.setHeader(`Puzzle ${i + 1} of ${items.length}`, (i / items.length) * 100);
       sh.coach.reset(); sh.note(''); sh.setHint(null);
-      const mid = it.min + Math.round((it.max - it.min) / 2 / it.step) * it.step;
-      const slider = h('input', { type: 'range', class: 'num-slider', min: it.min, max: it.max, step: it.step, 'aria-label': 'Your answer' });
-      const typed = h('input', { type: 'number', class: 'num-typed', min: it.min, max: it.max, step: 'any', inputmode: 'decimal', 'aria-label': 'Type your answer' });
-      slider.value = mid; typed.value = mid;
-      const readout = h('b', { class: 'num-out', 'aria-live': 'polite' }, fmtNum(mid, it));
-      const sync = (v) => { readout.textContent = fmtNum(v, it); };
+      const rng = numberRange(it);                 // the answer is never in the middle of the slider
+      const slider = h('input', { type: 'range', class: 'num-slider', min: rng.min, max: rng.max, step: it.step, 'aria-label': 'Your answer' });
+      const typed = h('input', { type: 'number', class: 'num-typed', min: rng.min, max: rng.max, step: 'any', inputmode: 'decimal', 'aria-label': 'Type your answer', placeholder: 'or type it' });
+      let touched = false;
+      slider.value = rng.min; typed.value = '';
+      const readout = h('b', { class: 'num-out', 'aria-live': 'polite' }, 'Your answer');
+      const sync = (v) => { touched = true; lock.disabled = false; readout.textContent = fmtNum(v, it); };
       slider.addEventListener('input', () => { typed.value = slider.value; sync(slider.value); });
       typed.addEventListener('input', () => { if (typed.value !== '') { slider.value = typed.value; sync(typed.value); } });
       const fb = h('div', {});
-      const lock = h('button', { class: 'btn', onclick: () => finish() }, 'Lock in my answer');
+      const lock = h('button', { class: 'btn', disabled: true, onclick: () => finish() }, 'Lock in my answer');
       const finish = () => {
-        if (answered) return;
+        if (answered || !touched) return;
         const guess = Number(typed.value === '' ? slider.value : typed.value);
         if (!Number.isFinite(guess)) return;
         answered = true; slider.disabled = true; typed.disabled = true; lock.disabled = true;
@@ -155,8 +156,8 @@ export async function runNumber(box, items, ctx) {
       };
       typed.addEventListener('keydown', (e) => { if (e.key === 'Enter') finish(); });
       fill(box, h('div', { class: 'qblock' }, h('p', { class: 'eyebrow' }, 'Number sense'), h('h2', { class: 'qtext' }, it.q),
-        h('p', { class: 'muted instr' }, 'Work it out, then drag the slider or type your answer.')),
-        h('div', { class: 'num-box' }, readout, slider, h('div', { class: 'num-range' }, h('span', {}, fmtNum(it.min, it)), h('span', {}, fmtNum(it.max, it))),
+        h('p', { class: 'muted instr' }, 'Work it out, then drag the slider or type your answer. The slider starts at the left on purpose.')),
+        h('div', { class: 'num-box' }, readout, slider, h('div', { class: 'num-range' }, h('span', {}, fmtNum(rng.min, it)), h('span', {}, fmtNum(rng.max, it))),
           h('div', { class: 'row gap wrap' }, h('label', { class: 'sr-only', for: 'num-typed' }, 'Type your answer'), typed, lock)), fb);
       typed.id = 'num-typed';
     });

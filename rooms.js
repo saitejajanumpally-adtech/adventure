@@ -2,7 +2,7 @@
    A room is one small document (who hosts, which questions, what state) plus one small document per player.
    No AdCoins are earned here, so there is nothing to gain by tampering with a score. */
 import { h, ic, fill, toast, petFigure } from './ui.js';
-import { shuffle } from './util.js';
+import { shuffle, numberRange } from './util.js';
 import { difficultyOf } from './validate.js';
 import { QUESTION_CUES } from './data.js';
 
@@ -229,27 +229,29 @@ export async function roomView(env, code) {
   /* Number sense: whatever the slider shows when you lock in, or when the time ends, is your answer */
   async function askNumber(it, i, n, qEnd, secs) {
     let locked = false, lockedAt = 0;
-    const mid = it.min + Math.round((it.max - it.min) / 2 / it.step) * it.step;
-    const slider = h('input', { type: 'range', class: 'num-slider', min: it.min, max: it.max, step: it.step, 'aria-label': 'Your answer' });
-    const typed = h('input', { type: 'number', class: 'num-typed', min: it.min, max: it.max, step: 'any', inputmode: 'decimal', 'aria-label': 'Type your answer', id: 'num-typed' });
-    slider.value = mid; typed.value = mid;
+    const rng = numberRange(it);                   // the answer is never in the middle of the slider
+    let touched = false;
+    const slider = h('input', { type: 'range', class: 'num-slider', min: rng.min, max: rng.max, step: it.step, 'aria-label': 'Your answer' });
+    const typed = h('input', { type: 'number', class: 'num-typed', min: rng.min, max: rng.max, step: 'any', inputmode: 'decimal', 'aria-label': 'Type your answer', id: 'num-typed', placeholder: 'or type it' });
+    slider.value = rng.min; typed.value = '';
     const fmt = (v) => (it.unit === '$' ? `$${Number(v).toLocaleString()}` : `${Number(v).toLocaleString(undefined, { maximumFractionDigits: 2 })}${it.unit ? (/^[a-z]{2,}/i.test(it.unit) ? ' ' : '') + it.unit : ''}`);
-    const readout = h('b', { class: 'num-out', 'aria-live': 'polite' }, fmt(mid));
-    slider.addEventListener('input', () => { typed.value = slider.value; readout.textContent = fmt(slider.value); });
-    typed.addEventListener('input', () => { if (typed.value !== '') { slider.value = typed.value; readout.textContent = fmt(typed.value); } });
-    const lock = h('button', { class: 'btn', onclick: () => { if (!locked && Date.now() < qEnd) { locked = true; lockedAt = Date.now(); slider.disabled = true; typed.disabled = true; lock.disabled = true; status.textContent = 'Locked in. Waiting for the others\u2026'; } } }, 'Lock in my answer');
+    const readout = h('b', { class: 'num-out', 'aria-live': 'polite' }, 'Your answer');
+    const seen = (v) => { touched = true; lock.disabled = false; readout.textContent = fmt(v); };
+    slider.addEventListener('input', () => { typed.value = slider.value; seen(slider.value); });
+    typed.addEventListener('input', () => { if (typed.value !== '') { slider.value = typed.value; seen(typed.value); } });
+    const lock = h('button', { class: 'btn', disabled: true, onclick: () => { if (!locked && touched && Date.now() < qEnd) { locked = true; lockedAt = Date.now(); slider.disabled = true; typed.disabled = true; lock.disabled = true; status.textContent = 'Locked in. Waiting for the others\u2026'; } } }, 'Lock in my answer');
     const status = h('p', { class: 'muted', role: 'status' }, 'Drag the slider or type a number.');
     const cb = clockBar();
     fill(box, cb.top, h('p', { class: 'eyebrow' }, `Number sense \u00B7 Puzzle ${i + 1} of ${n}`), h('h2', { class: 'qtext' }, it.q),
-      h('div', { class: 'num-box' }, readout, slider, h('div', { class: 'num-range' }, h('span', {}, fmt(it.min)), h('span', {}, fmt(it.max))), h('div', { class: 'row gap wrap' }, typed, lock)), status);
+      h('div', { class: 'num-box' }, readout, slider, h('div', { class: 'num-range' }, h('span', {}, fmt(rng.min)), h('span', {}, fmt(rng.max))), h('div', { class: 'row gap wrap' }, typed, lock)), status);
     const stop = every(() => cb.tick(qEnd, secs * 1000)); cb.tick(qEnd, secs * 1000);
     await wait(qEnd - Date.now()); stop();
     if (closed) return { gained: 0, ok: false };
-    const guess = Number(typed.value === '' ? slider.value : typed.value);
+    const guess = touched ? Number(typed.value === '' ? slider.value : typed.value) : NaN;   // a slider nobody moved is not an answer
     const band = Number.isFinite(guess) ? bandFor(guess, it.answer) : 'off';
     const gained = pointsNumber(band, locked ? qEnd - lockedAt : 0, secs), ok = band !== 'off';
     slider.disabled = true; typed.disabled = true; lock.disabled = true;
-    status.textContent = `You said ${fmt(guess)}. The answer is ${fmt(it.answer)}. ${band === 'spot' ? 'Spot on' : band === 'close' ? 'Close' : 'Not quite'}${ok ? `! +${gained} points` : '.'}`;
+    status.textContent = `${Number.isFinite(guess) ? `You said ${fmt(guess)}.` : 'No answer.'} The answer is ${fmt(it.answer)}. ${band === 'spot' ? 'Spot on' : band === 'close' ? 'Close' : 'Not quite'}${ok ? `! +${gained} points` : '.'}`;
     status.classList.add(ok ? 'good' : 'oops');
     return { gained, ok };
   }

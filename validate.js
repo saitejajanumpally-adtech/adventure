@@ -104,6 +104,7 @@ export function normalizeItem(game, raw) {
     need([min, max, answer].every(Number.isFinite), 'min, max and answer must be numbers');
     need(max > min, 'max must be bigger than min');
     need(answer >= min && answer <= max, 'the answer must sit between min and max');
+    need(answer > min, 'the answer must be above min');
     need(answer !== 0, 'the answer cannot be zero (the closeness check is a percentage of the answer)');
     let step = raw.step == null || raw.step === '' ? (max - min) / 100 : Number(raw.step);
     need(Number.isFinite(step) && step > 0 && step <= max - min, 'step must be a number above zero and no bigger than the range');

@@ -70,3 +70,17 @@ export function parseDevice(ua = '', width = 0) {
     : /Chrome\/|CriOS\//.test(u) ? 'Chrome' : /Safari\//.test(u) ? 'Safari' : 'Other';
   return { device, browser, width };
 }
+
+/* The slider range for a Number sense puzzle. The answer must never sit in the middle, because that would give it away.
+   So the far end is placed at about 1.3 to 1.6 times, or 2.6 to 4 times, the answer. The same puzzle always gets the same range. */
+export function numberRange(it) {
+  const min = Number(it.min), answer = Number(it.answer);
+  if (!(answer > min)) return { min, max: Number(it.max) };
+  let hsh = 0;
+  for (const c of String(it.id || it.q)) hsh = (hsh * 31 + c.charCodeAt(0)) >>> 0;
+  const f = hsh % 2 ? 1.3 + ((hsh >>> 1) % 31) / 100 : 2.6 + ((hsh >>> 1) % 141) / 100;
+  const step = Number(it.step) > 0 ? Number(it.step) : (Number(it.max) - min) / 100;
+  const max = min + Math.ceil(((answer - min) * f) / step) * step;
+  return { min, max: Math.round(Math.max(max, answer + step) * 1e6) / 1e6 };
+}
+
